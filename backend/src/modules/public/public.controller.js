@@ -28,6 +28,13 @@ class PublicController {
   }
 
   @Public()
+  @Post('contact')
+  @Bind(Body())
+  submitContact(body) {
+    return this.publicService.submitContact(body);
+  }
+
+  @Public()
   @Post('add-request')
   @Bind(Body(), Req())
   addRequest(body, req) {

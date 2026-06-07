@@ -20,7 +20,7 @@ export const metadata = {
   description: 'Enterprise multi-tenant CRM for revenue, marketing, and service teams',
 };
 
-const themeScript = `(function(){try{var t=localStorage.getItem('crm_theme');if(t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark')}catch(e){}})()`;
+const themeScript = `(function(){try{var t=localStorage.getItem('crm_theme');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}})()`;
 
 export default function RootLayout({ children }) {
   return (

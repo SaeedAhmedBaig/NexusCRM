@@ -33,6 +33,8 @@ services:
         sync: false
       - key: BREVO_SENDER_NAME
         value: NexusCRM
+      - key: CONTACT_SALES_EMAIL
+        sync: false
       - key: SUPERADMIN_EMAIL
         sync: false
       - key: SUPERADMIN_PASSWORD

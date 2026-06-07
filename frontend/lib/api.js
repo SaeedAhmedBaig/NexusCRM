@@ -75,9 +75,9 @@ export async function apiFetch(path, options = {}) {
   } catch (err) {
     const hint =
       err?.name === 'AbortError'
-        ? 'Request timed out. Ensure the backend is running on port 4000.'
+        ? 'Request timed out. Check that the backend is running and NEXT_PUBLIC_API_URL is set.'
         : err?.message === 'Failed to fetch'
-          ? 'Cannot reach the API. Ensure the backend is running on port 4000.'
+          ? 'Cannot reach the API. Check that the backend is running and NEXT_PUBLIC_API_URL is configured.'
           : err?.message;
     throw new Error(hint || 'Network request failed');
   } finally {

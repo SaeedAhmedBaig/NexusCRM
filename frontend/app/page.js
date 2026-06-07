@@ -48,9 +48,9 @@ export default async function HomePage() {
   const plansData = await fetchPublicPlans();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
       <MarketingNav />
-      <main>
+      <main className="flex-1">
         <Hero />
         <SocialProof />
         <FeaturesGrid />

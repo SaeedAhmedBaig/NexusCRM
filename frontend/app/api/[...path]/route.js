@@ -32,7 +32,10 @@ async function proxyRequest(request, context) {
     res = await fetch(target, { ...init, signal: controller.signal });
   } catch {
     return NextResponse.json(
-      { message: 'Cannot reach the API server. Ensure the backend is running on port 4000.' },
+      {
+        message:
+          'Cannot reach the API server. Set NEXT_PUBLIC_API_URL to your Render backend URL and redeploy.',
+      },
       { status: 502 },
     );
   } finally {

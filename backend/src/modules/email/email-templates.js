@@ -205,6 +205,39 @@ function dealNotificationEmail({ name, action, dealTitle, dealUrl, value }) {
   });
 }
 
+function contactSalesEmail({ name, email, company, message, type, sourceUrl }) {
+  const label = type === 'demo' ? 'Demo request' : 'Contact inquiry';
+  return layout({
+    preheader: `${label} from ${name}`,
+    title: label,
+    badge: 'Inbound lead',
+    bodyHtml: `
+      <p><strong>${name}</strong> submitted a ${type === 'demo' ? 'demo request' : 'contact form'} via the marketing site.</p>
+      <div class="features">
+        <p style="margin:0 0 8px;"><strong>Email:</strong> ${email}</p>
+        ${company ? `<p style="margin:0 0 8px;"><strong>Company:</strong> ${company}</p>` : ''}
+        ${message ? `<p style="margin:0 0 8px;"><strong>Message:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>` : ''}
+        ${sourceUrl ? `<p style="margin:0;"><strong>Source:</strong> ${sourceUrl}</p>` : ''}
+      </div>
+    `,
+    footerNote: 'Reply directly to the sender email to follow up.',
+  });
+}
+
+function contactAckEmail({ name, type, ctaUrl = 'http://localhost:3000' }) {
+  const title = type === 'demo' ? 'We received your demo request' : 'Thanks for contacting NexusCRM';
+  return layout({
+    preheader: title,
+    title,
+    bodyHtml: `
+      <p>Hi ${name},</p>
+      <p>Thanks for reaching out. Our team will review your ${type === 'demo' ? 'demo request' : 'message'} and respond within one business day.</p>
+    `,
+    ctaLabel: 'Explore NexusCRM',
+    ctaUrl,
+  });
+}
+
 module.exports = {
   layout,
   welcomeEmail,
@@ -216,4 +249,6 @@ module.exports = {
   taskNotificationEmail,
   requestNotificationEmail,
   dealNotificationEmail,
+  contactSalesEmail,
+  contactAckEmail,
 };

@@ -41,16 +41,22 @@ export function LoginForm({ tenantSubdomain, onSubmit, onDiscover }) {
 
   return (
     <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4" noValidate>
-      {!tenantSubdomain && (
+      {!tenantSubdomain && !onDiscover && (
         <FormField label="Workspace subdomain" error={errors.subdomain?.message}>
           <input
             className={`${inputClass} ${errors.subdomain ? inputErrorClass : ''}`}
             placeholder="yourteam"
             {...register('subdomain', {
-              required: onDiscover ? false : 'Subdomain is required',
+              required: 'Subdomain is required',
             })}
           />
         </FormField>
+      )}
+
+      {!tenantSubdomain && onDiscover && (
+        <p className="rounded-xl border border-border bg-muted px-4 py-3 text-sm text-muted-foreground">
+          Sign in with your account email. We&apos;ll find your workspace automatically.
+        </p>
       )}
 
       <FormField label="Email" error={errors.email?.message}>

@@ -11,6 +11,8 @@ const {
   taskNotificationEmail,
   requestNotificationEmail,
   dealNotificationEmail,
+  contactSalesEmail: contactSalesEmailTemplate,
+  contactAckEmail: contactAckEmailTemplate,
 } = require('./email-templates');
 
 @Injectable()
@@ -127,6 +129,34 @@ class EmailService {
       to,
       subject: `Deal ${action}: ${dealTitle}`,
       html: dealNotificationEmail({ name, action, dealTitle, dealUrl, value }),
+    });
+  }
+
+  contactSalesEmail({ to, name, email, company, message, type, sourceUrl }) {
+    const subject =
+      type === 'demo'
+        ? `Demo request from ${name}${company ? ` (${company})` : ''}`
+        : `Contact form from ${name}`;
+    return this.send({
+      to,
+      subject,
+      html: contactSalesEmailTemplate({
+        name,
+        email,
+        company,
+        message,
+        type,
+        sourceUrl,
+      }),
+    });
+  }
+
+  contactAckEmail({ to, name, type }) {
+    const appUrl = this.configService.get('FRONTEND_URL', 'http://localhost:3000');
+    return this.send({
+      to,
+      subject: type === 'demo' ? 'Your NexusCRM demo request' : 'We received your message',
+      html: contactAckEmailTemplate({ name, type, ctaUrl: appUrl }),
     });
   }
 }

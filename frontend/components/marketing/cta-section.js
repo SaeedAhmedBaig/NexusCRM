@@ -13,11 +13,11 @@ export function CtaSection() {
             Provision an isolated workspace, configure RBAC, and invite your team — or schedule a
             demo with our solutions team.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button href="/signup?plan=free" size="lg">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button href="/signup?plan=free" size="lg" className="w-full sm:w-auto">
               Start free workspace
             </Button>
-            <Button href="/contact" variant="outline" size="lg">
+            <Button href="/contact" variant="outline" size="lg" className="w-full sm:w-auto">
               Request a demo
             </Button>
           </div>

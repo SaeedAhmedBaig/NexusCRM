@@ -6,6 +6,7 @@ const {
 const { ConfigService } = require('@nestjs/config');
 const crypto = require('crypto');
 const { verifyRecaptcha } = require('../../common/utils/recaptcha');
+const { EmailService } = require('../email/email.service');
 const { defineParamTypes } = require('../../common/define-param-types');
 
 function lookupGeo(ip) {
@@ -26,9 +27,11 @@ class PublicService {
   requestModel;
   tenantModel;
   configService;
+  emailService;
 
-  constructor(configService) {
+  constructor(configService, emailService) {
     this.configService = configService;
+    this.emailService = emailService;
   }
 
   async getFormByToken(token) {
@@ -89,6 +92,57 @@ class PublicService {
     };
   }
 
+  async submitContact(body) {
+    const name = String(body.name || '').trim();
+    const email = String(body.email || '').trim().toLowerCase();
+    const company = String(body.company || '').trim();
+    const message = String(body.message || '').trim();
+    const type = body.type === 'contact' ? 'contact' : 'demo';
+    const sourceUrl = String(body.sourceUrl || '').trim();
+
+    if (!name || !email) {
+      throw new BadRequestException('Name and email are required');
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      throw new BadRequestException('Enter a valid email address');
+    }
+
+    const salesEmail =
+      this.configService.get('CONTACT_SALES_EMAIL') ||
+      this.configService.get('SUPERADMIN_EMAIL') ||
+      this.configService.get('BREVO_SENDER_EMAIL');
+
+    if (!salesEmail) {
+      throw new BadRequestException('Contact form is not configured on the server');
+    }
+
+    try {
+      await this.emailService.contactSalesEmail({
+        to: salesEmail,
+        name,
+        email,
+        company,
+        message,
+        type,
+        sourceUrl,
+      });
+    } catch {
+      throw new BadRequestException('Could not send your message. Try again shortly.');
+    }
+
+    try {
+      await this.emailService.contactAckEmail({ to: email, name, type });
+    } catch {
+      /* acknowledgement is best-effort */
+    }
+
+    return {
+      sent: true,
+      message: 'Thank you — our team will respond within one business day.',
+    };
+  }
+
   async ensureEmbedTokens(tenantId) {
     const sources = await this.leadSourceModel.find({ tenantId, embedToken: null });
     for (const source of sources) {
@@ -98,6 +152,6 @@ class PublicService {
   }
 }
 
-defineParamTypes(PublicService, ConfigService);
+defineParamTypes(PublicService, ConfigService, EmailService);
 
 module.exports = { PublicService };

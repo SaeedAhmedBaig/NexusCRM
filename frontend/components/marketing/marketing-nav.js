@@ -86,10 +86,12 @@ export function MarketingNav() {
                   </Link>
                 ))}
                 <Separator className="my-3" />
-                <Button href="/login" variant="ghost" className="justify-start">
+                <Button href="/login" variant="ghost" className="w-full justify-start">
                   Sign in
                 </Button>
-                <Button href="/contact">Get demo</Button>
+                <Button href="/contact" className="w-full">
+                  Get demo
+                </Button>
               </nav>
             </SheetContent>
           </Sheet>

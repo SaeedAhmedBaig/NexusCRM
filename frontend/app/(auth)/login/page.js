@@ -29,9 +29,16 @@ function LoginContent() {
 
   async function handleLogin(form, tenantId, subdomain) {
     try {
-      const payload = { email: form.email, password: form.password };
-      if (tenantId) payload.tenantId = tenantId;
-      else payload.subdomain = subdomain || tenantSubdomain || form.subdomain;
+      const payload = { email: form.email.trim(), password: form.password };
+      if (tenantId) {
+        payload.tenantId = tenantId;
+      } else {
+        const resolvedSubdomain = (subdomain || tenantSubdomain || form.subdomain || '').trim().toLowerCase();
+        if (!resolvedSubdomain) {
+          throw new Error('No workspace found. Check your email and password, or sign up first.');
+        }
+        payload.subdomain = resolvedSubdomain;
+      }
 
       const result = await login(payload);
       setSession({ token: result.token, tenant: result.tenant, rules: result.rules });

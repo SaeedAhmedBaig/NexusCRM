@@ -21,3 +21,14 @@ export async function submitPublicRequest(token, payload) {
   if (!res.ok) throw new Error(data.message || 'Submission failed');
   return data;
 }
+
+export async function submitContactRequest(payload) {
+  const res = await fetch(`${getApiBase()}/api/public/contact`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Could not send message');
+  return data;
+}
