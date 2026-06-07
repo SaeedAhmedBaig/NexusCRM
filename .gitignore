@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment & secrets (never commit)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.local
+**/.env.*.local
+backend/.env
+frontend/.env.local
+
+# Build output
+.next/
+**/.next/
+dist/
+out/
+build/
+
+# Logs & OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Uploads
+backend/uploads/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Turbo / cache
+.turbo/
+.vercel/
