@@ -34,13 +34,13 @@ export function MarketingNav() {
   return (
     <header className="sticky top-0 z-50 px-3 py-3">
       <div
-        className={`marketing-container flex h-14 w-full items-center justify-between rounded-full border px-4 shadow-sm backdrop-blur-xl transition-colors ${
-          scrolled ? 'border-border bg-card' : 'border-border bg-card'
+        className={`marketing-container flex h-14 w-full items-center justify-between rounded-full border border-border bg-card px-4 shadow-sm backdrop-blur-xl transition-shadow ${
+          scrolled ? 'shadow-md' : ''
         }`}
       >
         <Logo />
 
-        <nav className="hidden items-center gap-1 rounded-full bg-muted/70 p-1 md:flex">
+        <nav className="hidden items-center gap-1 rounded-full bg-muted p-1 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}

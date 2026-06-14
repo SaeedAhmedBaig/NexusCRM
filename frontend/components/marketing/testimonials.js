@@ -24,23 +24,23 @@ const TESTIMONIALS = [
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="marketing-section border-t border-border bg-muted/30">
+    <section id="testimonials" className="marketing-section border-t border-border bg-surface">
       <div className="marketing-container">
-        <div className="mx-auto mb-12 max-w-2xl text-center">
+        <div className="marketing-section-header">
           <p className="marketing-eyebrow mb-4">Customer perspective</p>
-          <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-            What enterprise buyers evaluate
+          <h2 className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl">
+            Built for teams that care about control and clarity
           </h2>
           <p className="mt-4 text-base text-muted-foreground">
             Representative feedback themes from revenue and IT leaders during platform selection.
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3">
           {TESTIMONIALS.map((item) => (
             <blockquote
               key={item.name}
-              className="rounded-lg border border-border bg-card p-6"
+              className="marketing-card p-6"
             >
               <p className="text-sm leading-relaxed text-foreground">
                 &ldquo;{item.quote}&rdquo;

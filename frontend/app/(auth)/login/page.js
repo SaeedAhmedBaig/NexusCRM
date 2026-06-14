@@ -142,7 +142,7 @@ function LoginContent() {
                 tenants.find((t) => t.tenantId === selectedTenantId)?.subdomain,
               )
             }
-            className="w-full rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
+            className="h-12 w-full rounded-full bg-brand px-4 text-sm font-semibold text-brand-foreground transition-colors hover:bg-brand-dark"
           >
             Continue
           </button>

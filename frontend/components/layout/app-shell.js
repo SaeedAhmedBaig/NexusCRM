@@ -34,7 +34,7 @@ export function AppShell({ subdomain, profile, children }) {
           onToggleCollapse={() => setCollapsed((v) => !v)}
         />
         <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto w-full max-w-[1360px] px-4 py-5 lg:px-8 lg:py-8">
+          <div className="mx-auto grid w-full max-w-[1400px] gap-6 px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
             {children}
           </div>
         </main>

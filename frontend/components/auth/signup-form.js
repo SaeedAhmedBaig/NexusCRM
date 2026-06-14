@@ -140,7 +140,7 @@ export function SignupForm({ defaultPlan = 'free', onSubmit }) {
       <button
         type="submit"
         disabled={loading}
-        className="rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
+        className="h-12 rounded-full bg-brand px-4 text-sm font-semibold text-brand-foreground transition-colors hover:bg-brand-dark disabled:opacity-60"
       >
         {loading ? 'Creating workspace…' : 'Create workspace'}
       </button>

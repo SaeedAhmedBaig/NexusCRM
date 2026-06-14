@@ -43,7 +43,7 @@ export function ContactForm({ type = 'demo', title, subtitle }) {
 
   if (submitted) {
     return (
-      <div className="rounded-xl border border-border bg-card p-6 sm:p-8">
+      <div className="marketing-card p-6 sm:p-8">
         <h2 className="text-xl font-semibold text-foreground">Message sent</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{serverMessage}</p>
         <button
@@ -58,7 +58,7 @@ export function ContactForm({ type = 'demo', title, subtitle }) {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-6 shadow-sm sm:p-8">
+    <div className="marketing-card p-6 sm:p-8">
       {(title || subtitle) && (
         <div className="mb-6">
           {title && <h2 className="text-xl font-semibold text-foreground">{title}</h2>}
@@ -126,7 +126,7 @@ export function ContactForm({ type = 'demo', title, subtitle }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
+          className="h-12 w-full rounded-full bg-brand px-5 text-sm font-semibold text-brand-foreground transition-colors hover:bg-brand-dark disabled:opacity-60"
         >
           {loading ? 'Sending…' : type === 'demo' ? 'Request demo' : 'Send message'}
         </button>

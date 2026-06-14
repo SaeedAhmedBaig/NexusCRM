@@ -50,27 +50,26 @@ export function FeaturesGrid() {
   return (
     <section id="features" className="marketing-section bg-background">
       <div className="marketing-container">
-        <div className="mx-auto mb-12 max-w-2xl text-center">
+        <div className="marketing-section-header">
           <p className="marketing-eyebrow mb-4">Journey intelligence</p>
-          <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-            One dashboard for the entire customer path
+          <h2 className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl">
+            A CRM system designed around how customers actually move
           </h2>
           <p className="mt-4 text-base text-muted-foreground">
-            Replace static pipeline views with a living journey system that helps sales, marketing,
-            and success work from the same customer truth.
+            Give every team the same language for customer state, ownership, risk, and next action.
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((feature) => {
             const Icon = feature.icon;
             return (
               <article
                 key={feature.title}
-                className="rounded-lg border border-border bg-card p-6"
+                className="marketing-card p-6 transition-transform hover:-translate-y-1"
               >
-                <div className="mb-4 flex size-10 items-center justify-center rounded-md bg-muted">
-                  <Icon className="size-5 text-foreground" strokeWidth={1.75} />
+                <div className="mb-5 flex size-12 items-center justify-center rounded-2xl bg-brand-light text-brand">
+                  <Icon className="size-5" strokeWidth={1.85} />
                 </div>
                 <h3 className="text-base font-semibold text-foreground">{feature.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

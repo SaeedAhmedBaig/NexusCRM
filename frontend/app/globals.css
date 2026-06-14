@@ -4,53 +4,57 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* NexusCRM — Enterprise design system (HubSpot / Linear restraint) */
+/* NexusCRM — unified rounded design system */
 
 :root {
-  /* Brand — accent only, never dominant */
-  --brand: #ef5b4f;
+  /* Brand — used for primary action and selected emphasis only */
+  --brand: #ee5b4d;
   --brand-foreground: #ffffff;
-  --brand-dark: #dc4338;
-  --brand-darker: #bd3027;
-  --brand-muted: rgba(239, 91, 79, 0.14);
-  --brand-light: rgba(239, 91, 79, 0.09);
-  --brand-subtle: rgba(239, 91, 79, 0.05);
+  --brand-dark: #d9483c;
+  --brand-darker: #b9352c;
+  --brand-muted: rgba(238, 91, 77, 0.14);
+  --brand-light: rgba(238, 91, 77, 0.1);
+  --brand-subtle: rgba(238, 91, 77, 0.06);
 
-  /* Neutrals — 90% of the UI */
-  --background: #f3f5f9;
-  --foreground: #101114;
-  --muted: #e7ebf2;
-  --muted-foreground: #5c6472;
-  --border: #d6dce7;
-  --border-subtle: #e8ecf3;
-  --ring: rgba(11, 11, 13, 0.08);
+  /* Neutral surface stack */
+  --background: #f5f7fb;
+  --foreground: #101217;
+  --muted: #e9eef6;
+  --muted-foreground: #5d6676;
+  --border: #d8e0ec;
+  --border-subtle: #e8edf5;
+  --ring: rgba(238, 91, 77, 0.22);
 
-  --surface: #eef2f7;
+  --surface: #eef3fa;
   --surface-elevated: #ffffff;
   --card: #ffffff;
-  --card-foreground: #101114;
+  --card-foreground: #101217;
   --card-hover: #f8fafc;
+  --control: #ffffff;
+  --control-hover: #f8fafc;
+  --ink: #101217;
+  --ink-foreground: #ffffff;
 
-  --accent: #f4f4f5;
-  --accent-foreground: #18181b;
+  --accent: #edf2f8;
+  --accent-foreground: #101217;
 
   /* Semantic */
-  --success: #16a34a;
-  --success-light: rgba(22, 163, 74, 0.1);
-  --warning: #ca8a04;
-  --warning-light: rgba(202, 138, 4, 0.1);
-  --danger: #dc2626;
-  --danger-light: rgba(220, 38, 38, 0.08);
-  --info: #2563eb;
-  --info-light: rgba(37, 99, 235, 0.08);
+  --success: #168a46;
+  --success-light: rgba(22, 138, 70, 0.12);
+  --warning: #b77908;
+  --warning-light: rgba(183, 121, 8, 0.13);
+  --danger: #ce3328;
+  --danger-light: rgba(206, 51, 40, 0.11);
+  --info: #2f6edb;
+  --info-light: rgba(47, 110, 219, 0.11);
 
   /* Shell */
   --sidebar: #fbfcfe;
-  --sidebar-foreground: #101114;
+  --sidebar-foreground: #101217;
   --sidebar-muted: #687080;
-  --sidebar-active: #101114;
+  --sidebar-active: #101217;
   --sidebar-border: #e1e6ef;
-  --sidebar-primary: #101114;
+  --sidebar-primary: #101217;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #ffffff;
   --sidebar-accent-foreground: #0b0b0d;
@@ -85,42 +89,50 @@
   --popover-foreground: var(--foreground);
   --input: var(--border);
 
-  --radius: 1rem;
-  --radius-lg: 1.375rem;
-  --shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 16px 40px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 28px 80px rgba(15, 23, 42, 0.12);
+  --radius: 1.125rem;
+  --radius-lg: 1.625rem;
+  --shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 18px 48px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 30px 90px rgba(15, 23, 42, 0.14);
 
   /* Unified shell header height (marketing + app + auth) */
   --header-height: 3.5rem;
 }
 
 .dark {
-  --background: #0f1117;
-  --foreground: #f7f8fb;
-  --muted: #202530;
-  --muted-foreground: #a7afbd;
-  --border: #2b313d;
-  --border-subtle: #1d222c;
-  --ring: rgba(239, 91, 79, 0.28);
+  --background: #0f131b;
+  --foreground: #f7f9fc;
+  --muted: #202633;
+  --muted-foreground: #aeb7c6;
+  --border: #2b3444;
+  --border-subtle: #1c2330;
+  --ring: rgba(238, 91, 77, 0.32);
 
-  --surface: #151922;
-  --surface-elevated: #1b202b;
-  --card: #181d26;
+  --surface: #151b25;
+  --surface-elevated: #1b2230;
+  --card: #19202b;
   --card-foreground: #f7f8fb;
-  --card-hover: #202631;
+  --card-hover: #222a38;
+  --control: #1b2230;
+  --control-hover: #242d3b;
+  --ink: #0b0f16;
+  --ink-foreground: #f7f9fc;
 
   --accent: #202530;
   --accent-foreground: #f7f8fb;
 
-  --brand-muted: rgba(226, 86, 38, 0.18);
-  --brand-light: rgba(226, 86, 38, 0.12);
-  --brand-subtle: rgba(226, 86, 38, 0.06);
+  --brand-muted: rgba(238, 91, 77, 0.2);
+  --brand-light: rgba(238, 91, 77, 0.13);
+  --brand-subtle: rgba(238, 91, 77, 0.07);
 
-  --success-light: rgba(22, 163, 74, 0.15);
-  --warning-light: rgba(202, 138, 4, 0.15);
-  --danger-light: rgba(220, 38, 38, 0.12);
-  --info-light: rgba(37, 99, 235, 0.12);
+  --success: #4ade80;
+  --warning: #facc15;
+  --danger: #f87171;
+  --info: #60a5fa;
+  --success-light: rgba(74, 222, 128, 0.15);
+  --warning-light: rgba(250, 204, 21, 0.15);
+  --danger-light: rgba(248, 113, 113, 0.13);
+  --info-light: rgba(96, 165, 250, 0.14);
 
   --sidebar: #11151d;
   --sidebar-foreground: #f7f8fb;
@@ -140,46 +152,23 @@
   --funnel-lost: #3f3f46;
   --funnel-lost-text: #71717a;
 
-  --popover: #1b202b;
+  --popover: #1b2230;
   --popover-foreground: var(--foreground);
   --input: #2b313d;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 18px 48px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 30px 90px rgba(0, 0, 0, 0.42);
 }
 
 .landing-surface {
-  --background: #f3f5f9;
-  --foreground: #101114;
-  --muted: #e7ebf2;
-  --muted-foreground: #5c6472;
-  --border: #d6dce7;
-  --border-subtle: #e8ecf3;
-  --card: #ffffff;
-  --card-foreground: #101114;
-  --surface: #e8edf5;
-  --surface-elevated: #ffffff;
-  --brand: #ef5b4f;
-  --brand-dark: #d8463b;
-  --brand-muted: rgba(239, 91, 79, 0.14);
-  --brand-light: rgba(239, 91, 79, 0.1);
-  --brand-subtle: rgba(239, 91, 79, 0.06);
   color: var(--foreground);
   background: var(--background);
 }
 
 .dark .landing-surface {
-  --background: #0f1117;
-  --foreground: #f7f8fb;
-  --muted: #202530;
-  --muted-foreground: #a7afbd;
-  --border: #2b313d;
-  --border-subtle: #1d222c;
-  --card: #181d26;
-  --card-foreground: #f7f8fb;
-  --surface: #151922;
-  --surface-elevated: #1b202b;
+  color: var(--foreground);
+  background: var(--background);
 }
 
 @theme inline {
@@ -201,6 +190,10 @@
   --color-surface-elevated: var(--surface-elevated);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  --color-control: var(--control);
+  --color-control-hover: var(--control-hover);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
   --color-success: var(--success);
   --color-success-light: var(--success-light);
   --color-warning: var(--warning);
@@ -267,19 +260,42 @@ body {
 .text-meta { font-size: 0.75rem; font-weight: 500; color: var(--muted-foreground); }
 
 /* Marketing */
-.marketing-section { padding-block: clamp(3rem, 7vw, 6rem); }
-.marketing-container { max-width: 1120px; margin-inline: auto; padding-inline: clamp(1rem, 4vw, 2rem); width: 100%; }
+.marketing-section {
+  padding-block: clamp(4.5rem, 8vw, 7.5rem);
+}
+.marketing-container {
+  max-width: 1184px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+  width: 100%;
+}
+.marketing-section-header {
+  margin-inline: auto;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  max-width: 44rem;
+  text-align: center;
+}
+.marketing-card {
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius-lg) * 1.1);
+  background: var(--card);
+  color: var(--card-foreground);
+  box-shadow: var(--shadow-sm);
+}
 .marketing-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: var(--muted);
-  padding: 0.25rem 0.75rem;
+  background: var(--card);
+  padding: 0.375rem 0.875rem;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--muted-foreground);
+  box-shadow: var(--shadow-sm);
 }
 .marketing-grid-bg {
   background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
@@ -317,18 +333,19 @@ body {
 .input-base {
   width: 100%;
   min-width: 0;
+  min-height: 2.75rem;
   border-radius: calc(var(--radius) * 1.05);
   border: 1px solid var(--border);
-  background: var(--card);
-  padding-block: 0.5rem;
-  padding-inline: 0.75rem;
+  background: var(--control);
+  padding-block: 0.625rem;
+  padding-inline: 0.875rem;
   font-size: 0.875rem;
   color: var(--foreground);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
 }
 .input-base::placeholder { color: var(--muted-foreground); }
 .input-base:focus {
-  border-color: var(--foreground);
+  border-color: var(--brand);
   box-shadow: 0 0 0 3px var(--ring);
   outline: none;
 }

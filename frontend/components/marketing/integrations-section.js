@@ -18,11 +18,11 @@ const INTEGRATIONS = [
 
 export function IntegrationsSection() {
   return (
-    <section className="marketing-section border-t border-border bg-muted/30">
+    <section className="marketing-section border-t border-border bg-surface">
       <div className="marketing-container">
-        <div className="mx-auto mb-10 max-w-2xl text-center">
+        <div className="marketing-section-header">
           <p className="marketing-eyebrow mb-4">Integrations</p>
-          <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl">
             Connect your existing stack
           </h2>
           <p className="mt-4 text-base text-muted-foreground">
@@ -35,7 +35,7 @@ export function IntegrationsSection() {
           {INTEGRATIONS.map((name) => (
             <div
               key={name}
-              className="flex h-14 items-center justify-center rounded-md border border-border bg-card text-sm font-medium text-foreground"
+              className="flex h-16 items-center justify-center rounded-2xl border border-border bg-card px-3 text-center text-sm font-semibold text-foreground shadow-sm"
             >
               {name}
             </div>

@@ -18,10 +18,10 @@ export function LogoMark({ size = 32, className = '' }) {
 
 export function Logo({ className = '' }) {
   return (
-    <Link href="/" className={`flex items-center gap-2.5 ${className}`}>
+    <Link href="/" className={`flex items-center gap-2.5 text-foreground ${className}`}>
       <LogoMark size={28} />
-      <span className="text-base font-semibold tracking-tight text-foreground">
-        Nexus<span className="text-muted-foreground">CRM</span>
+      <span className="text-base font-semibold tracking-tight text-current">
+        Nexus<span className="opacity-70">CRM</span>
       </span>
     </Link>
   );

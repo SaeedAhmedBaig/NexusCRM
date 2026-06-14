@@ -118,7 +118,7 @@ export default function TenantDashboardPage() {
                   { label: 'Pending requests', value: widgets?.pendingRequests ?? '—' },
                   { label: 'Tasks due today', value: widgets?.tasksDueToday ?? widgets?.myTasks ?? '—' },
                 ].map((row) => (
-                  <div key={row.label} className="flex items-center justify-between rounded-2xl bg-white/60 px-3 py-2">
+                  <div key={row.label} className="flex items-center justify-between rounded-2xl bg-muted px-3 py-2">
                     <span className="text-sm text-muted">{row.label}</span>
                     <span className="text-base font-semibold tabular-nums text-foreground">{row.value}</span>
                   </div>

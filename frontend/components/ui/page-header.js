@@ -1,9 +1,9 @@
 export function PageHeader({ title, description, actions, badge }) {
   return (
-    <div className="mb-5 flex flex-col gap-4 rounded-[2rem] border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-start sm:justify-between">
+    <div className="mb-6 flex flex-col gap-4 rounded-[2rem] border border-border bg-card p-6 shadow-sm sm:flex-row sm:items-start sm:justify-between">
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">{title}</h1>
+          <h1 className="text-2xl font-semibold tracking-[-0.03em] text-foreground">{title}</h1>
           {badge}
         </div>
         {description && (

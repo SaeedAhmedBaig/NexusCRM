@@ -38,17 +38,17 @@ export function FaqSection() {
   return (
     <section id="faq" className="marketing-section bg-background">
       <div className="marketing-container">
-        <div className="mx-auto mb-12 max-w-2xl text-center">
+        <div className="marketing-section-header">
           <p className="marketing-eyebrow mb-4">FAQ</p>
-          <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl">
             Common questions from IT and RevOps
           </h2>
         </div>
 
-        <Accordion className="mx-auto w-full max-w-3xl" defaultValue={['item-0']}>
+        <Accordion className="marketing-card mx-auto w-full max-w-3xl p-3" defaultValue={['item-0']}>
           {FAQS.map((item, i) => (
-            <AccordionItem key={item.q} value={`item-${i}`} className="border-border">
-              <AccordionTrigger className="py-4 text-sm font-medium text-foreground hover:no-underline">
+            <AccordionItem key={item.q} value={`item-${i}`} className="border-border px-3">
+              <AccordionTrigger className="py-5 text-left text-sm font-semibold text-foreground hover:no-underline">
                 {item.q}
               </AccordionTrigger>
               <AccordionContent className="pb-4 text-sm leading-relaxed text-muted-foreground">

@@ -9,14 +9,14 @@ const COMPANIES = [
 
 export function SocialProof() {
   return (
-    <section className="border-y border-border bg-muted/50 py-10">
+    <section className="border-y border-border bg-surface py-10">
       <div className="marketing-container text-center">
-        <p className="text-sm font-medium text-muted-foreground">Trusted by revenue teams</p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+        <p className="text-sm font-semibold text-muted-foreground">Trusted by teams managing complex customer relationships</p>
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {COMPANIES.map((name) => (
             <span
               key={name}
-              className="text-sm font-medium tracking-tight text-muted-foreground/70"
+              className="rounded-full border border-border bg-card px-4 py-3 text-sm font-semibold tracking-tight text-muted-foreground shadow-sm"
             >
               {name}
             </span>
