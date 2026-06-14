@@ -1,11 +1,21 @@
 import { NextResponse } from 'next/server';
 
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:4000').replace(
-  '://localhost',
-  '://127.0.0.1',
-);
+const configuredApiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
+const API_URL = (configuredApiUrl || 'http://127.0.0.1:4000')
+  .replace(/\/$/, '')
+  .replace('://localhost', '://127.0.0.1');
 
 async function proxyRequest(request, context) {
+  if (!configuredApiUrl && process.env.NODE_ENV === 'production') {
+    return NextResponse.json(
+      {
+        message:
+          'API server is not configured. Set API_URL or NEXT_PUBLIC_API_URL to your Render backend URL and redeploy.',
+      },
+      { status: 500 },
+    );
+  }
+
   const { path } = await context.params;
   const target = `${API_URL}/api/${path.join('/')}${request.nextUrl.search}`;
 
@@ -34,7 +44,7 @@ async function proxyRequest(request, context) {
     return NextResponse.json(
       {
         message:
-          'Cannot reach the API server. Set NEXT_PUBLIC_API_URL to your Render backend URL and redeploy.',
+          'Cannot reach the API server. Set API_URL or NEXT_PUBLIC_API_URL to your Render backend URL and redeploy.',
       },
       { status: 502 },
     );

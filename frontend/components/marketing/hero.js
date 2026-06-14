@@ -6,31 +6,33 @@ import { Button } from '../ui/button';
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-border bg-[#f7f5ef] py-10 sm:py-14 lg:py-16">
-      <div className="absolute left-1/2 top-0 h-80 w-[48rem] -translate-x-1/2 rounded-full bg-brand/10 blur-3xl" />
-      <div className="marketing-container relative grid items-center gap-10 lg:grid-cols-[0.9fr_1.25fr] lg:gap-12">
+    <section className="relative overflow-hidden border-b border-border bg-[radial-gradient(circle_at_18%_8%,rgba(239,91,79,0.12),transparent_28%),linear-gradient(135deg,#f8fafc_0%,#eef2f7_48%,#e6ebf3_100%)] py-12 sm:py-16 lg:py-20">
+      <div className="absolute inset-x-6 top-6 h-28 rounded-[3rem] bg-white/45 blur-2xl" />
+      <div className="marketing-container relative grid items-center gap-12 lg:grid-cols-[0.88fr_1.12fr] lg:gap-14">
         <div className="min-w-0 text-center lg:text-left">
-          <p className="marketing-eyebrow mb-4 border-white/70 bg-white/70 sm:mb-6">Customer journey CRM</p>
+          <p className="marketing-eyebrow mb-5 border-white/80 bg-white/80 text-[#424957] shadow-sm sm:mb-6">
+            Customer journey CRM
+          </p>
 
-          <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-[4.25rem] lg:leading-[0.98]">
+          <h1 className="text-4xl font-semibold tracking-[-0.055em] text-[#101114] sm:text-6xl lg:text-[4.75rem] lg:leading-[0.94]">
             See every customer move before revenue does
           </h1>
 
-          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:mt-6 lg:mx-0">
+          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#505968] sm:text-lg lg:mx-0">
             NexusCRM turns scattered leads, conversations, deals, and renewals into one journey
             dashboard. Spot high-intent accounts, rescue at-risk customers, and guide every team
             from first touch to expansion.
           </p>
 
-          <div className="mx-auto mt-6 grid max-w-xl grid-cols-3 gap-2 text-left lg:mx-0">
+          <div className="mx-auto mt-7 grid max-w-xl grid-cols-3 gap-3 text-left lg:mx-0">
             {[
-              ['5 stages', 'Journey map'],
-              ['82%', 'Health score'],
-              ['1,284', 'Active accounts'],
-            ].map(([value, label]) => (
-              <div key={label} className="rounded-2xl border border-white/70 bg-white/65 p-3 shadow-sm">
-                <p className="text-lg font-semibold tracking-tight text-foreground">{value}</p>
-                <p className="text-[11px] text-muted-foreground">{label}</p>
+              ['5', 'Journey stages', 'bg-[#101114] text-white'],
+              ['82%', 'Health score', 'bg-[#eaf7ef] text-[#137a3d]'],
+              ['1,284', 'Active accounts', 'bg-[#eef5ff] text-[#245fbd]'],
+            ].map(([value, label, className]) => (
+              <div key={label} className={`rounded-[1.35rem] border border-white/85 p-4 shadow-sm ${className}`}>
+                <p className="text-xl font-semibold tracking-tight">{value}</p>
+                <p className="mt-1 text-[11px] opacity-75">{label}</p>
               </div>
             ))}
           </div>
