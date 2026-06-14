@@ -2,9 +2,9 @@ import { ArrowUpRight, Check, Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
 
 const OUTCOMES = [
-  'Unify lead, support, and renewal context',
-  'Give every stage a clear owner',
-  'Prioritize customers by real movement',
+  'Launch a shared CRM workspace in minutes',
+  'Route every customer stage to the right owner',
+  'Keep sales, support, and renewals in one journey',
 ];
 
 const STAGES = [
@@ -25,19 +25,19 @@ export function CtaSection() {
           <div className="relative grid gap-10 lg:grid-cols-[1fr_0.86fr] lg:items-center">
             <div>
               <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white/70">
-                Customer journey operating system
+                Ready when your team is
               </p>
               <h2 className="max-w-2xl text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-[3.35rem] lg:leading-[1.02]">
-                Replace scattered follow-ups with one clear customer path
+                Start with a cleaner way to run customer relationships
               </h2>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-white/60">
-                NexusCRM gives your team a shared language for every lead, customer, and renewal without
-                mixing dashboards, tickets, and spreadsheets into another noisy screen.
+                Bring contacts, conversations, tasks, and deals into a workspace your team can
+                understand immediately. No messy setup, no scattered handoffs.
               </p>
 
               <div className="mt-7 space-y-3">
                 {OUTCOMES.map((outcome) => (
-                  <div key={outcome} className="flex items-center gap-3 text-sm font-medium text-white/78">
+                  <div key={outcome} className="flex items-center gap-3 text-sm font-medium text-white/80">
                     <span className="flex size-6 items-center justify-center rounded-full bg-white/10 text-[#20a45a]">
                       <Check className="size-3.5" />
                     </span>
@@ -64,8 +64,8 @@ export function CtaSection() {
                     <Sparkles className="size-4" />
                   </span>
                   <div>
-                    <p className="text-sm font-semibold">Balanced journey model</p>
-                    <p className="text-xs text-[#667085]">A repeatable system, not a copied mockup.</p>
+                    <p className="text-sm font-semibold">From first touch to renewal</p>
+                    <p className="text-xs text-[#667085]">A clear path for every customer stage.</p>
                   </div>
                 </div>
 
@@ -84,7 +84,7 @@ export function CtaSection() {
                 <div className="mt-6 grid grid-cols-2 gap-3">
                   <div className="rounded-3xl bg-[#101114] p-4 text-white">
                     <p className="text-2xl font-semibold">24h</p>
-                    <p className="mt-1 text-xs text-white/55">faster handoffs</p>
+                    <p className="mt-1 text-xs text-white/60">faster handoffs</p>
                   </div>
                   <div className="rounded-3xl bg-[#ddf3e5] p-4 text-[#137a3d]">
                     <p className="text-2xl font-semibold">98%</p>

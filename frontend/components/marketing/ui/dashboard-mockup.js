@@ -32,7 +32,7 @@ export function DashboardMockup() {
         </div>
 
         <div className="mt-8 grid gap-5">
-          <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2">
+          <div className="grid items-center gap-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:gap-2">
             {STAGES.slice(0, 3).map((stage, index) => (
               <Fragment key={stage.label}>
                 <div className={`rounded-[1.5rem] border border-white bg-white p-4 shadow-sm ${stage.soft}`}>
@@ -41,7 +41,7 @@ export function DashboardMockup() {
                   <p className="mt-1 text-[11px] text-[#667085]">Signal captured</p>
                 </div>
                 {index < 2 && (
-                  <div className="flex items-center justify-center text-[#7b8494]">
+                  <div className="hidden items-center justify-center text-[#7b8494] sm:flex">
                     <ArrowRight className="size-4" />
                   </div>
                 )}
@@ -67,7 +67,7 @@ export function DashboardMockup() {
             <div className="rounded-[1.75rem] bg-[#101114] p-4 text-white">
               <Sparkles className="size-4 text-[#ef5b4f]" />
               <p className="mt-4 text-lg font-semibold">Next best action</p>
-              <p className="mt-1 text-xs leading-relaxed text-white/58">
+              <p className="mt-1 text-xs leading-relaxed text-white/60">
                 Prioritize accounts by intent, health, and ownership without showing another dashboard screenshot.
               </p>
             </div>

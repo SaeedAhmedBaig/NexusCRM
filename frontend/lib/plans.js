@@ -25,6 +25,16 @@ export const FALLBACK_PLANS = {
       features: ['Up to 25 team members', 'Mass mail campaigns', 'Analytics dashboard', 'Live chat & VoIP', 'Multi-currency support', 'Custom domains', 'Priority support'],
     },
     {
+      id: 'business',
+      name: 'Business',
+      slug: 'business',
+      description: 'For revenue teams that need deeper journey control.',
+      monthlyPrice: 59,
+      yearlyPrice: 49,
+      popular: false,
+      features: ['Up to 75 team members', 'Advanced journey automation', 'Customer health scoring', 'Sales and support handoffs', 'Revenue forecasting', 'Custom reports', 'Priority chat support'],
+    },
+    {
       id: 'enterprise',
       name: 'Enterprise',
       slug: 'enterprise',
