@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { FormField, inputClass, inputErrorClass } from '../ui/form-field';
 import { getRecaptchaToken, isRecaptchaEnabled } from '../../lib/recaptcha';
+import { getTenantUrl } from '../../lib/tenant';
 import { notifyError } from '../../lib/notify';
 
 const PLANS = [
@@ -93,7 +94,7 @@ export function SignupForm({ defaultPlan = 'free', onSubmit }) {
       <FormField
         label="Workspace subdomain"
         error={errors.subdomain?.message}
-        hint={subdomain ? `Your URL: localhost:3000/${subdomain}` : 'Letters, numbers, and hyphens only'}
+        hint={subdomain ? `Your URL: ${getTenantUrl(subdomain, '/')}` : 'Letters, numbers, and hyphens only'}
       >
         <input
           className={`${inputClass} ${errors.subdomain ? inputErrorClass : ''}`}

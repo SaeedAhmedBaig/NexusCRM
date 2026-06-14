@@ -29,7 +29,7 @@ export function VerifyEmailForm({ email: initialEmail, token, subdomain, tenantN
   }, [cooldown]);
 
   useEffect(() => {
-    if (token && email) {
+    if (token) {
       handleTokenVerify(token);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

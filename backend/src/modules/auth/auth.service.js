@@ -134,10 +134,27 @@ class AuthService {
         groupId: ownerGroup?._id || null,
       });
 
+      let verificationDelivery;
       try {
-        await this.sendVerificationEmail(user, tenant, otp);
+        verificationDelivery = await this.sendVerificationEmail(user, tenant, otp);
       } catch {
-        /* signup should succeed even if verification email fails */
+        if (this.isEmailVerificationRequired()) {
+          throw new BadRequestException('Could not send verification email. Check your email provider settings.');
+        }
+      }
+
+      if (verificationDelivery?.skipped) {
+        if (this.isEmailVerificationRequired()) {
+          throw new BadRequestException('Email verification is not configured. Set BREVO_API_KEY and BREVO_SENDER_EMAIL.');
+        }
+
+        user.emailVerified = true;
+        user.emailVerificationToken = null;
+        user.emailVerificationExpires = null;
+        user.emailVerificationOtpHash = null;
+        await user.save();
+
+        return this.buildAuthResponse(user, tenant, ROLES.OWNER);
       }
 
       return {
@@ -557,12 +574,16 @@ class AuthService {
     return hash && this.hashOtp(otp) === hash;
   }
 
+  isEmailVerificationRequired() {
+    return this.configService.get('NODE_ENV') !== 'development';
+  }
+
   async sendVerificationEmail(user, tenant, otp) {
     const appUrl = this.configService.get('FRONTEND_URL', 'http://localhost:3000');
     const tenantName = tenant?.name || tenant?.tenantId?.name;
     const verifyUrl = `${appUrl}/verify-email?token=${user.emailVerificationToken}`;
 
-    await this.emailService.otpEmail({
+    return this.emailService.otpEmail({
       to: user.email,
       name: user.name,
       otp,

@@ -22,7 +22,7 @@ export default function BillingSettingsPage() {
   async function openPortal() {
     setLoading(true);
     try {
-      const returnUrl = `${window.location.origin}${getTenantUrl(subdomain, '/settings/billing')}`;
+      const returnUrl = getTenantUrl(subdomain, '/settings/billing');
       const { url } = await createBillingPortal(returnUrl);
       window.location.href = url;
     } catch (e) {
@@ -35,7 +35,7 @@ export default function BillingSettingsPage() {
   async function upgrade(plan) {
     setLoading(true);
     try {
-      const returnUrl = `${window.location.origin}${getTenantUrl(subdomain, '/settings/billing')}`;
+      const returnUrl = getTenantUrl(subdomain, '/settings/billing');
       const { url } = await createBillingCheckout(plan, returnUrl);
       window.location.href = url;
     } catch (e) {

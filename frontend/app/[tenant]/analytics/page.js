@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { Suspense, useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Download } from 'lucide-react';
@@ -40,7 +40,7 @@ function today() {
 
 const VALID_TABS = new Set(TABS.map((t) => t.id));
 
-export default function AnalyticsPage() {
+function AnalyticsPageInner() {
   const { profile } = useSession();
   const colors = useChartColors();
   const searchParams = useSearchParams();
@@ -207,5 +207,13 @@ export default function AnalyticsPage() {
       )}
     </div>
     </Can>
+  );
+}
+
+export default function AnalyticsPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-[40vh] items-center justify-center"><Spinner /></div>}>
+      <AnalyticsPageInner />
+    </Suspense>
   );
 }

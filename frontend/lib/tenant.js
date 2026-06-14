@@ -59,7 +59,7 @@ function isPublicAppPath(path) {
   return PUBLIC_APP_PATHS.has(base);
 }
 
-/** Tenant-scoped URLs: /{subdomain}/dashboard on localhost, subdomain.host in prod */
+/** Tenant-scoped URLs use the app's path-based routes: /{subdomain}/dashboard */
 export function getTenantUrl(subdomain, path = '/') {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
@@ -69,19 +69,8 @@ export function getTenantUrl(subdomain, path = '/') {
 
   const base = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   const url = new URL(base);
-
-  if (url.hostname === 'localhost') {
-    const suffix = normalizedPath === '/' ? '' : normalizedPath;
-    return `${url.origin}/${subdomain}${suffix}`;
-  }
-
-  if (url.hostname.endsWith('.localhost')) {
-    const port = url.port || '3000';
-    return `http://${subdomain}.localhost:${port}${normalizedPath}`;
-  }
-
-  const domain = process.env.NEXT_PUBLIC_APP_DOMAIN || url.hostname;
-  return `https://${subdomain}.${domain}${normalizedPath}`;
+  const suffix = normalizedPath === '/' ? '' : normalizedPath;
+  return `${url.origin}/${subdomain}${suffix}`;
 }
 
 export async function resolveTenant(subdomain) {
