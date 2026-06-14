@@ -24,6 +24,7 @@ export function TenantSwitcher({ currentSubdomain }) {
       token: result.token,
       tenant: result.tenant,
       rules: result.rules,
+      user: result.user,
     });
     window.location.href = getTenantUrl(subdomain, '/dashboard');
   }
@@ -31,7 +32,7 @@ export function TenantSwitcher({ currentSubdomain }) {
   return (
     <div className="relative">
       <select
-        className="h-10 appearance-none rounded-full border border-border bg-card/85 py-1.5 pl-4 pr-9 text-[13px] font-medium text-foreground shadow-sm outline-none backdrop-blur transition-colors hover:bg-card focus:border-foreground/30 focus:ring-2 focus:ring-ring"
+        className="h-10 appearance-none rounded-full border border-border bg-card py-1.5 pl-4 pr-9 text-[13px] font-medium text-foreground shadow-sm outline-none transition-colors hover:bg-card-hover focus:border-brand focus:ring-2 focus:ring-ring"
         value={currentSubdomain}
         onChange={(e) => {
           const selected = tenants.find((t) => t.subdomain === e.target.value);

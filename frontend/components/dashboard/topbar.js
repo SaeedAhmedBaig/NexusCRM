@@ -5,13 +5,13 @@ import Link from 'next/link';
 import { Menu, Bell } from 'lucide-react';
 import { TenantSwitcher } from '../tenant-switcher';
 import { getTenantUrl } from '../../lib/tenant';
-import { setToken } from '../../lib/api';
+import { clearSession } from '../../lib/auth';
 
 export function DashboardTopbar({ subdomain, tenantName, profile, onMenuClick, activityCount = 0 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   function signOut() {
-    setToken(null);
+    clearSession();
     window.location.href = getTenantUrl(subdomain, '/login');
   }
 

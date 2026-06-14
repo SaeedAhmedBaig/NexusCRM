@@ -113,7 +113,7 @@ export function DataTable({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           {title ? <h1 className="text-h1 text-foreground">{title}</h1> : null}
-          <p className="text-[13px] text-muted-foreground-foreground">{total.toLocaleString()} records</p>
+          <p className="text-[13px] text-muted-foreground">{total.toLocaleString()} records</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {selected.size > 0 && (
@@ -121,17 +121,17 @@ export function DataTable({
               <button
                 type="button"
                 onClick={() => setBulkMenuOpen(!bulkMenuOpen)}
-                className="focus-ring flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-[13px] font-medium shadow-sm hover:bg-card-hover"
+                className="focus-ring flex h-10 items-center gap-2 rounded-full border border-border bg-card px-3.5 text-[13px] font-medium text-foreground shadow-sm hover:bg-card-hover"
               >
                 <MoreHorizontal className="h-4 w-4" />
                 Bulk ({selected.size})
               </button>
               {bulkMenuOpen && (
-                <div className="absolute right-0 z-20 mt-1 w-48 rounded-xl border border-border bg-card py-1 shadow-lg">
+                <div className="absolute right-0 z-20 mt-2 w-52 overflow-hidden rounded-2xl border border-border bg-popover p-1.5 text-popover-foreground shadow-lg">
                   {filterOptions.statuses?.length > 0 && (
                     <button
                       type="button"
-                      className="block w-full px-4 py-2 text-left text-sm hover:bg-surface"
+                      className="flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm hover:bg-surface"
                       onClick={() => askBulk('change_status', 'Change status', `Update status for ${selected.size} record(s)?`)}
                     >
                       Change status
@@ -139,21 +139,21 @@ export function DataTable({
                   )}
                   <button
                     type="button"
-                    className="block w-full px-4 py-2 text-left text-sm hover:bg-surface"
+                    className="flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm hover:bg-surface"
                     onClick={() => askBulk('assign_owner', 'Assign owner', `Assign owner to ${selected.size} record(s)?`)}
                   >
                     Assign owner
                   </button>
                   <button
                     type="button"
-                    className="block w-full px-4 py-2 text-left text-sm hover:bg-surface"
+                    className="flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm hover:bg-surface"
                     onClick={() => askBulk('mass_mail', 'Create mass mail', `Queue mass mail for ${selected.size} record(s)?`)}
                   >
                     Create mass mail
                   </button>
                   <button
                     type="button"
-                    className="block w-full px-4 py-2 text-left text-sm text-danger hover:bg-danger-light"
+                    className="flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm text-danger hover:bg-danger-light"
                     onClick={() => askBulk('delete', 'Delete records', `Permanently delete ${selected.size} record(s)?`, true)}
                   >
                     Delete
@@ -165,7 +165,7 @@ export function DataTable({
           <button
             type="button"
             onClick={() => setFilterOpen(true)}
-            className="focus-ring flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-[13px] font-medium shadow-sm hover:bg-card-hover"
+            className="focus-ring flex h-10 items-center gap-2 rounded-full border border-border bg-card px-3.5 text-[13px] font-medium text-foreground shadow-sm hover:bg-card-hover"
           >
             <Filter className="h-4 w-4" strokeWidth={2} />
             Filters
@@ -185,16 +185,16 @@ export function DataTable({
       {loading ? (
         <SkeletonTable rows={8} />
       ) : (
-      <div className="overflow-hidden rounded-[2rem] border border-white/70 bg-card shadow-sm backdrop-blur">
+      <div className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-left text-[13px]">
-            <thead className="sticky top-0 z-10 border-b border-border/70 bg-muted/60">
+            <thead className="sticky top-0 z-10 border-b border-border bg-muted">
               <tr>
-                <th className="w-10 px-3 py-2.5">
-                  <input type="checkbox" checked={allSelected} onChange={toggleAll} className="rounded border-border" />
+                <th className="w-11 px-4 py-3">
+                  <input type="checkbox" checked={allSelected} onChange={toggleAll} className="rounded border-border bg-card" />
                 </th>
                 {columns.map((col) => (
-                  <th key={col.key} className="px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground-foreground">
+                  <th key={col.key} className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                     {col.sortable !== false ? (
                       <button
                         type="button"
@@ -209,7 +209,7 @@ export function DataTable({
                     )}
                   </th>
                 ))}
-                <th className="w-24 px-3 py-2.5 text-right text-[11px] font-medium uppercase tracking-wide text-muted-foreground-foreground">Actions</th>
+                <th className="w-28 px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -223,25 +223,25 @@ export function DataTable({
                 data.map((row) => (
                   <tr
                     key={row.id}
-                    className={`border-b border-border/50 last:border-0 transition-colors hover:bg-white/70 ${
-                      selected.has(row.id) ? 'bg-white/75' : ''
+                    className={`border-b border-border/50 last:border-0 transition-colors hover:bg-muted/70 ${
+                      selected.has(row.id) ? 'bg-muted' : ''
                     } ${onRowClick ? 'cursor-pointer' : ''}`}
                     onClick={() => onRowClick?.(row)}
                   >
-                    <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-4 py-3 align-middle" onClick={(e) => e.stopPropagation()}>
                       <input
                         type="checkbox"
                         checked={selected.has(row.id)}
                         onChange={() => toggleRow(row.id)}
-                        className="rounded"
+                        className="rounded border-border bg-card"
                       />
                     </td>
                     {columns.map((col) => (
-                      <td key={col.key} className="px-3 py-2.5 text-foreground">
+                      <td key={col.key} className="px-4 py-3 align-middle text-foreground">
                         {renderCell(col, row)}
                       </td>
                     ))}
-                    <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-4 py-3 align-middle" onClick={(e) => e.stopPropagation()}>
                       <div className="flex justify-end gap-0.5">
                         <button
                           type="button"
@@ -284,13 +284,13 @@ export function DataTable({
           </table>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-border/70 bg-white/35 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-t border-border bg-muted px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Rows per page</span>
             <select
               value={limit}
               onChange={(e) => onParamsChange({ limit: e.target.value, page: '1' })}
-              className="rounded-full border border-border bg-card px-3 py-1 text-sm"
+              className="h-8 rounded-full border border-border bg-card px-3 text-sm text-foreground"
             >
               {PAGE_SIZES.map((n) => (
                 <option key={n} value={n}>

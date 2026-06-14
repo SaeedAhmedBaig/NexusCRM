@@ -21,12 +21,14 @@ export function setToken(token) {
   }
 }
 
-export function setSession({ token, tenant, rules }) {
+export function setSession({ token, tenant, rules, user }) {
   setToken(token);
   if (typeof window !== 'undefined') {
     if (tenant?.subdomain) localStorage.setItem('crm_tenant', tenant.subdomain);
     if (tenant?.id) localStorage.setItem('crm_tenant_id', String(tenant.id));
     if (rules) localStorage.setItem('crm_rules', JSON.stringify(rules));
+    if (user?.isSuperadmin) localStorage.setItem('crm_is_superadmin', 'true');
+    else localStorage.removeItem('crm_is_superadmin');
   }
 }
 

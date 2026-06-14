@@ -15,7 +15,7 @@ export function AuthShell({ children, title, subtitle, badge }) {
 
       <div className="flex flex-1 flex-col items-center justify-center px-4 py-10 sm:py-14">
         <div className="animate-fade-in w-full max-w-[440px]">
-          <div className="rounded-[2rem] border border-white/70 bg-card/90 p-8 shadow-lg backdrop-blur sm:p-10">
+          <div className="rounded-[2rem] border border-border bg-card p-8 shadow-lg sm:p-10">
             {(badge || title) && (
               <div className="mb-8 text-center">
                 {badge && (

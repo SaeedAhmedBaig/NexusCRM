@@ -21,7 +21,7 @@ export function SuperadminShell({ children, onSignOut }) {
 
   return (
     <div className="auth-pattern flex min-h-screen">
-      <aside className="hidden w-56 shrink-0 border-r border-border bg-card/80 backdrop-blur-sm lg:flex lg:flex-col">
+      <aside className="hidden w-56 shrink-0 border-r border-border bg-card lg:flex lg:flex-col">
         <div className="border-b border-border px-4 py-4">
           <Logo />
           <p className="mt-2 flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
@@ -38,7 +38,7 @@ export function SuperadminShell({ children, onSignOut }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors',
+                  'flex items-center gap-2 rounded-full px-3 py-2 text-[13px] font-medium transition-colors',
                   active
                     ? 'bg-muted text-foreground'
                     : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',

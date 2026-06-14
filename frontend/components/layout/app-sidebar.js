@@ -41,7 +41,7 @@ export function AppSidebar({
         className={`group flex items-center gap-2.5 rounded-full px-3 py-2 text-[13px] font-medium transition-all ${
           active
             ? 'bg-sidebar-active text-sidebar-primary-foreground shadow-sm'
-            : 'text-muted-foreground hover:bg-white hover:text-foreground hover:shadow-sm'
+            : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-sm'
         } ${collapsed ? 'justify-center px-2.5' : ''}`}
       >
         <Icon className="h-4 w-4 shrink-0 opacity-80" strokeWidth={active ? 2.25 : 1.75} />
@@ -74,7 +74,7 @@ export function AppSidebar({
           collapsed ? 'w-20' : 'w-[264px]'
         } ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        <div className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-sidebar-border bg-sidebar/90 shadow-lg backdrop-blur-xl">
+        <div className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-sidebar-border bg-sidebar shadow-lg">
         <div
           className={`flex h-18 shrink-0 items-center border-b border-sidebar-border/70 ${
             collapsed ? 'justify-center px-2' : 'gap-3 px-4'

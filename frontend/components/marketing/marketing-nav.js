@@ -35,7 +35,7 @@ export function MarketingNav() {
     <header className="sticky top-0 z-50 px-3 py-3">
       <div
         className={`marketing-container flex h-14 w-full items-center justify-between rounded-full border px-4 shadow-sm backdrop-blur-xl transition-colors ${
-          scrolled ? 'border-border bg-card/90' : 'border-white/70 bg-white/65'
+          scrolled ? 'border-border bg-card' : 'border-border bg-card'
         }`}
       >
         <Logo />

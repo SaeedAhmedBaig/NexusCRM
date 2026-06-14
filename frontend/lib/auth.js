@@ -16,6 +16,7 @@ export function clearSession() {
   localStorage.removeItem('crm_tenant');
   localStorage.removeItem('crm_tenant_id');
   localStorage.removeItem('crm_rules');
+  localStorage.removeItem('crm_is_superadmin');
 }
 
 export function redirectToLogin(redirectPath) {

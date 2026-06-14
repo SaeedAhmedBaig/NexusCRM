@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { AuthShell } from '../layout/auth-shell';
 import { SuperadminLoginForm } from '../auth/superadmin-login-form';
 import { SuperadminShell } from '../layout/superadmin-shell';
-import { superadminLogin, setToken } from '../../lib/api';
+import { superadminLogin, setSession, setToken } from '../../lib/api';
 import { QueryProvider } from '../providers/query-provider';
 import { Spinner } from '../ui/spinner';
 
@@ -14,7 +14,8 @@ export function SuperadminGate({ children }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setLocalToken(localStorage.getItem('crm_token'));
+    const isSuperadmin = localStorage.getItem('crm_is_superadmin') === 'true';
+    setLocalToken(isSuperadmin ? localStorage.getItem('crm_token') : null);
     setReady(true);
   }, []);
 
@@ -24,11 +25,17 @@ export function SuperadminGate({ children }) {
     localStorage.removeItem('crm_tenant');
     localStorage.removeItem('crm_tenant_id');
     localStorage.removeItem('crm_rules');
+    localStorage.removeItem('crm_is_superadmin');
   }
 
   async function handleLogin(form) {
     const result = await superadminLogin(form);
-    setToken(result.token);
+    setSession({
+      token: result.token,
+      tenant: result.tenant,
+      rules: result.rules,
+      user: { ...result.user, isSuperadmin: true },
+    });
     setLocalToken(result.token);
   }
 

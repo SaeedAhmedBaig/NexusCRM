@@ -547,6 +547,7 @@ class AuthService {
         email: user.email,
         name: user.name,
         role,
+        isSuperadmin: Boolean(user.isSuperadmin),
       },
       tenant: {
         id: tenant._id.toString(),

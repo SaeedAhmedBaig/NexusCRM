@@ -10,7 +10,7 @@ export function KpiCard({ label, value, hint, icon: Icon, trend, trendLabel }) {
   const TrendIcon = trendUp ? TrendingUp : trendDown ? TrendingDown : Minus;
 
   return (
-    <Card className="border-white/70 bg-card/85 shadow-sm">
+    <Card className="border-border bg-card shadow-sm">
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
