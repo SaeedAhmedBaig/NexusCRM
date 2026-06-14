@@ -8,28 +8,28 @@
 
 :root {
   /* Brand — accent only, never dominant */
-  --brand: #e25626;
+  --brand: #ef5b4f;
   --brand-foreground: #ffffff;
-  --brand-dark: #c94a1f;
-  --brand-darker: #a83d19;
-  --brand-muted: rgba(226, 86, 38, 0.12);
-  --brand-light: rgba(226, 86, 38, 0.08);
-  --brand-subtle: rgba(226, 86, 38, 0.04);
+  --brand-dark: #dc4338;
+  --brand-darker: #bd3027;
+  --brand-muted: rgba(239, 91, 79, 0.14);
+  --brand-light: rgba(239, 91, 79, 0.09);
+  --brand-subtle: rgba(239, 91, 79, 0.05);
 
   /* Neutrals — 90% of the UI */
-  --background: #fafafa;
-  --foreground: #18181b;
-  --muted: #f4f4f5;
-  --muted-foreground: #52525b;
-  --border: #e4e4e7;
-  --border-subtle: #f4f4f5;
-  --ring: rgba(24, 24, 27, 0.08);
+  --background: #eef1f6;
+  --foreground: #0b0b0d;
+  --muted: #e6ebf3;
+  --muted-foreground: #646b78;
+  --border: #d9dee8;
+  --border-subtle: #e9edf4;
+  --ring: rgba(11, 11, 13, 0.08);
 
-  --surface: #f4f4f5;
+  --surface: #e9edf4;
   --surface-elevated: #ffffff;
-  --card: #ffffff;
-  --card-foreground: #18181b;
-  --card-hover: #fafafa;
+  --card: rgba(255, 255, 255, 0.86);
+  --card-foreground: #0b0b0d;
+  --card-hover: rgba(255, 255, 255, 0.96);
 
   --accent: #f4f4f5;
   --accent-foreground: #18181b;
@@ -45,15 +45,15 @@
   --info-light: rgba(37, 99, 235, 0.08);
 
   /* Shell */
-  --sidebar: #ffffff;
-  --sidebar-foreground: #18181b;
-  --sidebar-muted: #52525b;
-  --sidebar-active: #f4f4f5;
-  --sidebar-border: #e4e4e7;
-  --sidebar-primary: #18181b;
-  --sidebar-primary-foreground: #fafafa;
-  --sidebar-accent: #f4f4f5;
-  --sidebar-accent-foreground: #18181b;
+  --sidebar: #f7f8fb;
+  --sidebar-foreground: #0b0b0d;
+  --sidebar-muted: #687080;
+  --sidebar-active: #0b0b0d;
+  --sidebar-border: rgba(255, 255, 255, 0.82);
+  --sidebar-primary: #0b0b0d;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ffffff;
+  --sidebar-accent-foreground: #0b0b0d;
   --sidebar-ring: rgba(24, 24, 27, 0.08);
 
   /* Charts — muted palette, brand as one series */
@@ -85,18 +85,18 @@
   --popover-foreground: var(--foreground);
   --input: var(--border);
 
-  --radius: 0.5rem;
-  --radius-lg: 0.625rem;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --radius: 1rem;
+  --radius-lg: 1.375rem;
+  --shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 16px 40px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 28px 80px rgba(15, 23, 42, 0.12);
 
   /* Unified shell header height (marketing + app + auth) */
   --header-height: 3.5rem;
 }
 
 .dark {
-  --background: #09090b;
+  --background: #0b0b0d;
   --foreground: #fafafa;
   --muted: #27272a;
   --muted-foreground: #a1a1aa;
@@ -253,9 +253,9 @@ body {
 
 /* App utilities */
 .glass-nav {
-  background: color-mix(in srgb, var(--background) 92%, transparent);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--background) 74%, transparent);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
 }
 
 .auth-pattern {
@@ -266,9 +266,10 @@ body {
 
 .card-elevated {
   background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--border) 82%, white);
+  border-radius: calc(var(--radius-lg) * 1.15);
   box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(16px);
 }
 
 .focus-ring:focus-visible {
@@ -279,9 +280,9 @@ body {
 .input-base {
   width: 100%;
   min-width: 0;
-  border-radius: var(--radius);
+  border-radius: calc(var(--radius) * 1.05);
   border: 1px solid var(--border);
-  background: var(--card);
+  background: color-mix(in srgb, var(--card) 88%, white);
   padding-block: 0.5rem;
   padding-inline: 0.75rem;
   font-size: 0.875rem;
@@ -338,9 +339,9 @@ body {
   width: 2rem;
   height: 2rem;
   flex-shrink: 0;
-  border-radius: var(--radius);
+  border-radius: 999px;
   border: 1px solid var(--border);
-  background: var(--card);
+  background: color-mix(in srgb, var(--card) 92%, white);
   color: color-mix(in srgb, var(--foreground) 80%, transparent);
   box-shadow: var(--shadow-sm);
   transition: background-color 0.15s, color 0.15s;

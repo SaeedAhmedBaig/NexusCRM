@@ -30,14 +30,14 @@ export function Button({
 
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} {...props}>
         {children}
       </Link>
     );
   }
 
   return (
-    <ShadcnButton variant={mappedVariant} size={mappedSize} className={className} {...props}>
+    <ShadcnButton variant={mappedVariant} size={mappedSize} className={className} type={props.type || 'button'} {...props}>
       {children}
     </ShadcnButton>
   );

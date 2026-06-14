@@ -79,7 +79,7 @@ export function NotificationsDropdown({ subdomain }) {
       {open && (
         <>
           <button type="button" className="fixed inset-0 z-10" aria-label="Close" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-20 mt-2 w-80 overflow-hidden rounded-lg border border-border bg-card shadow-lg">
+          <div className="absolute right-0 z-20 mt-2 w-80 overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-lg backdrop-blur">
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <p className="text-sm font-semibold text-foreground">Notifications</p>
               {unread > 0 && (

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, ChevronDown, LogOut, Settings, PanelLeftClose, PanelLeft } from 'lucide-react';
+import { Menu, ChevronDown, LogOut, Settings, PanelLeftClose, PanelLeft, Search } from 'lucide-react';
 import { NotificationsDropdown } from '../notifications/NotificationsDropdown';
 import { TenantSwitcher } from '../tenant-switcher';
 import { ThemeToggle } from '../ui/theme-toggle';
@@ -42,7 +42,7 @@ export function AppTopbar({ subdomain, profile, onMenuClick, collapsed, onToggle
   }
 
   return (
-    <header className="glass-nav sticky top-0 z-30 flex h-[var(--header-height)] shrink-0 items-center justify-between gap-4 border-b border-border px-4 lg:px-5">
+    <header className="sticky top-0 z-30 flex h-[4.75rem] shrink-0 items-center justify-between gap-4 px-4 lg:px-8">
       <div className="flex min-w-0 items-center gap-2">
         <IconButton onClick={onMenuClick} className="lg:hidden" aria-label="Open menu">
           <Menu className="h-4 w-4" strokeWidth={1.75} />
@@ -60,7 +60,10 @@ export function AppTopbar({ subdomain, profile, onMenuClick, collapsed, onToggle
             )}
           </IconButton>
         )}
-        <p className="truncate text-[13px] text-muted-foreground capitalize">{breadcrumb}</p>
+        <div className="hidden min-w-0 items-center gap-2 rounded-full border border-border bg-card/80 px-3 py-2 shadow-sm backdrop-blur sm:flex">
+          <Search className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.8} />
+          <p className="truncate text-[13px] font-medium text-foreground capitalize">{breadcrumb}</p>
+        </div>
       </div>
 
       <div className="flex items-center gap-2">
@@ -72,9 +75,9 @@ export function AppTopbar({ subdomain, profile, onMenuClick, collapsed, onToggle
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
-            className="focus-ring flex h-9 items-center gap-2 rounded-md border border-border px-2 py-1.5 transition-colors hover:bg-muted"
+            className="focus-ring flex h-10 items-center gap-2 rounded-full border border-border bg-card/80 px-2 py-1.5 shadow-sm backdrop-blur transition-colors hover:bg-card"
           >
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-[11px] font-semibold text-foreground">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-foreground text-[11px] font-semibold text-background">
               {(user?.name || user?.email || '?').charAt(0).toUpperCase()}
             </span>
             <span className="hidden text-left md:block">
@@ -94,7 +97,7 @@ export function AppTopbar({ subdomain, profile, onMenuClick, collapsed, onToggle
                 aria-label="Close menu"
                 onClick={() => setMenuOpen(false)}
               />
-              <div className="absolute right-0 z-20 mt-1 w-44 overflow-hidden rounded-md border border-border bg-card py-1 shadow-md">
+              <div className="absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-3xl border border-border bg-card py-2 shadow-lg">
                 <Link
                   href={getTenantUrl(subdomain, '/settings')}
                   className="flex items-center gap-2 px-3 py-2 text-[13px] text-foreground transition-colors hover:bg-muted"

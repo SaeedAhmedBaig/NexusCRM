@@ -1,8 +1,8 @@
 const STATS = [
-  { value: '99.9%', label: 'Platform uptime SLA', description: 'Measured across production tenants' },
-  { value: '100%', label: 'Tenant data isolation', description: 'No shared data between workspaces' },
-  { value: '<14 days', label: 'Typical rollout', description: 'From provisioning to team onboarding' },
-  { value: 'Full', label: 'Audit log coverage', description: 'Every config and permission change recorded' },
+  { value: '5x', label: 'Journey visibility', description: 'From first visit through renewal and expansion' },
+  { value: '82%', label: 'Health scoring', description: 'Composite score from activity, pipeline, and service data' },
+  { value: '+18%', label: 'Conversion lift', description: 'Identify intent signals before deals change stage' },
+  { value: '1 view', label: 'Customer context', description: 'Sales, marketing, and success actions in one timeline' },
 ];
 
 export function StatsSection() {
@@ -10,9 +10,9 @@ export function StatsSection() {
     <section id="analytics" className="marketing-section bg-background">
       <div className="marketing-container">
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <p className="marketing-eyebrow mb-4">Reliability</p>
+          <p className="marketing-eyebrow mb-4">Journey outcomes</p>
           <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-            Infrastructure you can defend in procurement
+            Turn customer movement into measurable action
           </h2>
         </div>
 

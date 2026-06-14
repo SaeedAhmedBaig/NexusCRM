@@ -88,7 +88,7 @@ export default function TenantDashboardPage() {
     <div className="space-y-6 animate-fade-in">
       <PageHeader
         title={`Good ${greeting}, ${name}`}
-        description={`${roleLabel} · Business health at a glance`}
+        description={`${roleLabel} · Customer journey health at a glance`}
         actions={<QuickActions subdomain={subdomain} onSuccess={loadDashboard} />}
       />
 
@@ -109,8 +109,8 @@ export default function TenantDashboardPage() {
             </div>
             <Card className="lg:col-span-2">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">Pipeline snapshot</CardTitle>
-                <CardDescription>Key opportunities at a glance</CardDescription>
+                <CardTitle className="text-base">Journey snapshot</CardTitle>
+                <CardDescription>Accounts moving through your workflow</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 pt-0">
                 {[
@@ -118,7 +118,7 @@ export default function TenantDashboardPage() {
                   { label: 'Pending requests', value: widgets?.pendingRequests ?? '—' },
                   { label: 'Tasks due today', value: widgets?.tasksDueToday ?? widgets?.myTasks ?? '—' },
                 ].map((row) => (
-                  <div key={row.label} className="flex items-center justify-between rounded-lg bg-brand-subtle px-3 py-2">
+                  <div key={row.label} className="flex items-center justify-between rounded-2xl bg-white/60 px-3 py-2">
                     <span className="text-sm text-muted">{row.label}</span>
                     <span className="text-base font-semibold tabular-nums text-foreground">{row.value}</span>
                   </div>

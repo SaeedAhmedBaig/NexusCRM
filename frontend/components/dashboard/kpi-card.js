@@ -10,7 +10,7 @@ export function KpiCard({ label, value, hint, icon: Icon, trend, trendLabel }) {
   const TrendIcon = trendUp ? TrendingUp : trendDown ? TrendingDown : Minus;
 
   return (
-    <Card className="shadow-none ring-1 ring-border/80">
+    <Card className="border-white/70 bg-card/85 shadow-sm">
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -36,7 +36,7 @@ export function KpiCard({ label, value, hint, icon: Icon, trend, trendLabel }) {
             </div>
           </div>
           {Icon && (
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
               <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
             </span>
           )}

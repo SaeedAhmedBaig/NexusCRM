@@ -38,13 +38,13 @@ export function AppSidebar({
         href={`${base}${item.href}`}
         onClick={onClose}
         title={collapsed ? item.label : undefined}
-        className={`group flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] font-medium transition-colors ${
+        className={`group flex items-center gap-2.5 rounded-full px-3 py-2 text-[13px] font-medium transition-all ${
           active
-            ? 'bg-sidebar-active text-foreground'
-            : 'text-muted-foreground hover:bg-sidebar-active hover:text-foreground'
-        } ${collapsed ? 'justify-center px-2' : ''}`}
+            ? 'bg-sidebar-active text-sidebar-primary-foreground shadow-sm'
+            : 'text-muted-foreground hover:bg-white hover:text-foreground hover:shadow-sm'
+        } ${collapsed ? 'justify-center px-2.5' : ''}`}
       >
-        <Icon className="h-4 w-4 shrink-0 opacity-70" strokeWidth={active ? 2.25 : 1.75} />
+        <Icon className="h-4 w-4 shrink-0 opacity-80" strokeWidth={active ? 2.25 : 1.75} />
         {!collapsed && <span className="truncate">{item.label}</span>}
       </Link>
     );
@@ -70,43 +70,45 @@ export function AppSidebar({
         />
       )}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex h-screen flex-col border-r border-sidebar-border bg-sidebar transition-all duration-150 ${
-          collapsed ? 'w-14' : 'w-60'
+        className={`fixed inset-y-0 left-0 z-50 p-3 transition-all duration-150 ${
+          collapsed ? 'w-20' : 'w-[264px]'
         } ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
+        <div className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-sidebar-border bg-sidebar/90 shadow-lg backdrop-blur-xl">
         <div
-          className={`flex h-12 shrink-0 items-center border-b border-sidebar-border ${
-            collapsed ? 'justify-center px-2' : 'gap-2.5 px-3'
+          className={`flex h-18 shrink-0 items-center border-b border-sidebar-border/70 ${
+            collapsed ? 'justify-center px-2' : 'gap-3 px-4'
           }`}
         >
           {tenantLogo ? (
-            <img src={tenantLogo} alt="" className="h-7 w-7 shrink-0 rounded-md object-cover" />
+            <img src={tenantLogo} alt="" className="h-10 w-10 shrink-0 rounded-2xl object-cover" />
           ) : (
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-foreground text-[11px] font-semibold text-background">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-foreground text-sm font-semibold text-background shadow-sm">
               {initial}
             </span>
           )}
           {!collapsed && (
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-semibold text-foreground">{tenantName || subdomain}</p>
-              <p className="truncate text-[11px] text-muted-foreground capitalize">{tenantPlan || 'workspace'}</p>
+              <p className="truncate text-sm font-semibold text-foreground">{tenantName || subdomain}</p>
+              <p className="truncate text-[11px] text-muted-foreground capitalize">{tenantPlan || 'journey workspace'}</p>
             </div>
           )}
         </div>
 
-        <nav className={`flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto ${collapsed ? 'p-2' : 'p-2 pt-3'}`}>
+        <nav className={`flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto ${collapsed ? 'p-2.5' : 'p-3 pt-4'}`}>
           {NAV_SECTIONS.map((section) => (
             <div key={section.label || 'main'}>
               {section.label && !collapsed && (
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   {section.label}
                 </p>
               )}
-              {section.label && collapsed && <div className="mb-2 border-t border-sidebar-border" />}
-              <div className="flex flex-col gap-0.5">{section.items.map(renderLink)}</div>
+              {section.label && collapsed && <div className="mb-2 border-t border-sidebar-border/70" />}
+              <div className="flex flex-col gap-1">{section.items.map(renderLink)}</div>
             </div>
           ))}
         </nav>
+        </div>
       </aside>
     </>
   );

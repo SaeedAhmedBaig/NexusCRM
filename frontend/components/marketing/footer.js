@@ -24,20 +24,20 @@ const COLUMNS = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-muted">
+    <footer className="border-t border-border bg-[#111113] text-white">
       <div className="marketing-container py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Logo />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Multi-tenant CRM with per-tenant isolation, role-based access, and audit-ready
-              governance for enterprise revenue teams.
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
+              Customer journey CRM for mapping every account from first touch to renewal, with
+              governed tenant workspaces and live journey intelligence.
             </p>
           </div>
 
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-foreground">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-white">
                 {col.title}
               </p>
               <ul className="space-y-2.5">
@@ -45,7 +45,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      className="text-sm text-white/60 transition-colors hover:text-white"
                     >
                       {link.label}
                     </Link>
@@ -56,8 +56,8 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 border-t border-border pt-8">
-          <p className="text-center text-sm text-muted-foreground">
+        <div className="mt-12 border-t border-white/10 pt-8">
+          <p className="text-center text-sm text-white/50">
             &copy; {new Date().getFullYear()} NexusCRM. All rights reserved.
           </p>
         </div>

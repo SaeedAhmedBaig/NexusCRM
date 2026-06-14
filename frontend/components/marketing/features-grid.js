@@ -1,48 +1,48 @@
 import {
-  Shield,
+  Route,
   Users,
-  Lock,
-  ClipboardList,
-  BarChart3,
-  Bell,
+  Radar,
+  MessageSquareMore,
+  Sparkles,
+  ShieldCheck,
 } from 'lucide-react';
 
 const FEATURES = [
   {
-    icon: Shield,
-    title: 'Per-tenant data isolation',
+    icon: Route,
+    title: 'Journey stage tracking',
     description:
-      'Every workspace runs in a dedicated tenant boundary. Customer data never commingles across organizations.',
+      'Map every account from awareness to renewal with live movement, stage velocity, and owner accountability.',
   },
   {
     icon: Users,
-    title: 'Role-based access control',
+    title: 'Behavior-based segments',
     description:
-      'Granular permissions by role, department, and object type. Enforce least-privilege across your revenue org.',
+      'Group high-intent leads, expansion candidates, and at-risk customers automatically from activity signals.',
   },
   {
-    icon: Lock,
-    title: 'SSO-ready authentication',
+    icon: Radar,
+    title: 'Risk and intent radar',
     description:
-      'Integrate with your identity provider. SAML and OIDC support for enterprise single sign-on workflows.',
+      'See who is ready to buy, who is going quiet, and where your team should act before the funnel changes.',
   },
   {
-    icon: ClipboardList,
-    title: 'Audit trails',
+    icon: MessageSquareMore,
+    title: 'Conversation context',
     description:
-      'Immutable activity logs for every configuration change, data export, and permission update.',
+      'Unify emails, notes, tickets, campaign touches, and task history into one account timeline.',
   },
   {
-    icon: BarChart3,
-    title: 'Unified pipeline analytics',
+    icon: Sparkles,
+    title: 'Next-best action cues',
     description:
-      'Pipeline, campaigns, and service metrics in one dashboard — sourced from live tenant data, not stale exports.',
+      'Turn journey gaps into suggested follow-ups, onboarding tasks, retention plays, and expansion motions.',
   },
   {
-    icon: Bell,
-    title: 'Centralized notifications',
+    icon: ShieldCheck,
+    title: 'Governed workspace data',
     description:
-      'Deal movements, SLA breaches, and workflow events delivered through a single notification layer.',
+      'Keep every customer journey inside isolated tenant workspaces with RBAC, audit trails, and admin oversight.',
   },
 ];
 
@@ -51,13 +51,13 @@ export function FeaturesGrid() {
     <section id="features" className="marketing-section bg-background">
       <div className="marketing-container">
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <p className="marketing-eyebrow mb-4">Platform capabilities</p>
+          <p className="marketing-eyebrow mb-4">Journey intelligence</p>
           <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-            Built for security and scale
+            One dashboard for the entire customer path
           </h2>
           <p className="mt-4 text-base text-muted-foreground">
-            Enterprise governance controls alongside the sales, marketing, and service tools your
-            teams use every day.
+            Replace static pipeline views with a living journey system that helps sales, marketing,
+            and success work from the same customer truth.
           </p>
         </div>
 

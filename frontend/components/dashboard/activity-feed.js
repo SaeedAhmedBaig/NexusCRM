@@ -17,10 +17,10 @@ function timeAgo(dateStr) {
 
 export function ActivityFeed({ subdomain, items = [], compact = false }) {
   return (
-    <div className="rounded-xl border border-border bg-card">
-      <div className={`border-b border-border ${compact ? 'px-4 py-3' : 'px-5 py-4'}`}>
-        <h3 className={compact ? 'text-sm font-semibold text-foreground' : 'text-h3 text-foreground'}>Team activity</h3>
-        <p className="mt-0.5 text-sm text-muted">Latest workspace events</p>
+    <div className="overflow-hidden rounded-[2rem] border border-white/70 bg-card/85 shadow-sm backdrop-blur">
+      <div className={`border-b border-border/70 ${compact ? 'px-4 py-3' : 'px-5 py-4'}`}>
+        <h3 className={compact ? 'text-sm font-semibold text-foreground' : 'text-h3 text-foreground'}>Journey activity</h3>
+        <p className="mt-0.5 text-sm text-muted">Latest customer movement</p>
       </div>
       {!items.length ? (
         <div className="p-4">
@@ -31,7 +31,7 @@ export function ActivityFeed({ subdomain, items = [], compact = false }) {
           />
         </div>
       ) : (
-        <ul className={`divide-y divide-border ${compact ? 'max-h-52 overflow-y-auto' : ''}`}>
+        <ul className={`divide-y divide-border/60 ${compact ? 'max-h-52 overflow-y-auto' : ''}`}>
           {items.map((item) => {
             const href = item.href
               ? getTenantUrl(subdomain, item.href.startsWith('/') ? item.href : `/${item.href}`)
@@ -40,7 +40,7 @@ export function ActivityFeed({ subdomain, items = [], compact = false }) {
               <li key={item.id}>
                 <a
                   href={href}
-                  className={`block transition-colors hover:bg-surface ${compact ? 'px-4 py-2.5' : 'px-5 py-3.5'}`}
+                  className={`block transition-colors hover:bg-white/65 ${compact ? 'px-4 py-2.5' : 'px-5 py-3.5'}`}
                 >
                   <p className="text-sm font-medium text-foreground">{item.summary}</p>
                   <p className="mt-0.5 text-meta">
