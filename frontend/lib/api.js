@@ -24,11 +24,21 @@ export function setToken(token) {
 export function setSession({ token, tenant, rules, user }) {
   setToken(token);
   if (typeof window !== 'undefined') {
+    if (user?.isSuperadmin) {
+      localStorage.setItem('crm_is_superadmin', 'true');
+      localStorage.removeItem('crm_tenant');
+      localStorage.removeItem('crm_tenant_id');
+      localStorage.removeItem('crm_rules');
+      return;
+    }
+
+    localStorage.removeItem('crm_is_superadmin');
     if (tenant?.subdomain) localStorage.setItem('crm_tenant', tenant.subdomain);
+    else localStorage.removeItem('crm_tenant');
     if (tenant?.id) localStorage.setItem('crm_tenant_id', String(tenant.id));
+    else localStorage.removeItem('crm_tenant_id');
     if (rules) localStorage.setItem('crm_rules', JSON.stringify(rules));
-    if (user?.isSuperadmin) localStorage.setItem('crm_is_superadmin', 'true');
-    else localStorage.removeItem('crm_is_superadmin');
+    else localStorage.removeItem('crm_rules');
   }
 }
 
@@ -56,7 +66,10 @@ export async function apiFetch(path, options = {}) {
 
   if (typeof window !== 'undefined' && window.location?.host) {
     headers['X-Forwarded-Host'] = window.location.host;
-    const storedTenant = localStorage.getItem('crm_tenant');
+    const storedTenant =
+      localStorage.getItem('crm_is_superadmin') === 'true'
+        ? null
+        : localStorage.getItem('crm_tenant');
     if (storedTenant) {
       headers['X-Tenant-Subdomain'] = storedTenant;
     }

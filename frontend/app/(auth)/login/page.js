@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 import { LoginForm } from '../../../components/auth/login-form';
 import { AuthShell } from '../../../components/layout/auth-shell';
-import { discoverTenants, login, setSession, superadminLogin } from '../../../lib/api';
+import { discoverTenants, login, setSession } from '../../../lib/api';
 import { extractSubdomain, getTenantUrl } from '../../../lib/tenant';
 import { isAuthenticated } from '../../../lib/auth';
 
@@ -20,15 +20,18 @@ function LoginContent() {
   const [savedForm, setSavedForm] = useState(null);
 
   useEffect(() => {
-    setTenantSubdomain(extractSubdomain(window.location.host) || '');
-    if (isAuthenticated() && !redirect) {
-      if (localStorage.getItem('crm_is_superadmin') === 'true') {
-        router.replace('/superadmin');
-        return;
+    const frame = requestAnimationFrame(() => {
+      setTenantSubdomain(extractSubdomain(window.location.host) || '');
+      if (isAuthenticated() && !redirect) {
+        if (localStorage.getItem('crm_is_superadmin') === 'true') {
+          router.replace('/superadmin');
+          return;
+        }
+        const stored = localStorage.getItem('crm_tenant');
+        if (stored) router.replace(getTenantUrl(stored, '/dashboard'));
       }
-      const stored = localStorage.getItem('crm_tenant');
-      if (stored) router.replace(getTenantUrl(stored, '/dashboard'));
-    }
+    });
+    return () => cancelAnimationFrame(frame);
   }, [redirect, router]);
 
   async function handleLogin(form, tenantId, subdomain) {
@@ -71,25 +74,6 @@ function LoginContent() {
 
   async function handleDiscover(form) {
     try {
-      try {
-        const adminResult = await superadminLogin({
-          email: form.email.trim(),
-          password: form.password,
-        });
-        setSession({
-          token: adminResult.token,
-          tenant: adminResult.tenant,
-          rules: adminResult.rules,
-          user: { ...adminResult.user, isSuperadmin: true },
-        });
-        router.push('/superadmin');
-        return;
-      } catch (adminErr) {
-        if (!adminErr.message?.toLowerCase().includes('superadmin access required')) {
-          throw adminErr;
-        }
-      }
-
       const list = await discoverTenants({ email: form.email, password: form.password });
       if (list.length === 0) throw new Error('No workspaces found for this account');
 

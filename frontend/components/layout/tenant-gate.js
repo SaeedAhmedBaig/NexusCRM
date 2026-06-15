@@ -29,6 +29,11 @@ export function TenantGate({ subdomain, children }) {
         return;
       }
 
+      if (typeof window !== 'undefined' && localStorage.getItem('crm_is_superadmin') === 'true') {
+        router.replace('/superadmin');
+        return;
+      }
+
       if (typeof window !== 'undefined' && subdomain) {
         localStorage.setItem('crm_tenant', subdomain);
       }

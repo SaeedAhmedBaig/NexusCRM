@@ -79,7 +79,7 @@ export const NAV_SECTIONS = [
     ],
   },
   {
-    label: 'Admin',
+    label: 'Workspace',
     items: [
       { href: '/settings/profile', label: 'Profile', icon: User },
       { href: '/settings/tenant', label: 'Organization', icon: Building2, action: 'manage', subject: 'Settings' },
