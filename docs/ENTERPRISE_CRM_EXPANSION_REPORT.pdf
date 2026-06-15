@@ -1,0 +1,1738 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R 21 0 R 23 0 R 25 0 R 27 0 R 29 0 R 31 0 R 33 0 R 35 0 R 37 0 R] /Count 17 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Length 4833 >>
+stream
+BT
+/F1 10 Tf
+/F1 18 Tf
+1 0 0 1 54.00 742.00 Tm (NexusCRM Enterprise SaaS CRM Expansion Report) Tj
+/F1 10 Tf
+1 0 0 1 54.00 719.00 Tm (Report date: 2026-06-16) Tj
+/F1 14 Tf
+1 0 0 1 54.00 692.00 Tm (Executive Summary) Tj
+/F1 10 Tf
+1 0 0 1 54.00 671.00 Tm (NexusCRM already has a strong SaaS foundation: tenant-scoped authentication, superadmin) Tj
+/F1 10 Tf
+1 0 0 1 54.00 658.00 Tm (operations, RBAC, dashboarding, CRM objects, sales documents, tickets, live chat, knowledge,) Tj
+/F1 10 Tf
+1 0 0 1 54.00 645.00 Tm (automation placeholders, email marketing, tasks, projects, billing, integrations, analytics,) Tj
+/F1 10 Tf
+1 0 0 1 54.00 632.00 Tm (and reporting routes. The current product is best described as a functional CRM platform) Tj
+/F1 10 Tf
+1 0 0 1 54.00 619.00 Tm (with broad module coverage and reusable CRUD architecture.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 600.00 Tm (To compete with enterprise CRM leaders, the next step is not just adding more screens. The) Tj
+/F1 10 Tf
+1 0 0 1 54.00 587.00 Tm (system needs deeper workflows, stronger data modeling, automation runtime, enterprise) Tj
+/F1 10 Tf
+1 0 0 1 54.00 574.00 Tm (administration, AI assistance, collaboration, compliance, extensibility, and operational) Tj
+/F1 10 Tf
+1 0 0 1 54.00 561.00 Tm (observability.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 542.00 Tm (The recommended target is a modular enterprise CRM platform with:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 523.00 Tm (- A unified customer 360 record across accounts, contacts, leads, deals, tickets,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 510.00 Tm (  activities, email, calls, tasks, products, invoices, subscriptions, and support health.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 497.00 Tm (- Full quote-to-cash flow: product catalog, CPQ, approvals, quotes, orders, contracts,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 484.00 Tm (  invoices, payments, renewals, revenue schedules, and dunning.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 471.00 Tm (- Enterprise service desk: SLA calendars, queues, omnichannel support, escalations,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 458.00 Tm (  macros, customer portal, knowledge feedback, and support analytics.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 445.00 Tm (- No-code automation: triggers, conditions, branching, approvals, scheduled jobs, retries,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 432.00 Tm (  logs, and versioning.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 419.00 Tm (- Enterprise reporting: saved reports, dashboards, forecasting, cohorts, attribution,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 406.00 Tm (  funnel analytics, exports, and scheduled delivery.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 393.00 Tm (- Platform-grade extensibility: custom objects, custom fields, API keys, webhooks,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 380.00 Tm (  marketplace integrations, data imports, field mapping, and audit trails.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 367.00 Tm (- Security and governance: SSO, SCIM, MFA, field-level permissions, object-level) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 354.00 Tm (  permissions, audit exports, retention, data residency, and compliance readiness.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 341.00 Tm (- AI capabilities: account summaries, next-best action, lead scoring, churn prediction,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 328.00 Tm (  email drafting, ticket classification, call summaries, forecast risk, and automation) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 315.00 Tm (  suggestions.) Tj
+/F1 14 Tf
+1 0 0 1 54.00 288.00 Tm (Current Architecture Snapshot) Tj
+/F1 12 Tf
+1 0 0 1 54.00 262.00 Tm (Frontend Surface) Tj
+/F1 10 Tf
+1 0 0 1 54.00 242.00 Tm (The frontend App Router currently exposes major modules under:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 223.00 Tm (- Marketing and auth: `frontend/app/page.js`, `frontend/app/\(auth\)/login/page.js`,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 210.00 Tm (  `frontend/app/signup/page.js`, `frontend/app/contact/page.js`.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 197.00 Tm (- Tenant CRM shell: `frontend/app/[tenant]/dashboard/page.js`,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 184.00 Tm (  `frontend/app/[tenant]/page.js`.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 171.00 Tm (- CRM: leads, contacts, companies/accounts, deals/opportunities, activities, requests.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 158.00 Tm (- Sales: pipeline, quotations, orders, invoices.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 145.00 Tm (- Marketing: campaigns, mass mail, SMS.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 132.00 Tm (- Customer service: tickets, live chat, knowledge base.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 119.00 Tm (- Work management: tasks, projects, memos.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 106.00 Tm (- Analytics and reports: analytics, reports, sales reports, customer reports, team) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 93.00 Tm (  reports.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 80.00 Tm (- Workspace administration: settings, tenant settings, profile, users, departments, roles,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 67.00 Tm (  billing, email, email accounts.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 1 of 17) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 4 0 R >>
+endobj
+6 0 obj
+<< /Length 4593 >>
+stream
+BT
+/F1 10 Tf
+/F1 9.5 Tf
+1 0 0 1 66.00 742.00 Tm (- Platform administration: superadmin overview, tenants, analytics, settings.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 723.00 Tm (Navigation is centralized in `frontend/lib/navigation.js`, with the tenant admin section now) Tj
+/F1 10 Tf
+1 0 0 1 54.00 710.00 Tm (labelled Workspace to avoid confusion with the platform superadmin portal.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 686.00 Tm (Backend Surface) Tj
+/F1 10 Tf
+1 0 0 1 54.00 666.00 Tm (The backend is organized around NestJS modules:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 647.00 Tm (- `auth`: user login, tenant discovery, invitations, email verification, password reset,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 634.00 Tm (  superadmin login.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 621.00 Tm (- `tenant`: tenant resolution, onboarding, settings, members, departments, lead sources.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 608.00 Tm (- `rbac`: groups, permissions, invitations, tenant user management.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 595.00 Tm (- `crm`: deals, companies, contacts, leads, requests, payments, emails, attachments, audit) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 582.00 Tm (  logs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 569.00 Tm (- `extensions`: generic entity modules for quotations, orders, invoices, tickets, SMS,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 556.00 Tm (  knowledge, automation, live chat, integrations.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 543.00 Tm (- `tasks`: tasks, projects, memos, workflow logs, notifications.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 530.00 Tm (- `mail`: email accounts, templates, mass mail, unsubscribe handling.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 517.00 Tm (- `analytics`: sales, customers, team, funnel, cohort-oriented analytics foundation.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 504.00 Tm (- `dashboard`: dashboard widgets and recent activity.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 491.00 Tm (- `subscription`: billing and Stripe-oriented subscription flow.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 478.00 Tm (- `superadmin`: platform tenant management, settings, analytics.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 465.00 Tm (- `realtime`: chat messages and notifications.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 452.00 Tm (- `public`: embedded public contact form.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 439.00 Tm (- `voip`: call-oriented integration placeholder.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 420.00 Tm (Key schema coverage includes users, user-tenants, tenants, companies, contacts, leads,) Tj
+/F1 10 Tf
+1 0 0 1 54.00 407.00 Tm (deals, requests, tasks, projects, memos, payments, CRM emails, attachments, audit logs,) Tj
+/F1 10 Tf
+1 0 0 1 54.00 394.00 Tm (invoices, orders, quotations, tickets, SMS campaigns, knowledge articles, automation rules,) Tj
+/F1 10 Tf
+1 0 0 1 54.00 381.00 Tm (live chat sessions, mass mail campaigns, email accounts, departments, groups, invitations,) Tj
+/F1 10 Tf
+1 0 0 1 54.00 368.00 Tm (notifications, and system settings.) Tj
+/F1 14 Tf
+1 0 0 1 54.00 341.00 Tm (Enterprise Design Principles) Tj
+/F1 10 Tf
+1 0 0 1 54.00 320.00 Tm (The expansion should follow these principles:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 301.00 Tm (- Build depth inside existing modules before adding unrelated modules.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 288.00 Tm (- Treat every customer interaction as an activity on the customer timeline.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 275.00 Tm (- Preserve tenant isolation at every API, query, file, job, event, and webhook boundary.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 262.00 Tm (- Make every module extensible through custom fields, saved views, permissions, workflow) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 249.00 Tm (  events, audit logs, imports, exports, and API access.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 236.00 Tm (- Use background jobs for long-running imports, exports, automation, email sends,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 223.00 Tm (  enrichment, AI analysis, and report generation.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 210.00 Tm (- Avoid enterprise features that are just UI labels. Each feature should have persistence,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 197.00 Tm (  permissions, auditability, and measurable workflow value.) Tj
+/F1 14 Tf
+1 0 0 1 54.00 170.00 Tm (Module-by-Module Enterprise Expansion) Tj
+/F1 12 Tf
+1 0 0 1 54.00 144.00 Tm (1. Authentication, Tenant Login, and Superadmin) Tj
+/F1 10 Tf
+1 0 0 1 54.00 124.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 105.00 Tm (- Tenant login supports workspace discovery and tenant-scoped routing.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 92.00 Tm (- Superadmin login exists through `/superadmin`.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 79.00 Tm (- Session storage separates tenant and superadmin sessions after the latest fix.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 2 of 17) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 4356 >>
+stream
+BT
+/F1 10 Tf
+/F1 9.5 Tf
+1 0 0 1 66.00 742.00 Tm (- Tenant access is guarded through `TenantGate`.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 723.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 704.00 Tm (- Add SSO through SAML 2.0 and OIDC per tenant.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 691.00 Tm (- Add mandatory MFA policies by tenant, role, geography, and risk level.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 678.00 Tm (- Add SCIM provisioning for users, groups, departments, and deprovisioning.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 665.00 Tm (- Add session management: active sessions, device list, revoke session, idle timeout,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 652.00 Tm (  absolute timeout.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 639.00 Tm (- Add login risk controls: impossible travel, suspicious IP, admin login alerts.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 626.00 Tm (- Add domain verification and enforced company domains.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 613.00 Tm (- Add IP allowlist and VPN-only access policies.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 600.00 Tm (- Add break-glass admin accounts with stricter audit trails.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 587.00 Tm (- Add login audit logs with user, tenant, IP, user agent, auth method, result, and failure) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 574.00 Tm (  reason.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 561.00 Tm (- Add superadmin impersonation with explicit approval, banner, reason capture, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 548.00 Tm (  immutable audit log.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 535.00 Tm (- Add tenant-specific password policy controls.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 516.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 497.00 Tm (- Phase 1: MFA, login audit, session list, tenant password policy.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 484.00 Tm (- Phase 2: SSO/OIDC, SAML, domain verification.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 471.00 Tm (- Phase 3: SCIM, risk-based login, impersonation governance.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 447.00 Tm (2. Workspace Administration and RBAC) Tj
+/F1 10 Tf
+1 0 0 1 54.00 427.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 408.00 Tm (- Users, roles, groups, departments, invitations, tenant settings, and billing routes) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 395.00 Tm (  exist.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 382.00 Tm (- RBAC uses ability rules and `Can` checks.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 363.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 344.00 Tm (- Add object-level permissions for accounts, contacts, deals, tickets, reports, invoices,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 331.00 Tm (  and tasks.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 318.00 Tm (- Add field-level permissions for sensitive fields such as revenue, phone, email, address,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 305.00 Tm (  payment data, health score, and private notes.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 292.00 Tm (- Add record ownership and team sharing models.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 279.00 Tm (- Add hierarchy-based access using departments, teams, territories, and management chain.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 266.00 Tm (- Add permission simulation: "View as user" for admins.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 253.00 Tm (- Add permission diff and role change audit.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 240.00 Tm (- Add approval workflow for role changes and high-risk permission grants.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 227.00 Tm (- Add custom profile templates per department.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 214.00 Tm (- Add admin activity feed for user creation, deactivation, role changes, exports, billing) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 201.00 Tm (  changes, SSO changes, API key creation, and webhook changes.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 188.00 Tm (- Add workspace health center: storage, email deliverability, integration health,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 175.00 Tm (  automation failures, billing status.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 156.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 137.00 Tm (- Phase 1: field-level permission metadata, role audit logs, team ownership.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 124.00 Tm (- Phase 2: sharing rules, permission simulator, admin activity center.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 111.00 Tm (- Phase 3: approval workflows for sensitive administrative changes.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 87.00 Tm (3. Customer 360 and Account Management) Tj
+/F1 10 Tf
+1 0 0 1 54.00 67.00 Tm (Current state:) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 3 of 17) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 8 0 R >>
+endobj
+10 0 obj
+<< /Length 4490 >>
+stream
+BT
+/F1 10 Tf
+/F1 9.5 Tf
+1 0 0 1 66.00 742.00 Tm (- Companies/accounts, contacts, leads, deals, requests, emails, payments, attachments, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 729.00 Tm (  activities exist as separate surfaces.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 716.00 Tm (- Generic CRM list pages support list, create, get, update, and delete flows for major) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 703.00 Tm (  entities.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 684.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 665.00 Tm (- Add a single Customer 360 page for each account.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 652.00 Tm (- Include timeline events: emails, calls, meetings, tasks, notes, tickets, deals,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 639.00 Tm (  invoices, orders, quotes, campaigns, web visits, form submissions, chat sessions, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 626.00 Tm (  automation events.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 613.00 Tm (- Add relationship graph: parent accounts, subsidiaries, buying committees, influencers,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 600.00 Tm (  champions, blockers, partners, resellers.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 587.00 Tm (- Add account health score with configurable signals.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 574.00 Tm (- Add lifecycle stage model: target, prospect, qualified, active customer, at-risk,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 561.00 Tm (  renewal, churned, reactivation.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 548.00 Tm (- Add account plans: goals, stakeholders, risks, success criteria, open opportunities,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 535.00 Tm (  renewal dates.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 522.00 Tm (- Add duplicate detection and merge for accounts and contacts.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 509.00 Tm (- Add enrichment hooks for firmographics, industries, headcount, location, social links,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 496.00 Tm (  and technology stack.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 483.00 Tm (- Add consent, communication preferences, legal basis, and do-not-contact fields.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 470.00 Tm (- Add customer portal access mapping.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 457.00 Tm (- Add account-level SLA and support plan.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 438.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 419.00 Tm (- Phase 1: account detail page, timeline service, unified activity schema.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 406.00 Tm (- Phase 2: duplicate detection, merge, relationships, buying committee.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 393.00 Tm (- Phase 3: health score, enrichment, portal mapping, account plans.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 369.00 Tm (4. Leads and Lead Management) Tj
+/F1 10 Tf
+1 0 0 1 54.00 349.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 330.00 Tm (- Leads have list/create/update/delete support, lead sources, filtering, and shared CRM) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 317.00 Tm (  primitives.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 298.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 279.00 Tm (- Add lead scoring with explicit score history and explainability.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 266.00 Tm (- Add qualification workflow: MQL, SQL, accepted, rejected, recycled.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 253.00 Tm (- Add lead routing rules by territory, product, source, company size, language, SLA, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 240.00 Tm (  rep capacity.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 227.00 Tm (- Add lead assignment queues and round-robin pools.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 214.00 Tm (- Add lead conversion wizard to account, contact, and opportunity.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 201.00 Tm (- Add duplicate prevention during lead intake and conversion.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 188.00 Tm (- Add enrichment and email/phone validation.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 175.00 Tm (- Add campaign attribution: first touch, last touch, multi-touch.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 162.00 Tm (- Add form capture, UTM capture, landing page attribution, and source confidence.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 149.00 Tm (- Add lead recycle campaigns and nurture sequences.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 136.00 Tm (- Add response SLA and speed-to-lead metrics.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 117.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 98.00 Tm (- Phase 1: conversion wizard, status lifecycle, routing rules.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 85.00 Tm (- Phase 2: lead scoring, assignment queues, dedupe.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 72.00 Tm (- Phase 3: attribution, enrichment, SLA analytics.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 4 of 17) Tj
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 10 0 R >>
+endobj
+12 0 obj
+<< /Length 4127 >>
+stream
+BT
+/F1 10 Tf
+/F1 12 Tf
+1 0 0 1 54.00 737.00 Tm (5. Contacts) Tj
+/F1 10 Tf
+1 0 0 1 54.00 717.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 698.00 Tm (- Contacts have list/create/update/delete support.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 679.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 660.00 Tm (- Add contact timeline and relationship to accounts, deals, tickets, campaigns, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 647.00 Tm (  meetings.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 634.00 Tm (- Add role in buying process: decision maker, champion, influencer, finance, legal,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 621.00 Tm (  technical evaluator.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 608.00 Tm (- Add consent management: opt-in, opt-out, GDPR basis, SMS consent, email subscription) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 595.00 Tm (  categories.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 582.00 Tm (- Add communication preference center.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 569.00 Tm (- Add contact verification for email, phone, social, and job status.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 556.00 Tm (- Add duplicate matching and merge.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 543.00 Tm (- Add stakeholder mapping per opportunity and account.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 530.00 Tm (- Add engagement score from email opens, replies, meetings, web activity, tickets, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 517.00 Tm (  campaign interaction.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 504.00 Tm (- Add personal notes visibility controls: public, team, private.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 485.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 466.00 Tm (- Phase 1: richer contact detail, consent fields, stakeholder roles.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 453.00 Tm (- Phase 2: engagement score, duplicate merge.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 440.00 Tm (- Phase 3: preference center and verification integrations.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 416.00 Tm (6. Deals and Opportunity Management) Tj
+/F1 10 Tf
+1 0 0 1 54.00 396.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 377.00 Tm (- Deals have a dedicated service and detail page with payments, emails, attachments,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 364.00 Tm (  history, stages, status, amount, and activity.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 351.00 Tm (- Sales pipeline route exists.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 332.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 313.00 Tm (- Add customizable pipelines by team, product, region, or business unit.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 300.00 Tm (- Add configurable stages, probabilities, exit criteria, required fields, and stage gates.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 287.00 Tm (- Add opportunity products and line items.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 274.00 Tm (- Add competitors, partner involvement, decision criteria, close plan, mutual action plan.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 261.00 Tm (- Add forecast category: pipeline, best case, commit, closed won, closed lost.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 248.00 Tm (- Add next step enforcement and stale deal alerts.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 235.00 Tm (- Add deal scoring and risk indicators.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 222.00 Tm (- Add approval workflows for discounts, legal terms, non-standard pricing, and margin) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 209.00 Tm (  thresholds.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 196.00 Tm (- Add quote generation directly from opportunity products.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 183.00 Tm (- Add renewal and expansion opportunities.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 170.00 Tm (- Add opportunity splits and team selling.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 157.00 Tm (- Add sales methodology templates: MEDDICC, BANT, SPICED, Challenger.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 144.00 Tm (- Add closed-lost reason taxonomy and win/loss analytics.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 125.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 106.00 Tm (- Phase 1: custom pipelines, stage metadata, products/line items.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 93.00 Tm (- Phase 2: forecasting, approvals, mutual action plans.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 80.00 Tm (- Phase 3: methodology templates, risk scoring, opportunity splits.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 5 of 17) Tj
+ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 12 0 R >>
+endobj
+14 0 obj
+<< /Length 4509 >>
+stream
+BT
+/F1 10 Tf
+/F1 12 Tf
+1 0 0 1 54.00 737.00 Tm (7. Quote-to-Cash: Products, Quotes, Orders, Invoices, Payments) Tj
+/F1 10 Tf
+1 0 0 1 54.00 717.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 698.00 Tm (- Quotations, orders, and invoices exist as extension entities.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 685.00 Tm (- Auto-numbering exists for sales documents.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 672.00 Tm (- Deal payments exist.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 653.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 634.00 Tm (- Add product catalog with SKUs, categories, prices, currencies, tax codes, inventory) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 621.00 Tm (  flags, and subscription terms.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 608.00 Tm (- Add price books by segment, currency, region, customer tier, and channel.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 595.00 Tm (- Add CPQ: product bundles, optional products, constraints, recommendations, discount) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 582.00 Tm (  rules, and margin rules.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 569.00 Tm (- Add quote versioning and quote approval.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 556.00 Tm (- Add quote PDF generation with branding, terms, signatures, and expiration.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 543.00 Tm (- Add e-signature integration.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 530.00 Tm (- Add order fulfillment states and shipment/service delivery tasks.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 517.00 Tm (- Add contract objects tied to orders, quotes, accounts, subscriptions, and renewal dates.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 504.00 Tm (- Add invoice line items, taxes, credits, write-offs, partial payments, refunds, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 491.00 Tm (  dunning.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 478.00 Tm (- Add recurring invoices and subscription schedules.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 465.00 Tm (- Add revenue recognition schedules and deferred revenue reporting.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 452.00 Tm (- Add payment gateway webhooks and reconciliation.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 439.00 Tm (- Add finance roles, approval thresholds, and audit trails.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 420.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 401.00 Tm (- Phase 1: product catalog, line items, quote/invoice detail pages.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 388.00 Tm (- Phase 2: CPQ rules, quote PDF, approval flow, e-signature.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 375.00 Tm (- Phase 3: subscriptions, revenue schedules, dunning, reconciliation.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 351.00 Tm (8. Customer Service and Ticketing) Tj
+/F1 10 Tf
+1 0 0 1 54.00 331.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 312.00 Tm (- Tickets exist with priority, status, assignment, SLA due dates, first response due) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 299.00 Tm (  dates, status timestamps, resolved date, escalation level, tags, and internal notes.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 286.00 Tm (- Live chat and knowledge modules exist as generic extension entities.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 267.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 248.00 Tm (- Add queues, assignment rules, routing by skill, language, priority, account tier, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 235.00 Tm (  product.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 222.00 Tm (- Add business-hour SLA calendars and holiday calendars.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 209.00 Tm (- Add first response, next response, resolution, and breached SLA tracking.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 196.00 Tm (- Add escalations with levels, timers, owner changes, and notifications.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 183.00 Tm (- Add ticket merge, split, parent-child tickets, related tickets, and problem records.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 170.00 Tm (- Add macros, canned responses, private notes, public replies, and internal mentions.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 157.00 Tm (- Add email-to-ticket and chat-to-ticket conversion.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 144.00 Tm (- Add omnichannel support: email, chat, phone, SMS, WhatsApp, social.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 131.00 Tm (- Add customer portal with ticket creation, status, comments, attachments, and knowledge) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 118.00 Tm (  suggestions.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 105.00 Tm (- Add CSAT, NPS, post-resolution surveys, and sentiment tracking.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 92.00 Tm (- Add service contracts and entitlement checks.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 79.00 Tm (- Add ticket analytics: backlog, breach rate, average handle time, first contact) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 6 of 17) Tj
+ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 14 0 R >>
+endobj
+16 0 obj
+<< /Length 4301 >>
+stream
+BT
+/F1 10 Tf
+/F1 9.5 Tf
+1 0 0 1 74.00 742.00 Tm (  resolution, reopen rate, agent load.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 729.00 Tm (- Add AI ticket classification, suggested replies, summarization, and duplicate) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 716.00 Tm (  suggestions.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 697.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 678.00 Tm (- Phase 1: ticket detail page, comments/replies, SLA engine with calendars.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 665.00 Tm (- Phase 2: queues, macros, email-to-ticket, portal.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 652.00 Tm (- Phase 3: omnichannel, AI assistance, service contracts, survey analytics.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 628.00 Tm (9. Knowledge Base) Tj
+/F1 10 Tf
+1 0 0 1 54.00 608.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 589.00 Tm (- Knowledge articles exist with generic list and CRUD behavior.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 570.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 551.00 Tm (- Add article categories, collections, permissions, versioning, draft/review/publish) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 538.00 Tm (  workflow.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 525.00 Tm (- Add public and internal knowledge separation.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 512.00 Tm (- Add article feedback: helpful, not helpful, comments, suggested edits.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 499.00 Tm (- Add search analytics and failed search tracking.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 486.00 Tm (- Add localization and translation workflow.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 473.00 Tm (- Add article ownership, review reminders, expiration dates, and compliance review.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 460.00 Tm (- Add AI article generation from resolved tickets.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 447.00 Tm (- Add suggested articles inside tickets and chat.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 434.00 Tm (- Add knowledge portal with SEO, branding, custom domain, and access control.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 415.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 396.00 Tm (- Phase 1: article detail, categories, publish workflow.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 383.00 Tm (- Phase 2: portal, feedback, ticket suggestions.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 370.00 Tm (- Phase 3: localization, review governance, AI generation.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 346.00 Tm (10. Tasks, Projects, and Work Management) Tj
+/F1 10 Tf
+1 0 0 1 54.00 326.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 307.00 Tm (- Tasks support list and Kanban views, assignees, project relation, due dates, subtasks,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 294.00 Tm (  progress, workflow logs, comments, status transitions, and notifications.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 281.00 Tm (- Projects and memos exist.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 262.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 243.00 Tm (- Add custom task statuses and custom board columns per workspace/project.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 230.00 Tm (- Add card ordering, swimlanes, saved filters, labels, watchers, attachments, covers,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 217.00 Tm (  dependencies, blockers, recurring tasks, templates, and checklists.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 204.00 Tm (- Add task time tracking and billable/non-billable flags.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 191.00 Tm (- Add workload management by user, department, project, and capacity.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 178.00 Tm (- Add project milestones, Gantt view, timeline view, calendar view, and critical path.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 165.00 Tm (- Add project budgets, estimated hours, actual hours, cost, margin, and profitability.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 152.00 Tm (- Add project risk register and RAID logs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 139.00 Tm (- Add approvals for project deliverables.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 126.00 Tm (- Add comments with mentions, reactions, rich text, attachments, and threaded replies.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 113.00 Tm (- Add task automation: create task on deal stage change, ticket breach, invoice overdue,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 100.00 Tm (  campaign milestone.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 87.00 Tm (- Add project templates for onboarding, implementation, renewal, service delivery, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 74.00 Tm (  internal initiatives.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 7 of 17) Tj
+ET
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 16 0 R >>
+endobj
+18 0 obj
+<< /Length 4274 >>
+stream
+BT
+/F1 10 Tf
+/F1 10 Tf
+1 0 0 1 54.00 742.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 723.00 Tm (- Phase 1: custom statuses, ordering, labels, watchers, attachments.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 710.00 Tm (- Phase 2: time tracking, workload, calendar/timeline.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 697.00 Tm (- Phase 3: Gantt, budgets, dependencies, risk management.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 673.00 Tm (11. Marketing, Campaigns, Mass Mail, and SMS) Tj
+/F1 10 Tf
+1 0 0 1 54.00 653.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 634.00 Tm (- Campaign routes exist.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 621.00 Tm (- Mass mail service exists with email templates and unsubscribe handling.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 608.00 Tm (- SMS campaign entity exists.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 589.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 570.00 Tm (- Add marketing campaign objects with channels, budget, goals, audiences, assets,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 557.00 Tm (  schedule, status, and attribution.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 544.00 Tm (- Add segmentation builder using CRM fields, behavior, campaigns, tags, lifecycle stage,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 531.00 Tm (  and consent.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 518.00 Tm (- Add email template builder with personalization, merge tags, dynamic blocks, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 505.00 Tm (  preview.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 492.00 Tm (- Add journey builder for nurture sequences and drip campaigns.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 479.00 Tm (- Add A/B testing for subject lines, content, send time, and CTA.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 466.00 Tm (- Add deliverability dashboard: bounces, spam complaints, unsubscribes, domain health,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 453.00 Tm (  DKIM/SPF/DMARC.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 440.00 Tm (- Add suppression lists and subscription categories.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 427.00 Tm (- Add SMS compliance: consent, quiet hours, opt-out keywords, region restrictions.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 414.00 Tm (- Add campaign ROI: influenced pipeline, sourced pipeline, revenue, cost per lead,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 401.00 Tm (  conversion rate.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 388.00 Tm (- Add landing pages/forms as lead capture sources.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 375.00 Tm (- Add UTM builder and attribution model.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 356.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 337.00 Tm (- Phase 1: campaign detail, segmentation, email templates, send logs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 324.00 Tm (- Phase 2: journey builder, A/B testing, deliverability.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 311.00 Tm (- Phase 3: attribution, ROI, landing pages, SMS compliance engine.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 287.00 Tm (12. Email, Inbox, and Communication Hub) Tj
+/F1 10 Tf
+1 0 0 1 54.00 267.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 248.00 Tm (- Email accounts, mass mail, CRM email records, templates, unsubscribe, and Google OAuth) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 235.00 Tm (  controller exist.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 222.00 Tm (- Deal detail supports emails.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 203.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 184.00 Tm (- Add shared inbox and personal inbox views.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 171.00 Tm (- Add IMAP/SMTP and Gmail/Microsoft Graph sync.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 158.00 Tm (- Add two-way email sync on accounts, contacts, leads, deals, tickets, and projects.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 145.00 Tm (- Add email composer attachments with storage, scanning, metadata, and entity linking.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 132.00 Tm (- Add email threading and conversation timeline.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 119.00 Tm (- Add send later, scheduled follow-up, reminders, and snooze.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 106.00 Tm (- Add sequences for sales outreach with reply detection.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 93.00 Tm (- Add email tracking: opens, clicks, replies, bounces.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 80.00 Tm (- Add compliance: unsubscribe, consent, suppression, retention, legal hold.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 67.00 Tm (- Add AI email drafting, summarization, tone rewrite, and next reply suggestion.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 8 of 17) Tj
+ET
+endstream
+endobj
+19 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 18 0 R >>
+endobj
+20 0 obj
+<< /Length 4352 >>
+stream
+BT
+/F1 10 Tf
+/F1 10 Tf
+1 0 0 1 54.00 742.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 723.00 Tm (- Phase 1: attachment support, entity timeline sync, email threading.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 710.00 Tm (- Phase 2: Gmail/Microsoft sync, shared inbox, sequences.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 697.00 Tm (- Phase 3: tracking analytics, AI drafting, compliance controls.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 673.00 Tm (13. Live Chat and Omnichannel Messaging) Tj
+/F1 10 Tf
+1 0 0 1 54.00 653.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 634.00 Tm (- Live chat sessions and realtime chat messages exist.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 621.00 Tm (- Realtime notifications exist.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 602.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 583.00 Tm (- Add website chat widget with authenticated and anonymous visitor modes.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 570.00 Tm (- Add chat routing by queue, agent availability, language, product, and customer tier.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 557.00 Tm (- Add agent presence, capacity, transfer, whisper, and supervisor monitoring.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 544.00 Tm (- Add chat transcripts tied to contacts, accounts, tickets, and deals.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 531.00 Tm (- Add proactive chat rules based on page, UTM, account score, or time on page.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 518.00 Tm (- Add chatbot and AI triage.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 505.00 Tm (- Add WhatsApp, Facebook Messenger, Instagram, SMS, and web chat unified inbox.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 492.00 Tm (- Add conversation SLAs and response analytics.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 473.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 454.00 Tm (- Phase 1: chat widget, transcript-to-record linking, agent routing.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 441.00 Tm (- Phase 2: unified inbox, transfer, presence.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 428.00 Tm (- Phase 3: bots, AI triage, omnichannel connectors.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 404.00 Tm (14. Automation and Workflow Engine) Tj
+/F1 10 Tf
+1 0 0 1 54.00 384.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 365.00 Tm (- Automation rule schema and generic module exist.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 352.00 Tm (- Current behavior appears closer to CRUD configuration than a full runtime.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 333.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 314.00 Tm (- Add workflow runtime with trigger, condition, branch, action, schedule, retry, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 301.00 Tm (  failure state.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 288.00 Tm (- Triggers: record created, updated, deleted, field changed, stage changed, SLA breached,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 275.00 Tm (  email received, form submitted, invoice overdue, payment received, task due, webhook) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 262.00 Tm (  received.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 249.00 Tm (- Conditions: field comparison, segment membership, date windows, owner, role, related) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 236.00 Tm (  records, score thresholds, consent, business hours.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 223.00 Tm (- Actions: create/update record, assign owner, send email/SMS, create task, notify user,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 210.00 Tm (  call webhook, create ticket, add tag, move stage, request approval, generate document.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 197.00 Tm (- Add workflow builder UI with versioning, draft/publish, test run, and simulation.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 184.00 Tm (- Add automation logs with inputs, outputs, duration, failures, retries, and skipped) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 171.00 Tm (  reasons.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 158.00 Tm (- Add approval chains with parallel/sequential approvals and delegation.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 145.00 Tm (- Add scheduled jobs and recurring automations.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 132.00 Tm (- Add rate limits and loop prevention.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 113.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 94.00 Tm (- Phase 1: backend runtime, event bus, action registry, execution logs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 81.00 Tm (- Phase 2: visual builder, conditions, versioning, test runs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 68.00 Tm (- Phase 3: approvals, schedules, observability, marketplace actions.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 9 of 17) Tj
+ET
+endstream
+endobj
+21 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 20 0 R >>
+endobj
+22 0 obj
+<< /Length 4374 >>
+stream
+BT
+/F1 10 Tf
+/F1 12 Tf
+1 0 0 1 54.00 737.00 Tm (15. Analytics, Dashboards, and Reporting) Tj
+/F1 10 Tf
+1 0 0 1 54.00 717.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 698.00 Tm (- Dashboard widgets, analytics page, and sales/customer/team reports exist.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 685.00 Tm (- Funnel and sales trend APIs exist.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 666.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 647.00 Tm (- Add report builder with objects, fields, filters, grouping, charts, pivots, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 634.00 Tm (  permissions.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 621.00 Tm (- Add saved reports, saved views, dashboard layouts, and dashboard sharing.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 608.00 Tm (- Add scheduled report delivery by email.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 595.00 Tm (- Add exports as background jobs with audit logs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 582.00 Tm (- Add forecasting dashboard with quotas, commit/best case/pipeline categories, rep) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 569.00 Tm (  rollups, and forecast history.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 556.00 Tm (- Add customer analytics: lifecycle movement, retention, churn, expansion, health score) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 543.00 Tm (  distribution.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 530.00 Tm (- Add marketing analytics: attribution, campaign ROI, source quality, funnel velocity.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 517.00 Tm (- Add service analytics: SLA, backlog, queue load, agent productivity, CSAT, knowledge) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 504.00 Tm (  deflection.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 491.00 Tm (- Add revenue analytics: MRR, ARR, net revenue retention, gross revenue retention,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 478.00 Tm (  invoices, dunning, payment failure.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 465.00 Tm (- Add report-level row access based on role, team, and ownership.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 446.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 427.00 Tm (- Phase 1: report builder foundation, saved reports, export jobs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 414.00 Tm (- Phase 2: dashboards, scheduled delivery, forecast rollups.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 401.00 Tm (- Phase 3: advanced attribution, cohort analytics, predictive insights.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 377.00 Tm (16. Integrations and Platform Extensibility) Tj
+/F1 10 Tf
+1 0 0 1 54.00 357.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 338.00 Tm (- Integrations service and controller exist.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 325.00 Tm (- Email account and tenant integration settings exist.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 306.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 287.00 Tm (- Add integration marketplace with categories, setup flows, scopes, health status, logs,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 274.00 Tm (  and sync controls.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 261.00 Tm (- Add OAuth token storage with encryption, refresh handling, and failure notifications.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 248.00 Tm (- Add sync jobs with cursors, rate limits, dedupe, retry, replay, and conflict resolution.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 235.00 Tm (- Add webhooks: outbound event subscriptions and inbound webhook endpoints.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 222.00 Tm (- Add public REST API with API keys, scopes, rate limits, pagination, filtering, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 209.00 Tm (  audit.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 196.00 Tm (- Add custom fields for every object.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 183.00 Tm (- Add custom objects with schema builder, relationships, permissions, UI generation, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 170.00 Tm (  API exposure.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 157.00 Tm (- Add app framework for embedded panels, record actions, and workflow actions.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 144.00 Tm (- Add Zapier/Make/n8n connectors.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 131.00 Tm (- Add Slack, Microsoft Teams, Google Workspace, Microsoft 365, Stripe, Twilio, WhatsApp,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 118.00 Tm (  QuickBooks, Xero, DocuSign, Calendly, Zoom, and data warehouse connectors.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 99.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 80.00 Tm (- Phase 1: integration health, OAuth refresh, webhooks, API keys.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 67.00 Tm (- Phase 2: custom fields, import/export, sync logs.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 10 of 17) Tj
+ET
+endstream
+endobj
+23 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 22 0 R >>
+endobj
+24 0 obj
+<< /Length 4070 >>
+stream
+BT
+/F1 10 Tf
+/F1 9.5 Tf
+1 0 0 1 66.00 742.00 Tm (- Phase 3: custom objects, marketplace, embedded apps.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 718.00 Tm (17. Billing, Subscription, and SaaS Monetization) Tj
+/F1 10 Tf
+1 0 0 1 54.00 698.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 679.00 Tm (- Billing module and tenant billing settings exist.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 666.00 Tm (- Superadmin settings and tenant plans exist.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 647.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 628.00 Tm (- Add plan catalog with feature gates, usage limits, add-ons, overages, trials, coupons,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 615.00 Tm (  and custom contracts.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 602.00 Tm (- Add usage metering: seats, storage, emails, SMS, automations, API calls, AI credits,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 589.00 Tm (  integrations, exports.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 576.00 Tm (- Add billing portal with invoices, payment methods, subscriptions, seats, and upgrade) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 563.00 Tm (  flows.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 550.00 Tm (- Add grace periods, dunning, failed payment workflows, and suspension states.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 537.00 Tm (- Add enterprise contracts with manual invoicing and custom terms.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 524.00 Tm (- Add revenue dashboard for platform superadmin.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 511.00 Tm (- Add tenant-level entitlement checks in backend guards, not just UI.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 498.00 Tm (- Add audit trails for plan changes and billing admin actions.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 479.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 460.00 Tm (- Phase 1: feature gates, usage counters, entitlement guards.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 447.00 Tm (- Phase 2: dunning, add-ons, overages, seat management.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 434.00 Tm (- Phase 3: enterprise contracts, revenue analytics, billing audit exports.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 410.00 Tm (18. Superadmin Platform Operations) Tj
+/F1 10 Tf
+1 0 0 1 54.00 390.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 371.00 Tm (- Superadmin overview, tenant list, tenant detail, analytics, and settings exist.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 358.00 Tm (- Legacy `/admin/tenants` redirects to `/superadmin/tenants`.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 339.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 320.00 Tm (- Add tenant lifecycle controls: trial, active, overdue, suspended, cancelled, archived.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 307.00 Tm (- Add tenant impersonation with reason, approval, time limit, and audit trail.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 294.00 Tm (- Add platform health dashboard: jobs, queues, email deliverability, webhook failures,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 281.00 Tm (  integration failures, database usage, API latency.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 268.00 Tm (- Add tenant usage analytics: seats, storage, API calls, automations, emails, AI credits.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 255.00 Tm (- Add plan and entitlement management.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 242.00 Tm (- Add tenant data export, archive, restore, and deletion workflow.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 229.00 Tm (- Add support operations: tenant notes, incidents, escalation owner, SLA for enterprise) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 216.00 Tm (  accounts.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 203.00 Tm (- Add platform announcements and in-app banners by segment.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 190.00 Tm (- Add kill switches for risky integrations, automations, and tenants.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 171.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 152.00 Tm (- Phase 1: tenant lifecycle and usage.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 139.00 Tm (- Phase 2: impersonation governance, platform health.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 126.00 Tm (- Phase 3: enterprise support operations and incident management.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 102.00 Tm (19. Security, Compliance, and Governance) Tj
+/F1 10 Tf
+1 0 0 1 54.00 82.00 Tm (Current state:) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 11 of 17) Tj
+ET
+endstream
+endobj
+25 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 24 0 R >>
+endobj
+26 0 obj
+<< /Length 4115 >>
+stream
+BT
+/F1 10 Tf
+/F1 9.5 Tf
+1 0 0 1 66.00 742.00 Tm (- Tenant isolation, JWT auth, RBAC, audit log schema, and superadmin separation exist.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 723.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 704.00 Tm (- Add immutable audit log for auth, admin, data, exports, API keys, webhooks, automations,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 691.00 Tm (  billing, and superadmin actions.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 678.00 Tm (- Add audit log export and retention policy.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 665.00 Tm (- Add encryption at rest for sensitive fields and integration tokens.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 652.00 Tm (- Add data retention and legal hold.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 639.00 Tm (- Add GDPR/CCPA request workflows: access, export, delete, anonymize, consent history.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 626.00 Tm (- Add SOC 2 readiness controls: access reviews, change logs, vendor data map, incident) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 613.00 Tm (  logging.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 600.00 Tm (- Add backup and restore procedures with tenant-level restore.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 587.00 Tm (- Add DLP controls for exports and sensitive fields.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 574.00 Tm (- Add field masking for PII.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 561.00 Tm (- Add API rate limiting and anomaly detection.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 548.00 Tm (- Add security center for workspace admins.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 529.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 510.00 Tm (- Phase 1: audit event service, sensitive field inventory, token encryption.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 497.00 Tm (- Phase 2: retention, data subject requests, access reviews.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 484.00 Tm (- Phase 3: DLP, anomaly detection, compliance dashboards.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 460.00 Tm (20. AI and Intelligence Layer) Tj
+/F1 10 Tf
+1 0 0 1 54.00 440.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 421.00 Tm (- AI is not yet a deep product layer.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 402.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 383.00 Tm (- Add AI account summary from timeline, deals, tickets, emails, calls, and invoices.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 370.00 Tm (- Add AI lead score and fit score with explainability.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 357.00 Tm (- Add AI next-best action per lead, deal, ticket, and account.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 344.00 Tm (- Add email reply drafting and tone rewrite.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 331.00 Tm (- Add ticket classification, priority suggestion, duplicate detection, and suggested) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 318.00 Tm (  macro.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 305.00 Tm (- Add call and meeting summarization.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 292.00 Tm (- Add forecast risk analysis and deal inspection.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 279.00 Tm (- Add churn risk and expansion opportunity detection.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 266.00 Tm (- Add automation builder assistant: "when a high-value lead comes in, assign it and create) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 253.00 Tm (  follow-up tasks.") Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 240.00 Tm (- Add natural language report builder.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 227.00 Tm (- Add AI governance: opt-in, tenant policy, data redaction, model logs, prompt audit,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 214.00 Tm (  human approval for outbound actions.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 195.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 176.00 Tm (- Phase 1: summaries, email drafts, ticket classification.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 163.00 Tm (- Phase 2: scoring, next-best action, report assistant.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 150.00 Tm (- Phase 3: predictive analytics, automation assistant, governance controls.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 126.00 Tm (21. Data Management, Imports, Exports, and Quality) Tj
+/F1 10 Tf
+1 0 0 1 54.00 106.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 87.00 Tm (- Generic list pages and bulk endpoints exist for some objects.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 68.00 Tm (Enterprise expansion:) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 12 of 17) Tj
+ET
+endstream
+endobj
+27 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 26 0 R >>
+endobj
+28 0 obj
+<< /Length 3744 >>
+stream
+BT
+/F1 10 Tf
+/F1 9.5 Tf
+1 0 0 1 66.00 742.00 Tm (- Add import wizard for CSV/XLSX with mapping, validation, dedupe, preview, error) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 729.00 Tm (  downloads, and rollback.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 716.00 Tm (- Add export jobs with filters, permissions, and audit logs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 703.00 Tm (- Add data quality dashboard: duplicates, missing fields, invalid emails, stale accounts,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 690.00 Tm (  unassigned records.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 677.00 Tm (- Add duplicate rules by object and tenant.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 664.00 Tm (- Add merge flows for leads, contacts, companies, and accounts.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 651.00 Tm (- Add enrichment jobs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 638.00 Tm (- Add data lineage: source, import batch, integration, user, timestamp.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 625.00 Tm (- Add sandbox tenant cloning for enterprise testing.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 606.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 587.00 Tm (- Phase 1: import/export jobs and audit.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 574.00 Tm (- Phase 2: dedupe, merge, quality dashboard.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 561.00 Tm (- Phase 3: enrichment, lineage, sandbox clone.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 537.00 Tm (22. Mobile and Offline) Tj
+/F1 10 Tf
+1 0 0 1 54.00 517.00 Tm (Current state:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 498.00 Tm (- Responsive web pages exist, but no dedicated mobile app/offline layer is visible.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 479.00 Tm (Enterprise expansion:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 460.00 Tm (- Add mobile-optimized CRM flows: call logging, task completion, lead capture, deal) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 447.00 Tm (  updates, ticket replies.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 434.00 Tm (- Add push notifications.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 421.00 Tm (- Add offline drafts for notes, tasks, calls, and contact updates.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 408.00 Tm (- Add mobile scanner for business cards and documents.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 395.00 Tm (- Add location-aware visit logs for field sales.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 382.00 Tm (- Add mobile approval flows.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 363.00 Tm (Implementation priorities:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 344.00 Tm (- Phase 1: mobile responsive QA and PWA basics.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 331.00 Tm (- Phase 2: push notifications and offline drafts.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 318.00 Tm (- Phase 3: native mobile app or Capacitor wrapper.) Tj
+/F1 14 Tf
+1 0 0 1 54.00 291.00 Tm (Cross-Cutting Platform Work) Tj
+/F1 12 Tf
+1 0 0 1 54.00 265.00 Tm (Unified Activity Timeline) Tj
+/F1 10 Tf
+1 0 0 1 54.00 245.00 Tm (Every enterprise CRM workflow depends on a high-quality timeline. Create a normalized) Tj
+/F1 10 Tf
+1 0 0 1 54.00 232.00 Tm (Activity/Event model that captures:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 213.00 Tm (- Actor, tenant, entity type, entity ID, related entities, event type, channel, timestamp.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 200.00 Tm (- Source: user, automation, integration, email, API, import, system.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 187.00 Tm (- Visibility: public, internal, private, team.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 174.00 Tm (- Payload: normalized summary and structured data.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 155.00 Tm (This timeline should power account 360, contact history, deal inspection, ticket history,) Tj
+/F1 10 Tf
+1 0 0 1 54.00 142.00 Tm (audit views, AI summaries, and reporting.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 118.00 Tm (Custom Fields and Metadata) Tj
+/F1 10 Tf
+1 0 0 1 54.00 98.00 Tm (Add a metadata service for:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 79.00 Tm (- Field definitions by object and tenant.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 13 of 17) Tj
+ET
+endstream
+endobj
+29 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 28 0 R >>
+endobj
+30 0 obj
+<< /Length 3234 >>
+stream
+BT
+/F1 10 Tf
+/F1 9.5 Tf
+1 0 0 1 66.00 742.00 Tm (- Field type, validation, options, default values, help text, required rules.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 729.00 Tm (- Field permissions and visibility.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 716.00 Tm (- Layout placement.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 703.00 Tm (- Import/export mapping.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 690.00 Tm (- API exposure.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 671.00 Tm (This is a prerequisite for serious enterprise adoption.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 647.00 Tm (Background Jobs) Tj
+/F1 10 Tf
+1 0 0 1 54.00 627.00 Tm (Introduce a durable job system for:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 608.00 Tm (- Imports and exports.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 595.00 Tm (- Email sends and sync.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 582.00 Tm (- Automation executions.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 569.00 Tm (- Integration sync.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 556.00 Tm (- AI analysis.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 543.00 Tm (- Report generation.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 530.00 Tm (- SLA timers and escalation.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 517.00 Tm (- Data quality scans.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 498.00 Tm (Jobs need status, retries, dead-letter queue, logs, duration, tenant ID, actor ID, and trace) Tj
+/F1 10 Tf
+1 0 0 1 54.00 485.00 Tm (IDs.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 461.00 Tm (Observability) Tj
+/F1 10 Tf
+1 0 0 1 54.00 441.00 Tm (Add operational observability:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 422.00 Tm (- API request tracing by tenant.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 409.00 Tm (- Job dashboard.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 396.00 Tm (- Integration health logs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 383.00 Tm (- Automation failure analytics.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 370.00 Tm (- Email delivery metrics.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 357.00 Tm (- Security event feed.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 344.00 Tm (- Admin-facing incident state.) Tj
+/F1 14 Tf
+1 0 0 1 54.00 317.00 Tm (Recommended Implementation Roadmap) Tj
+/F1 12 Tf
+1 0 0 1 54.00 291.00 Tm (Phase 0: Foundation Hardening) Tj
+/F1 10 Tf
+1 0 0 1 54.00 271.00 Tm (Goal: make current modules stable, consistent, and enterprise-ready.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 252.00 Tm (- Normalize all remaining local UI forms to shared primitives.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 239.00 Tm (- Add test coverage for auth, tenant routing, RBAC, generic CRUD, tasks, and sales) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 226.00 Tm (  documents.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 213.00 Tm (- Add centralized audit event service.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 200.00 Tm (- Add object metadata registry.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 187.00 Tm (- Add background job infrastructure.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 174.00 Tm (- Add file storage abstraction.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 161.00 Tm (- Add tenant-scoped logging and request IDs.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 137.00 Tm (Phase 1: Core CRM Depth) Tj
+/F1 10 Tf
+1 0 0 1 54.00 117.00 Tm (Goal: make CRM objects competitive.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 98.00 Tm (- Account 360 and unified activity timeline.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 85.00 Tm (- Lead conversion, dedupe, routing, and scoring.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 72.00 Tm (- Contact consent and engagement history.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 14 of 17) Tj
+ET
+endstream
+endobj
+31 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 30 0 R >>
+endobj
+32 0 obj
+<< /Length 3584 >>
+stream
+BT
+/F1 10 Tf
+/F1 9.5 Tf
+1 0 0 1 66.00 742.00 Tm (- Custom pipelines, stage gates, and opportunity products.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 729.00 Tm (- Quote/invoice line items and product catalog.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 716.00 Tm (- Ticket detail, replies, comments, SLA engine, queues.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 692.00 Tm (Phase 2: Automation and Communication) Tj
+/F1 10 Tf
+1 0 0 1 54.00 672.00 Tm (Goal: reduce manual work and improve engagement.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 653.00 Tm (- Workflow runtime and execution logs.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 640.00 Tm (- Email sync and shared inbox.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 627.00 Tm (- Marketing segmentation and campaign builder.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 614.00 Tm (- Task custom statuses, ordering, labels, watchers, attachments.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 601.00 Tm (- Knowledge portal and article workflow.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 588.00 Tm (- Integration health center and webhooks.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 564.00 Tm (Phase 3: Enterprise Controls) Tj
+/F1 10 Tf
+1 0 0 1 54.00 544.00 Tm (Goal: win larger customers.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 525.00 Tm (- SSO/OIDC/SAML, MFA policies, SCIM.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 512.00 Tm (- Field-level and object-level permissions.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 499.00 Tm (- Audit exports, retention, data subject request workflows.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 486.00 Tm (- Report builder, saved dashboards, scheduled reports.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 473.00 Tm (- Usage metering and entitlement guards.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 460.00 Tm (- Superadmin tenant operations and impersonation governance.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 436.00 Tm (Phase 4: Intelligence and Ecosystem) Tj
+/F1 10 Tf
+1 0 0 1 54.00 416.00 Tm (Goal: compete with top-tier SaaS CRM platforms.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 397.00 Tm (- AI account summaries, email drafts, ticket classification, next-best action.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 384.00 Tm (- Forecasting and revenue intelligence.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 371.00 Tm (- Churn and expansion prediction.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 358.00 Tm (- Custom objects and marketplace apps.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 345.00 Tm (- Data warehouse sync and advanced BI connectors.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 332.00 Tm (- Mobile/PWA offline workflows.) Tj
+/F1 14 Tf
+1 0 0 1 54.00 305.00 Tm (Suggested Technical Architecture Additions) Tj
+/F1 12 Tf
+1 0 0 1 54.00 279.00 Tm (Backend) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 259.00 Tm (- Event bus module for domain events.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 246.00 Tm (- Jobs module with queues and workers.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 233.00 Tm (- Files module with provider abstraction.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 220.00 Tm (- Metadata module for custom fields and layouts.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 207.00 Tm (- Audit module for immutable event capture.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 194.00 Tm (- Automation runtime module.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 181.00 Tm (- Webhooks/API keys module.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 168.00 Tm (- Imports/exports module.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 155.00 Tm (- AI module with tenant policy and redaction.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 142.00 Tm (- Entitlements module for plan gates.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 118.00 Tm (Frontend) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 98.00 Tm (- Record detail framework with tabs: Overview, Timeline, Related, Files, Activity,) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 85.00 Tm (  Automations, Audit.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 72.00 Tm (- Form/layout builder powered by metadata.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 15 of 17) Tj
+ET
+endstream
+endobj
+33 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 32 0 R >>
+endobj
+34 0 obj
+<< /Length 3332 >>
+stream
+BT
+/F1 10 Tf
+/F1 9.5 Tf
+1 0 0 1 66.00 742.00 Tm (- Report builder.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 729.00 Tm (- Workflow builder.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 716.00 Tm (- Import wizard.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 703.00 Tm (- Integration marketplace.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 690.00 Tm (- Admin security center.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 677.00 Tm (- Customer portal.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 664.00 Tm (- Unified inbox.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 651.00 Tm (- AI assistant panels.) Tj
+/F1 12 Tf
+1 0 0 1 54.00 627.00 Tm (Data Model) Tj
+/F1 10 Tf
+1 0 0 1 54.00 607.00 Tm (Add or deepen:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 588.00 Tm (- ActivityEvent.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 575.00 Tm (- CustomFieldDefinition.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 562.00 Tm (- CustomObjectDefinition.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 549.00 Tm (- FieldValue or dynamic schema layer.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 536.00 Tm (- WorkflowDefinition and WorkflowRun.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 523.00 Tm (- JobRun.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 510.00 Tm (- AuditEvent.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 497.00 Tm (- FileAsset.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 484.00 Tm (- WebhookEndpoint and WebhookDelivery.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 471.00 Tm (- ApiKey.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 458.00 Tm (- Product, PriceBook, QuoteLineItem, InvoiceLineItem, Contract, Subscription.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 445.00 Tm (- SlaPolicy, SlaClock, Queue, Macro, Survey.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 432.00 Tm (- ReportDefinition, DashboardDefinition, ExportJob.) Tj
+/F1 14 Tf
+1 0 0 1 54.00 405.00 Tm (Quality, Testing, and Release Strategy) Tj
+/F1 10 Tf
+1 0 0 1 54.00 384.00 Tm (Each module expansion should include:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 365.00 Tm (- API unit tests.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 352.00 Tm (- Tenant isolation tests.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 339.00 Tm (- Permission tests.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 326.00 Tm (- Frontend component and flow tests.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 313.00 Tm (- Seed data for demo and QA.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 300.00 Tm (- Migration scripts for schema changes.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 287.00 Tm (- Audit events for sensitive changes.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 274.00 Tm (- Feature flags for staged rollout.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 261.00 Tm (- Documentation and admin setup guides.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 242.00 Tm (Release order:) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 223.00 Tm (- Ship foundation and audit/event/job infrastructure first.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 210.00 Tm (- Expand one customer journey at a time: lead-to-opportunity, opportunity-to-cash, ticket-) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 197.00 Tm (  to-resolution.) Tj
+/F1 9.5 Tf
+1 0 0 1 66.00 184.00 Tm (- Avoid creating many shallow modules at once. Enterprise buyers judge depth, control, and) Tj
+/F1 9.5 Tf
+1 0 0 1 74.00 171.00 Tm (  reliability.) Tj
+/F1 14 Tf
+1 0 0 1 54.00 144.00 Tm (Highest-Value Next Build Sequence) Tj
+/F1 10 Tf
+1 0 0 1 54.00 123.00 Tm (If the goal is maximum enterprise value quickly, build in this order:) Tj
+/F1 10 Tf
+1 0 0 1 54.00 104.00 Tm (1. Account 360 and unified timeline.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 91.00 Tm (2. Lead conversion, dedupe, and routing.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 78.00 Tm (3. Custom pipeline stages and opportunity line items.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 16 of 17) Tj
+ET
+endstream
+endobj
+35 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 34 0 R >>
+endobj
+36 0 obj
+<< /Length 1546 >>
+stream
+BT
+/F1 10 Tf
+/F1 10 Tf
+1 0 0 1 54.00 742.00 Tm (4. Product catalog, quote/invoice line items, and branded PDFs.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 729.00 Tm (5. Ticket detail, SLA calendar engine, queues, replies, and macros.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 716.00 Tm (6. Workflow runtime with logs and retry.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 703.00 Tm (7. Email sync, attachments, shared inbox, and entity timeline.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 690.00 Tm (8. Report builder, saved dashboards, and export jobs.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 677.00 Tm (9. SSO, MFA, audit exports, field permissions.) Tj
+/F1 10 Tf
+1 0 0 1 54.00 664.00 Tm (10. AI summaries, email drafts, ticket classification, and next-best action.) Tj
+/F1 14 Tf
+1 0 0 1 54.00 637.00 Tm (Conclusion) Tj
+/F1 10 Tf
+1 0 0 1 54.00 616.00 Tm (NexusCRM has the right broad structure to become a serious enterprise SaaS CRM. The) Tj
+/F1 10 Tf
+1 0 0 1 54.00 603.00 Tm (immediate opportunity is to turn broad CRUD coverage into deep operational workflows. The) Tj
+/F1 10 Tf
+1 0 0 1 54.00 590.00 Tm (most important architectural moves are unified activity events, custom metadata, background) Tj
+/F1 10 Tf
+1 0 0 1 54.00 577.00 Tm (jobs, audit logging, file storage, workflow runtime, and enterprise permissions. Once those) Tj
+/F1 10 Tf
+1 0 0 1 54.00 564.00 Tm (foundations exist, each business module can grow into a high-value enterprise feature set) Tj
+/F1 10 Tf
+1 0 0 1 54.00 551.00 Tm (without duplicating patterns or creating fragile one-off screens.) Tj
+/F1 8 Tf
+1 0 0 1 522 30 Tm (Page 17 of 17) Tj
+ET
+endstream
+endobj
+37 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 36 0 R >>
+endobj
+xref
+0 38
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000226 00000 n 
+0000000296 00000 n 
+0000005181 00000 n 
+0000005307 00000 n 
+0000009952 00000 n 
+0000010078 00000 n 
+0000014486 00000 n 
+0000014612 00000 n 
+0000019155 00000 n 
+0000019283 00000 n 
+0000023463 00000 n 
+0000023591 00000 n 
+0000028153 00000 n 
+0000028281 00000 n 
+0000032635 00000 n 
+0000032763 00000 n 
+0000037090 00000 n 
+0000037218 00000 n 
+0000041623 00000 n 
+0000041751 00000 n 
+0000046178 00000 n 
+0000046306 00000 n 
+0000050429 00000 n 
+0000050557 00000 n 
+0000054725 00000 n 
+0000054853 00000 n 
+0000058650 00000 n 
+0000058778 00000 n 
+0000062065 00000 n 
+0000062193 00000 n 
+0000065830 00000 n 
+0000065958 00000 n 
+0000069343 00000 n 
+0000069471 00000 n 
+0000071070 00000 n 
+trailer
+<< /Size 38 /Root 1 0 R >>
+startxref
+71198
+%%EOF
