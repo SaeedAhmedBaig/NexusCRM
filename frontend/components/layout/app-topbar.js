@@ -42,7 +42,7 @@ export function AppTopbar({ subdomain, profile, onMenuClick, collapsed, onToggle
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-[4.25rem] shrink-0 items-center justify-between gap-4 bg-background/80 px-4 backdrop-blur lg:px-7">
+    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border bg-background/95 px-4 backdrop-blur lg:px-6">
       <div className="flex min-w-0 items-center gap-2">
         <IconButton onClick={onMenuClick} className="lg:hidden" aria-label="Open menu">
           <Menu className="h-4 w-4" strokeWidth={1.75} />
@@ -60,10 +60,10 @@ export function AppTopbar({ subdomain, profile, onMenuClick, collapsed, onToggle
             )}
           </IconButton>
         )}
-        <div className="hidden h-10 min-w-[280px] items-center gap-2 rounded-xl border border-border bg-card px-3 shadow-sm sm:flex">
+        <div className="hidden h-9 min-w-[320px] items-center gap-2 rounded-md border border-border bg-control px-3 shadow-sm sm:flex">
           <Search className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.8} />
           <p className="truncate text-[12px] font-semibold text-foreground capitalize">{breadcrumb}</p>
-          <span className="ml-auto rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">⌘K</span>
+          <span className="ml-auto rounded-sm bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">⌘K</span>
         </div>
       </div>
 
@@ -76,9 +76,9 @@ export function AppTopbar({ subdomain, profile, onMenuClick, collapsed, onToggle
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
-            className="focus-ring flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-2 py-1.5 shadow-sm transition-colors hover:bg-card-hover"
+            className="focus-ring flex h-9 items-center gap-2 rounded-md border border-border bg-control px-2 py-1 shadow-sm transition-colors hover:bg-control-hover"
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-foreground text-[11px] font-semibold text-background">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-brand text-[11px] font-semibold text-brand-foreground">
               {(user?.name || user?.email || '?').charAt(0).toUpperCase()}
             </span>
             <span className="hidden text-left md:block">
@@ -98,10 +98,10 @@ export function AppTopbar({ subdomain, profile, onMenuClick, collapsed, onToggle
                 aria-label="Close menu"
                 onClick={() => setMenuOpen(false)}
               />
-              <div className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-3xl border border-border bg-popover p-1.5 text-popover-foreground shadow-lg">
+              <div className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-lg border border-border bg-popover p-1.5 text-popover-foreground shadow-lg">
                 <Link
                   href={getTenantUrl(subdomain, '/settings')}
-                  className="flex items-center gap-2 rounded-2xl px-3 py-2.5 text-[13px] text-foreground transition-colors hover:bg-muted"
+                  className="flex items-center gap-2 rounded-md px-3 py-2.5 text-[13px] text-foreground transition-colors hover:bg-muted"
                   onClick={() => setMenuOpen(false)}
                 >
                   <Settings className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.75} />
@@ -110,7 +110,7 @@ export function AppTopbar({ subdomain, profile, onMenuClick, collapsed, onToggle
                 <button
                   type="button"
                   onClick={signOut}
-                  className="flex w-full items-center gap-2 rounded-2xl px-3 py-2.5 text-left text-[13px] text-danger transition-colors hover:bg-danger-light"
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-left text-[13px] text-danger transition-colors hover:bg-danger-light"
                 >
                   <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} />
                   Sign out

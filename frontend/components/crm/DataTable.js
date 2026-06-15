@@ -121,17 +121,17 @@ export function DataTable({
               <button
                 type="button"
                 onClick={() => setBulkMenuOpen(!bulkMenuOpen)}
-                className="focus-ring flex h-11 items-center gap-2 rounded-full border border-border bg-control px-4 text-[13px] font-semibold text-foreground shadow-sm hover:bg-control-hover"
+              className="focus-ring flex h-9 items-center gap-2 rounded-md border border-border bg-control px-3 text-[13px] font-semibold text-foreground shadow-sm hover:bg-control-hover"
               >
                 <MoreHorizontal className="h-4 w-4" />
                 Bulk ({selected.size})
               </button>
               {bulkMenuOpen && (
-                <div className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-3xl border border-border bg-popover p-2 text-popover-foreground shadow-lg">
+                <div className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-lg border border-border bg-popover p-1.5 text-popover-foreground shadow-lg">
                   {filterOptions.statuses?.length > 0 && (
                     <button
                       type="button"
-                      className="flex w-full items-center rounded-2xl px-3.5 py-2.5 text-left text-sm hover:bg-surface"
+                      className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm hover:bg-surface"
                       onClick={() => askBulk('change_status', 'Change status', `Update status for ${selected.size} record(s)?`)}
                     >
                       Change status
@@ -139,21 +139,21 @@ export function DataTable({
                   )}
                   <button
                     type="button"
-                    className="flex w-full items-center rounded-2xl px-3.5 py-2.5 text-left text-sm hover:bg-surface"
+                    className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm hover:bg-surface"
                     onClick={() => askBulk('assign_owner', 'Assign owner', `Assign owner to ${selected.size} record(s)?`)}
                   >
                     Assign owner
                   </button>
                   <button
                     type="button"
-                    className="flex w-full items-center rounded-2xl px-3.5 py-2.5 text-left text-sm hover:bg-surface"
+                    className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm hover:bg-surface"
                     onClick={() => askBulk('mass_mail', 'Create mass mail', `Queue mass mail for ${selected.size} record(s)?`)}
                   >
                     Create mass mail
                   </button>
                   <button
                     type="button"
-                    className="flex w-full items-center rounded-2xl px-3.5 py-2.5 text-left text-sm text-danger hover:bg-danger-light"
+                    className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-danger hover:bg-danger-light"
                     onClick={() => askBulk('delete', 'Delete records', `Permanently delete ${selected.size} record(s)?`, true)}
                   >
                     Delete
@@ -165,7 +165,7 @@ export function DataTable({
           <button
             type="button"
             onClick={() => setFilterOpen(true)}
-            className="focus-ring flex h-11 items-center gap-2 rounded-full border border-border bg-control px-4 text-[13px] font-semibold text-foreground shadow-sm hover:bg-control-hover"
+            className="focus-ring flex h-9 items-center gap-2 rounded-md border border-border bg-control px-3 text-[13px] font-semibold text-foreground shadow-sm hover:bg-control-hover"
           >
             <Filter className="h-4 w-4" strokeWidth={2} />
             Filters
@@ -185,16 +185,16 @@ export function DataTable({
       {loading ? (
         <SkeletonTable rows={8} />
       ) : (
-      <div className="overflow-hidden rounded-[2.25rem] border border-border bg-card shadow-sm">
+      <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[820px] text-left text-[13px]">
             <thead className="sticky top-0 z-10 border-b border-border bg-muted">
               <tr>
-                <th className="w-14 px-5 py-4">
+                <th className="w-12 px-4 py-3">
                   <input type="checkbox" checked={allSelected} onChange={toggleAll} className="rounded border-border bg-card" />
                 </th>
                 {columns.map((col) => (
-                  <th key={col.key} className="px-5 py-4 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                  <th key={col.key} className="px-4 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                     {col.sortable !== false ? (
                       <button
                         type="button"
@@ -209,7 +209,7 @@ export function DataTable({
                     )}
                   </th>
                 ))}
-                <th className="w-32 px-5 py-4 text-right text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Actions</th>
+                <th className="w-28 px-4 py-3 text-right text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -223,12 +223,12 @@ export function DataTable({
                 data.map((row) => (
                   <tr
                     key={row.id}
-                    className={`min-h-16 border-b border-border/60 last:border-0 transition-colors hover:bg-muted/70 ${
+                    className={`border-b border-border/60 last:border-0 transition-colors hover:bg-muted/70 ${
                       selected.has(row.id) ? 'bg-muted' : ''
                     } ${onRowClick ? 'cursor-pointer' : ''}`}
                     onClick={() => onRowClick?.(row)}
                   >
-                    <td className="px-5 py-4 align-middle" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-4 py-3 align-middle" onClick={(e) => e.stopPropagation()}>
                       <input
                         type="checkbox"
                         checked={selected.has(row.id)}
@@ -237,17 +237,17 @@ export function DataTable({
                       />
                     </td>
                     {columns.map((col) => (
-                      <td key={col.key} className="px-5 py-4 align-middle text-foreground">
+                      <td key={col.key} className="px-4 py-3 align-middle text-foreground">
                         {renderCell(col, row)}
                       </td>
                     ))}
-                    <td className="px-5 py-4 align-middle" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-4 py-3 align-middle" onClick={(e) => e.stopPropagation()}>
                       <div className="flex justify-end gap-1">
                         <button
                           type="button"
                           title="View"
                           onClick={() => onRowView?.(row) || onRowClick?.(row)}
-                          className="focus-ring inline-flex size-8 items-center justify-center rounded-full text-muted-foreground hover:bg-surface hover:text-foreground"
+                          className="focus-ring inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-surface hover:text-foreground"
                         >
                           <Eye className="h-4 w-4" />
                         </button>
@@ -255,7 +255,7 @@ export function DataTable({
                           type="button"
                           title="Edit"
                           onClick={() => onRowEdit?.(row)}
-                          className="inline-flex size-8 items-center justify-center rounded-full text-muted-foreground hover:bg-surface hover:text-foreground"
+                          className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-surface hover:text-foreground"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
@@ -271,7 +271,7 @@ export function DataTable({
                               danger: true,
                             })
                           }
-                          className="inline-flex size-8 items-center justify-center rounded-full text-muted-foreground hover:bg-danger-light hover:text-danger"
+                          className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-danger-light hover:text-danger"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -284,13 +284,13 @@ export function DataTable({
           </table>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-border bg-muted px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-t border-border bg-muted px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Rows per page</span>
             <select
               value={limit}
               onChange={(e) => onParamsChange({ limit: e.target.value, page: '1' })}
-              className="h-9 rounded-full border border-border bg-control px-3 text-sm text-foreground"
+              className="h-8 rounded-md border border-border bg-control px-3 text-sm text-foreground"
             >
               {PAGE_SIZES.map((n) => (
                 <option key={n} value={n}>
@@ -307,7 +307,7 @@ export function DataTable({
               type="button"
               disabled={page <= 1}
               onClick={() => onParamsChange({ page: String(page - 1) })}
-              className="inline-flex size-9 items-center justify-center rounded-full border border-border bg-control shadow-sm disabled:opacity-40"
+              className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-control shadow-sm disabled:opacity-40"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -315,7 +315,7 @@ export function DataTable({
               type="button"
               disabled={page >= totalPages}
               onClick={() => onParamsChange({ page: String(page + 1) })}
-              className="inline-flex size-9 items-center justify-center rounded-full border border-border bg-control shadow-sm disabled:opacity-40"
+              className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-control shadow-sm disabled:opacity-40"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -330,7 +330,7 @@ export function DataTable({
           <aside className="animate-slide-in-right relative flex h-full w-full max-w-md flex-col border-l border-border bg-card shadow-xl">
             <div className="flex items-center justify-between border-b border-border px-5 py-5">
               <h2 className="font-semibold">Filters</h2>
-              <button type="button" onClick={() => setFilterOpen(false)} className="inline-flex size-9 items-center justify-center rounded-full hover:bg-surface">
+              <button type="button" onClick={() => setFilterOpen(false)} className="inline-flex size-9 items-center justify-center rounded-md hover:bg-surface">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -369,7 +369,7 @@ export function DataTable({
                   onParamsChange({ status: '', stage: '', department: '', owner: '', dateFrom: '', dateTo: '', page: '1' });
                   setFilterOpen(false);
                 }}
-                className="h-11 w-full rounded-full border border-border bg-control px-4 text-sm font-semibold hover:bg-control-hover"
+                className="h-10 w-full rounded-md border border-border bg-control px-4 text-sm font-semibold hover:bg-control-hover"
               >
                 Clear filters
               </button>

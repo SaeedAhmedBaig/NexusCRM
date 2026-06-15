@@ -23,11 +23,11 @@ export function PricingCards({ plansData }) {
             and governance as your team grows.
           </p>
 
-          <div className="mt-8 inline-flex items-center rounded-full border border-border bg-card p-1 shadow-sm">
+          <div className="mt-8 inline-flex items-center rounded-md border border-border bg-card p-1 shadow-sm">
             <button
               type="button"
               className={cn(
-                'rounded-full px-5 py-2.5 text-sm font-semibold transition-colors',
+                'rounded-md px-5 py-2 text-sm font-semibold transition-colors',
                 billing === 'monthly'
                   ? 'bg-brand text-brand-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground',
@@ -40,7 +40,7 @@ export function PricingCards({ plansData }) {
             <button
               type="button"
               className={cn(
-                'rounded-full px-5 py-2.5 text-sm font-semibold transition-colors',
+                'rounded-md px-5 py-2 text-sm font-semibold transition-colors',
                 billing === 'yearly'
                   ? 'bg-brand text-brand-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground',
@@ -63,14 +63,14 @@ export function PricingCards({ plansData }) {
               <article
                 key={plan.id}
                 className={cn(
-                  'relative flex h-full flex-col rounded-[2rem] border bg-card p-5 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md',
+                  'relative flex h-full flex-col rounded-lg border bg-card p-5 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md',
                   plan.popular
                     ? 'border-brand ring-4 ring-brand/10'
                     : 'border-border',
                 )}
               >
                 {plan.popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-brand-foreground shadow-sm">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-md bg-brand px-3 py-1 text-xs font-semibold text-brand-foreground shadow-sm">
                     Most popular
                   </span>
                 )}
@@ -104,7 +104,7 @@ export function PricingCards({ plansData }) {
                 <Link
                   href={`/signup?plan=${plan.slug || plan.id}`}
                   className={cn(
-                    'mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors',
+                    'mt-6 inline-flex h-10 items-center justify-center gap-2 rounded-md px-4 text-sm font-semibold transition-colors',
                     plan.popular
                       ? 'bg-brand text-brand-foreground hover:bg-brand-dark'
                       : 'border border-border bg-control text-foreground hover:bg-control-hover',

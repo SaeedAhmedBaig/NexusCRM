@@ -4,66 +4,66 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* NexusCRM — unified rounded design system */
+/* NexusCRM — Effix/Fillout visual system */
 
 :root {
   /* Brand — used for primary action and selected emphasis only */
-  --brand: #ee5b4d;
+  --brand: #007f89;
   --brand-foreground: #ffffff;
-  --brand-dark: #d9483c;
-  --brand-darker: #b9352c;
-  --brand-muted: rgba(238, 91, 77, 0.14);
-  --brand-light: rgba(238, 91, 77, 0.1);
-  --brand-subtle: rgba(238, 91, 77, 0.06);
+  --brand-dark: #00646d;
+  --brand-darker: #004f56;
+  --brand-muted: rgba(0, 127, 137, 0.14);
+  --brand-light: rgba(0, 127, 137, 0.1);
+  --brand-subtle: rgba(0, 127, 137, 0.06);
 
   /* Neutral surface stack */
-  --background: #f5f7fb;
-  --foreground: #101217;
-  --muted: #e9eef6;
-  --muted-foreground: #5d6676;
-  --border: #d8e0ec;
-  --border-subtle: #e8edf5;
-  --ring: rgba(238, 91, 77, 0.22);
+  --background: #f3f5f4;
+  --foreground: #101716;
+  --muted: #eef1ef;
+  --muted-foreground: #53605d;
+  --border: #d9dfdc;
+  --border-subtle: #e8ecea;
+  --ring: rgba(0, 127, 137, 0.24);
 
-  --surface: #eef3fa;
+  --surface: #f8faf9;
   --surface-elevated: #ffffff;
   --card: #ffffff;
-  --card-foreground: #101217;
-  --card-hover: #f8fafc;
+  --card-foreground: #101716;
+  --card-hover: #f7faf9;
   --control: #ffffff;
-  --control-hover: #f8fafc;
-  --ink: #101217;
+  --control-hover: #f1f5f3;
+  --ink: #08211f;
   --ink-foreground: #ffffff;
 
   --accent: #edf2f8;
   --accent-foreground: #101217;
 
   /* Semantic */
-  --success: #168a46;
+  --success: #00a870;
   --success-light: rgba(22, 138, 70, 0.12);
-  --warning: #b77908;
+  --warning: #ca7a00;
   --warning-light: rgba(183, 121, 8, 0.13);
-  --danger: #ce3328;
+  --danger: #d63b35;
   --danger-light: rgba(206, 51, 40, 0.11);
-  --info: #2f6edb;
+  --info: #2764d8;
   --info-light: rgba(47, 110, 219, 0.11);
   --pending: #6b7280;
   --pending-light: rgba(107, 114, 128, 0.12);
-  --progress: #0f7a94;
+  --progress: #007f89;
   --progress-light: rgba(15, 122, 148, 0.12);
   --overdue: #c0362c;
   --overdue-light: rgba(192, 54, 44, 0.12);
 
   /* Shell */
-  --sidebar: #fbfcfe;
-  --sidebar-foreground: #101217;
-  --sidebar-muted: #687080;
-  --sidebar-active: #101217;
-  --sidebar-border: #e1e6ef;
-  --sidebar-primary: #101217;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #10201e;
+  --sidebar-muted: #62706c;
+  --sidebar-active: #007f89;
+  --sidebar-border: #e3e8e5;
+  --sidebar-primary: #007f89;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #ffffff;
-  --sidebar-accent-foreground: #0b0b0d;
+  --sidebar-accent: #f0f7f6;
+  --sidebar-accent-foreground: #063b3f;
   --sidebar-ring: rgba(24, 24, 27, 0.08);
 
   /* Charts — muted palette, brand as one series */
@@ -95,11 +95,11 @@
   --popover-foreground: var(--foreground);
   --input: var(--border);
 
-  --radius: 1.125rem;
-  --radius-lg: 1.625rem;
-  --shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 18px 48px rgba(15, 23, 42, 0.1);
-  --shadow-lg: 0 30px 90px rgba(15, 23, 42, 0.14);
+  --radius: 0.625rem;
+  --radius-lg: 0.875rem;
+  --shadow-sm: 0 1px 2px rgba(9, 30, 26, 0.06), 0 8px 28px rgba(9, 30, 26, 0.04);
+  --shadow-md: 0 12px 38px rgba(9, 30, 26, 0.1);
+  --shadow-lg: 0 28px 80px rgba(9, 30, 26, 0.15);
   --app-gutter: clamp(1rem, 2vw, 2rem);
   --app-grid-gap: 1rem;
 
@@ -108,30 +108,30 @@
 }
 
 .dark {
-  --background: #0f131b;
-  --foreground: #f7f9fc;
-  --muted: #202633;
-  --muted-foreground: #aeb7c6;
-  --border: #2b3444;
-  --border-subtle: #1c2330;
-  --ring: rgba(238, 91, 77, 0.32);
+  --background: #07100f;
+  --foreground: #f5fbf9;
+  --muted: #14201e;
+  --muted-foreground: #b6c7c3;
+  --border: #263532;
+  --border-subtle: #172421;
+  --ring: rgba(0, 184, 194, 0.34);
 
-  --surface: #151b25;
-  --surface-elevated: #1b2230;
-  --card: #19202b;
-  --card-foreground: #f7f8fb;
-  --card-hover: #222a38;
-  --control: #1b2230;
-  --control-hover: #242d3b;
-  --ink: #0b0f16;
-  --ink-foreground: #f7f9fc;
+  --surface: #0b1513;
+  --surface-elevated: #101d1a;
+  --card: #101d1a;
+  --card-foreground: #f5fbf9;
+  --card-hover: #172622;
+  --control: #0f1c19;
+  --control-hover: #192925;
+  --ink: #020807;
+  --ink-foreground: #f5fbf9;
 
   --accent: #202530;
   --accent-foreground: #f7f8fb;
 
-  --brand-muted: rgba(238, 91, 77, 0.2);
-  --brand-light: rgba(238, 91, 77, 0.13);
-  --brand-subtle: rgba(238, 91, 77, 0.07);
+  --brand-muted: rgba(0, 184, 194, 0.22);
+  --brand-light: rgba(0, 184, 194, 0.15);
+  --brand-subtle: rgba(0, 184, 194, 0.08);
 
   --success: #4ade80;
   --warning: #facc15;
@@ -148,15 +148,15 @@
   --progress-light: rgba(103, 232, 249, 0.14);
   --overdue-light: rgba(252, 165, 165, 0.14);
 
-  --sidebar: #11151d;
-  --sidebar-foreground: #f7f8fb;
-  --sidebar-muted: #a7afbd;
-  --sidebar-active: #f7f8fb;
-  --sidebar-border: #252b36;
-  --sidebar-primary: #f7f8fb;
-  --sidebar-primary-foreground: #101114;
-  --sidebar-accent: #1a1f29;
-  --sidebar-accent-foreground: #f7f8fb;
+  --sidebar: #0b1513;
+  --sidebar-foreground: #f5fbf9;
+  --sidebar-muted: #a6b8b4;
+  --sidebar-active: #00b8c2;
+  --sidebar-border: #20302c;
+  --sidebar-primary: #00b8c2;
+  --sidebar-primary-foreground: #02100f;
+  --sidebar-accent: #10231f;
+  --sidebar-accent-foreground: #f5fbf9;
 
   --chart-grid: #27272a;
   --chart-text: #71717a;
@@ -281,10 +281,10 @@ body {
 
 /* Marketing */
 .marketing-section {
-  padding-block: clamp(4.5rem, 8vw, 7.5rem);
+  padding-block: clamp(5rem, 8vw, 8rem);
 }
 .marketing-container {
-  max-width: 1184px;
+  max-width: 1200px;
   margin-inline: auto;
   padding-inline: clamp(1rem, 4vw, 2rem);
   width: 100%;
@@ -297,7 +297,7 @@ body {
 }
 .marketing-card {
   border: 1px solid var(--border);
-  border-radius: calc(var(--radius-lg) * 1.1);
+  border-radius: var(--radius-lg);
   background: var(--card);
   color: var(--card-foreground);
   box-shadow: var(--shadow-sm);
@@ -316,14 +316,14 @@ body {
 
 .effix-panel {
   border: 1px solid var(--border);
-  border-radius: calc(var(--radius-lg) * 1.1);
+  border-radius: var(--radius-lg);
   background: var(--card);
   box-shadow: var(--shadow-sm);
 }
 
 .effix-widget {
   border: 1px solid var(--border);
-  border-radius: calc(var(--radius-lg) * 0.95);
+  border-radius: var(--radius-lg);
   background: var(--card);
   padding: 1rem;
   box-shadow: var(--shadow-sm);
@@ -332,7 +332,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  border-radius: 999px;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--card);
   padding: 0.375rem 0.875rem;
@@ -366,7 +366,7 @@ body {
 .card-elevated {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: calc(var(--radius-lg) * 1.15);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(16px);
 }
@@ -379,17 +379,17 @@ body {
 .input-base {
   width: 100%;
   min-width: 0;
-  min-height: 2.75rem;
-  border-radius: calc(var(--radius) * 1.05);
+  min-height: 2.625rem;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--control);
-  padding-block: 0.625rem;
+  padding-block: 0.5625rem;
   padding-inline: 0.875rem;
   font-size: 0.875rem;
   color: var(--foreground);
   transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
 }
-.input-base::placeholder { color: var(--muted-foreground); }
+.input-base::placeholder { color: color-mix(in srgb, var(--muted-foreground) 86%, var(--foreground)); opacity: 1; }
 .input-base:focus {
   border-color: var(--brand);
   box-shadow: 0 0 0 3px var(--ring);

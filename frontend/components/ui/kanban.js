@@ -35,13 +35,13 @@ export function KanbanCard({
 
   const body = (
     <div className="space-y-3">
-      {coverClassName && <div className={cn('h-2 rounded-full', coverClassName)} />}
+      {coverClassName && <div className={cn('h-1.5 rounded-sm', coverClassName)} />}
       {labels.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {labels.map((label) => (
             <span
               key={label.label || label}
-              className={cn('h-2 min-w-8 rounded-full', label.className || label)}
+              className={cn('h-1.5 min-w-7 rounded-sm', label.className || label)}
               title={label.label || label}
             />
           ))}
@@ -50,7 +50,7 @@ export function KanbanCard({
       <div className="flex items-start gap-2.5">
       <button
         type="button"
-        className="mt-0.5 shrink-0 cursor-grab rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+        className="mt-0.5 shrink-0 cursor-grab rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
         aria-label="Drag"
         {...attributes}
         {...listeners}
@@ -67,7 +67,7 @@ export function KanbanCard({
               <span
                 key={b.label}
                 className={cn(
-                  'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+                  'rounded-sm px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
                   b.className || 'bg-muted text-muted-foreground',
                 )}
               >
@@ -81,25 +81,25 @@ export function KanbanCard({
       {(dueDate || assignees.length > 0 || checklist || commentCount || attachmentCount) && (
         <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
           {dueDate && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1">
+            <span className="inline-flex items-center gap-1 rounded-sm bg-muted px-2 py-1">
               <Clock3 className="h-3 w-3" />
               {new Date(dueDate).toLocaleDateString()}
             </span>
           )}
           {checklist && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1">
+            <span className="inline-flex items-center gap-1 rounded-sm bg-muted px-2 py-1">
               <CheckSquare className="h-3 w-3" />
               {checklist.done}/{checklist.total}
             </span>
           )}
           {commentCount ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1">
+            <span className="inline-flex items-center gap-1 rounded-sm bg-muted px-2 py-1">
               <MessageCircle className="h-3 w-3" />
               {commentCount}
             </span>
           ) : null}
           {attachmentCount ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1">
+            <span className="inline-flex items-center gap-1 rounded-sm bg-muted px-2 py-1">
               <Paperclip className="h-3 w-3" />
               {attachmentCount}
             </span>
@@ -111,7 +111,7 @@ export function KanbanCard({
                 {assignees.slice(0, 3).map((user) => (
                   <span
                     key={user.id || user.userId || user.email || user.name}
-                    className="flex size-6 items-center justify-center rounded-full border border-card bg-foreground text-[10px] font-semibold text-background"
+                    className="flex size-6 items-center justify-center rounded-md border border-card bg-foreground text-[10px] font-semibold text-background"
                     title={user.name || user.email}
                   >
                     {(user.name || user.email || '?').charAt(0).toUpperCase()}
@@ -127,7 +127,7 @@ export function KanbanCard({
   );
 
   const shell = cn(
-    'rounded-[1.35rem] border border-border bg-card p-3.5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md',
+    'rounded-lg border border-border bg-card p-3.5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md',
     className,
   );
 
@@ -183,7 +183,7 @@ export function KanbanStaticCard({ title, subtitle, meta, badges = [], footer, h
   );
 
   const shell = cn(
-    'rounded-[1.35rem] border border-border bg-card p-3.5 shadow-sm transition-shadow hover:shadow-md',
+    'rounded-lg border border-border bg-card p-3.5 shadow-sm transition-shadow hover:shadow-md',
     className,
   );
 
@@ -207,7 +207,7 @@ export function KanbanColumn({ id, title, count, summary, accent, children, empt
       <div className="mb-3 flex items-center justify-between px-1">
         <div>
           <div className="flex items-center gap-2">
-            <span className={cn('h-2.5 w-2.5 rounded-full', accent)} />
+            <span className={cn('h-2.5 w-2.5 rounded-sm', accent)} />
             <h3 className="text-sm font-semibold text-foreground">{title}</h3>
           </div>
           <p className="mt-0.5 text-[11px] text-muted-foreground">
@@ -219,12 +219,12 @@ export function KanbanColumn({ id, title, count, summary, accent, children, empt
       <div
         ref={setNodeRef}
         className={cn(
-          'flex min-h-[360px] flex-1 flex-col gap-3 rounded-[1.75rem] border border-border bg-surface p-3 transition-colors',
+          'flex min-h-[360px] flex-1 flex-col gap-3 rounded-lg border border-border bg-surface p-3 transition-colors',
           isOver && 'bg-muted ring-2 ring-brand/20',
         )}
       >
         {hasChildren ? children : (
-          <div className="flex min-h-32 items-center justify-center rounded-[1.25rem] border border-dashed border-border bg-card/60 p-4 text-center text-xs text-muted-foreground">
+          <div className="flex min-h-32 items-center justify-center rounded-md border border-dashed border-border bg-card/60 p-4 text-center text-xs text-muted-foreground">
             {empty || 'Drop cards here'}
           </div>
         )}

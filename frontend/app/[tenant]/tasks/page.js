@@ -73,7 +73,7 @@ function TasksPageInner() {
   }
 
   if (error) {
-    return <div className="rounded-2xl border border-danger/20 bg-danger-light p-6 text-sm text-danger">{error.message}</div>;
+    return <div className="rounded-md border border-danger/20 bg-danger-light p-6 text-sm text-danger">{error.message}</div>;
   }
 
   const listData = data?.data || [];
@@ -94,18 +94,18 @@ function TasksPageInner() {
           <p className="mt-1 text-sm text-muted-foreground">Plan, assign, checklist, discuss, and move work like a Trello board.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex rounded-full border border-border bg-muted p-1">
+          <div className="flex rounded-md border border-border bg-muted p-1">
             <button
               type="button"
               onClick={() => setParam('view', 'kanban')}
-              className={`flex h-10 items-center gap-1.5 rounded-full px-4 text-sm font-semibold ${view === 'kanban' ? 'bg-brand text-brand-foreground' : 'text-muted-foreground'}`}
+              className={`flex h-9 items-center gap-1.5 rounded-md px-3.5 text-sm font-semibold ${view === 'kanban' ? 'bg-brand text-brand-foreground' : 'text-muted-foreground'}`}
             >
               <LayoutGrid className="h-4 w-4" /> Kanban
             </button>
             <button
               type="button"
               onClick={() => setParam('view', 'list')}
-              className={`flex h-10 items-center gap-1.5 rounded-full px-4 text-sm font-semibold ${view === 'list' ? 'bg-brand text-brand-foreground' : 'text-muted-foreground'}`}
+              className={`flex h-9 items-center gap-1.5 rounded-md px-3.5 text-sm font-semibold ${view === 'list' ? 'bg-brand text-brand-foreground' : 'text-muted-foreground'}`}
             >
               <List className="h-4 w-4" /> List
             </button>
@@ -113,7 +113,7 @@ function TasksPageInner() {
           <button
             type="button"
             onClick={() => setAddOpen(true)}
-            className="inline-flex h-11 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-brand-foreground"
+            className="inline-flex h-10 items-center gap-2 rounded-md bg-brand px-4 text-sm font-semibold text-brand-foreground"
           >
             <Plus className="h-4 w-4" /> Add task
           </button>
@@ -127,13 +127,13 @@ function TasksPageInner() {
           ].map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.label} className="rounded-[1.35rem] border border-border bg-card p-4">
+              <div key={item.label} className="rounded-md border border-border bg-card p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-2xl font-semibold tracking-tight text-foreground">{item.value}</p>
                     <p className="text-xs font-medium text-muted-foreground">{item.label}</p>
                   </div>
-                  <span className={`flex size-10 items-center justify-center rounded-2xl ${item.tone}`}>
+                  <span className={`flex size-9 items-center justify-center rounded-md ${item.tone}`}>
                     <Icon className="size-4" />
                   </span>
                 </div>
@@ -144,7 +144,7 @@ function TasksPageInner() {
       </div>
 
       <div className="effix-panel flex flex-wrap items-center gap-2 p-3">
-        <div className="flex h-11 min-w-[260px] flex-1 items-center gap-2 rounded-full border border-border bg-control px-4">
+        <div className="flex h-10 min-w-[260px] flex-1 items-center gap-2 rounded-md border border-border bg-control px-3.5">
           <Search className="h-4 w-4 text-muted-foreground" />
           <input
             defaultValue={filters.q}
@@ -158,7 +158,7 @@ function TasksPageInner() {
         <select
           value={filters.priority}
           onChange={(e) => setParam('priority', e.target.value)}
-          className="h-11 rounded-full border border-border bg-control px-4 text-sm"
+          className="h-10 rounded-md border border-border bg-control px-3.5 text-sm"
         >
           <option value="">All priorities</option>
           {['low', 'medium', 'high', 'urgent'].map((p) => (
@@ -168,14 +168,14 @@ function TasksPageInner() {
         <select
           value={filters.projectId}
           onChange={(e) => setParam('projectId', e.target.value)}
-          className="h-11 rounded-full border border-border bg-control px-4 text-sm"
+          className="h-10 rounded-md border border-border bg-control px-3.5 text-sm"
         >
           <option value="">All projects</option>
           {projects.map((p) => (
             <option key={p.id} value={p.id}>{p.name}</option>
           ))}
         </select>
-        <label className="flex h-11 items-center gap-2 rounded-full border border-border bg-control px-4 text-sm">
+        <label className="flex h-10 items-center gap-2 rounded-md border border-border bg-control px-3.5 text-sm">
           <input
             type="checkbox"
             checked={filters.assignedToMe === 'true'}
@@ -187,10 +187,10 @@ function TasksPageInner() {
           type="date"
           value={filters.dueBefore}
           onChange={(e) => setParam('dueBefore', e.target.value)}
-          className="h-11 rounded-full border border-border bg-control px-4 text-sm"
+          className="h-10 rounded-md border border-border bg-control px-3.5 text-sm"
           title="Due before"
         />
-        <label className="flex h-11 items-center gap-2 rounded-full border border-border bg-control px-4 text-sm">
+        <label className="flex h-10 items-center gap-2 rounded-md border border-border bg-control px-3.5 text-sm">
           <input
             type="checkbox"
             checked={filters.showCompleted === 'true'}

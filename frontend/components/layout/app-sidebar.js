@@ -38,9 +38,9 @@ export function AppSidebar({
         href={`${base}${item.href}`}
         onClick={onClose}
         title={collapsed ? item.label : undefined}
-        className={`group flex h-9 items-center gap-2.5 rounded-xl px-3 text-[12px] font-semibold transition-all ${
+        className={`group flex h-8 items-center gap-2 rounded-md px-2.5 text-[12px] font-semibold transition-all ${
           active
-            ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
+            ? 'bg-sidebar-accent text-sidebar-accent-foreground'
             : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
         } ${collapsed ? 'justify-center px-2.5' : ''}`}
       >
@@ -70,41 +70,41 @@ export function AppSidebar({
         />
       )}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 p-3 transition-all duration-150 ${
-          collapsed ? 'w-20' : 'w-[248px]'
+        className={`fixed inset-y-0 left-0 z-50 border-r border-sidebar-border bg-sidebar transition-all duration-150 ${
+          collapsed ? 'w-[74px]' : 'w-[220px]'
         } ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        <div className="flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-sidebar-border bg-sidebar shadow-sm">
+        <div className="flex h-full flex-col overflow-hidden">
         <div
-          className={`flex h-16 shrink-0 items-center border-b border-sidebar-border/70 ${
-            collapsed ? 'justify-center px-2' : 'gap-3 px-4'
+          className={`flex h-14 shrink-0 items-center border-b border-sidebar-border/70 ${
+            collapsed ? 'justify-center px-2' : 'gap-2.5 px-4'
           }`}
         >
           {tenantLogo ? (
-            <img src={tenantLogo} alt="" className="h-9 w-9 shrink-0 rounded-2xl object-cover" />
+            <img src={tenantLogo} alt="" className="h-8 w-8 shrink-0 rounded-md object-cover" />
           ) : (
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-foreground text-sm font-semibold text-background shadow-sm">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-brand text-sm font-semibold text-brand-foreground shadow-sm">
               {initial}
             </span>
           )}
           {!collapsed && (
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-semibold text-foreground">{tenantName || subdomain}</p>
-              <p className="truncate text-[11px] text-muted-foreground capitalize">{tenantPlan || 'journey workspace'}</p>
+              <p className="truncate text-[13px] font-bold text-foreground">{tenantName || subdomain}</p>
+              <p className="truncate text-[10px] font-medium text-muted-foreground capitalize">{tenantPlan || 'workspace'}</p>
             </div>
           )}
         </div>
 
-        <nav className={`flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto ${collapsed ? 'p-2.5' : 'p-3 pt-4'}`}>
+        <nav className={`flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto ${collapsed ? 'p-2' : 'p-2.5 pt-3'}`}>
           {NAV_SECTIONS.map((section) => (
             <div key={section.label || 'main'}>
               {section.label && !collapsed && (
-                <p className="mb-2 px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                <p className="mb-1.5 px-2 text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                   {section.label}
                 </p>
               )}
               {section.label && collapsed && <div className="mb-2 border-t border-sidebar-border/70" />}
-              <div className="flex flex-col gap-1">{section.items.map(renderLink)}</div>
+              <div className="flex flex-col gap-0.5">{section.items.map(renderLink)}</div>
             </div>
           ))}
         </nav>

@@ -17,10 +17,10 @@ function timeAgo(dateStr) {
 
 export function ActivityFeed({ subdomain, items = [], compact = false }) {
   return (
-    <div className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm">
+    <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div className={`border-b border-border/70 ${compact ? 'px-4 py-3' : 'px-5 py-4'}`}>
         <h3 className={compact ? 'text-sm font-semibold text-foreground' : 'text-h3 text-foreground'}>Journey activity</h3>
-        <p className="mt-0.5 text-sm text-muted">Latest customer movement</p>
+        <p className="mt-0.5 text-sm text-muted-foreground">Latest customer movement</p>
       </div>
       {!items.length ? (
         <div className="p-4">

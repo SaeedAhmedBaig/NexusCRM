@@ -69,7 +69,7 @@ export function FeaturesGrid() {
                 key={feature.title}
                 className="marketing-card p-6 transition-transform hover:-translate-y-1"
               >
-                <div className="mb-5 flex size-12 items-center justify-center rounded-2xl bg-brand-light text-brand">
+                <div className="mb-5 flex size-11 items-center justify-center rounded-md bg-brand-light text-brand">
                   <Icon className="size-5" strokeWidth={1.85} />
                 </div>
                 <h3 className="text-base font-semibold text-foreground">{feature.title}</h3>

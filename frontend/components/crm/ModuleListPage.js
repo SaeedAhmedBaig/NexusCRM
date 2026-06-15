@@ -132,7 +132,7 @@ export function ModuleListPage({
 
   if (error) {
     return (
-      <div className="rounded-2xl border border-danger/20 bg-danger-light p-6 text-sm text-danger">
+      <div className="rounded-md border border-danger/20 bg-danger-light p-6 text-sm text-danger">
         {error.message}
       </div>
     );
@@ -155,7 +155,7 @@ export function ModuleListPage({
 
       {showCreate && createFields.length > 0 && (
         <form
-          className="rounded-xl border border-border bg-card p-5"
+          className="rounded-lg border border-border bg-card p-5"
           onSubmit={(e) => {
             e.preventDefault();
             createMutation.mutate(form);
@@ -244,7 +244,7 @@ export function ModuleListPage({
                   {detailLoading ? 'Loading latest record...' : 'View, edit, and govern this CRM record.'}
                 </p>
               </div>
-              <button type="button" onClick={() => setDrawer({ open: false, mode: 'view', record: null, form: {} })} className="rounded-full p-2 hover:bg-card">
+              <button type="button" onClick={() => setDrawer({ open: false, mode: 'view', record: null, form: {} })} className="rounded-md p-2 hover:bg-card">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -282,7 +282,7 @@ export function ModuleListPage({
                       .filter(([key, value]) => !['_id', 'id', '__v'].includes(key) && value !== null && value !== undefined && typeof value !== 'object')
                       .slice(0, 12)
                       .map(([key, value]) => (
-                        <div key={key} className="rounded-2xl border border-border bg-control p-4">
+                        <div key={key} className="rounded-md border border-border bg-control p-4">
                           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{key.replace(/([A-Z])/g, ' $1')}</p>
                           <p className="mt-1 break-words text-sm font-semibold text-foreground">{String(value)}</p>
                         </div>

@@ -65,7 +65,7 @@ export function ExecutiveDashboard({ widgets, salesTrend, funnelStages, activity
               { label: 'Pending requests', value: widgets?.pendingRequests ?? '—' },
               { label: 'Tasks due today', value: widgets?.tasksDueToday ?? widgets?.myTasks ?? '—' },
             ].map((row) => (
-              <div key={row.label} className="flex items-center justify-between rounded-2xl bg-muted px-3 py-2">
+              <div key={row.label} className="flex items-center justify-between rounded-md bg-muted px-3 py-2">
                 <span className="text-[13px] text-muted-foreground">{row.label}</span>
                 <span className="text-sm font-semibold tabular-nums text-foreground">{row.value}</span>
               </div>

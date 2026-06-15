@@ -17,13 +17,16 @@ const MODES = [
 ];
 
 const triggerClass =
-  'icon-btn focus-ring inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-border bg-control text-foreground/80 shadow-sm transition-colors hover:bg-control-hover hover:text-foreground';
+  'icon-btn focus-ring inline-flex size-9 shrink-0 items-center justify-center rounded-md border border-border bg-control text-foreground/80 shadow-sm transition-colors hover:bg-control-hover hover:text-foreground';
 
 export function ThemeToggle({ compact = true }) {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   if (!mounted) {
     return (
@@ -39,13 +42,13 @@ export function ThemeToggle({ compact = true }) {
 
   if (!compact) {
     return (
-      <div className="flex items-center gap-0.5 rounded-full border border-border bg-control p-1 shadow-sm">
+      <div className="flex items-center gap-0.5 rounded-md border border-border bg-control p-1 shadow-sm">
         {MODES.map(({ value, label, icon: Icon }) => (
           <button
             key={value}
             type="button"
             onClick={() => setTheme(value)}
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
               current === value
                 ? 'bg-muted text-foreground'
                 : 'text-muted-foreground hover:text-foreground'

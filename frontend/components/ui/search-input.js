@@ -16,8 +16,8 @@ export function SearchInput({
   return (
     <div
       className={cn(
-        'flex min-w-0 items-center gap-3 rounded-full border border-border bg-control',
-        'min-h-11 px-4 py-0 shadow-sm transition-colors focus-within:border-brand focus-within:ring-[3px] focus-within:ring-[var(--ring)]',
+        'flex min-w-0 items-center gap-3 rounded-md border border-border bg-control',
+        'min-h-10 px-3.5 py-0 shadow-sm transition-colors focus-within:border-brand focus-within:ring-[3px] focus-within:ring-[var(--ring)]',
         className,
       )}
     >
@@ -38,7 +38,7 @@ export function SearchInput({
         onKeyDown={onKeyDown}
         className={cn(
           'min-w-0 flex-1 border-0 bg-transparent py-3 text-sm text-foreground outline-none',
-          'placeholder:truncate placeholder:text-muted',
+          'placeholder:truncate placeholder:text-muted-foreground',
           inputClassName,
         )}
         {...props}

@@ -69,7 +69,7 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <button type="button" className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] border border-border bg-card shadow-xl">
+      <div className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg border border-border bg-card shadow-xl">
         <div className="flex items-start justify-between gap-4 border-b border-border bg-muted px-6 py-5">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Task card</p>
@@ -78,7 +78,7 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
               {task.project?.name || 'No project'} · {task.priority || 'medium'} priority · {task.progress || 0}% checklist
             </p>
           </div>
-          <button type="button" onClick={onClose} className="rounded-full p-2 hover:bg-card"><X className="h-5 w-5" /></button>
+          <button type="button" onClick={onClose} className="rounded-md p-2 hover:bg-card"><X className="h-5 w-5" /></button>
         </div>
 
         <div className="border-b border-border px-5 py-3">
@@ -88,7 +88,7 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                 key={t}
                 type="button"
                 onClick={() => setTab(t)}
-                className={`rounded-full px-3 py-2 text-sm font-semibold capitalize ${
+                className={`rounded-md px-3 py-2 text-sm font-semibold capitalize ${
                   tab === t ? 'bg-brand text-brand-foreground' : 'bg-control text-muted-foreground hover:bg-control-hover hover:text-foreground'
                 }`}
               >
@@ -111,7 +111,7 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                 <input
                   {...register('title')}
                   defaultValue={task.title}
-                  className="mt-1 w-full rounded-2xl border border-border bg-control px-4 py-3"
+                  className="mt-1 w-full rounded-md border border-border bg-control px-4 py-3"
                 />
               </label>
               <label className="block text-sm lg:col-span-2">
@@ -120,13 +120,13 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                   {...register('description')}
                   defaultValue={task.description || ''}
                   rows={3}
-                  className="mt-1 w-full rounded-2xl border border-border bg-control px-4 py-3"
+                  className="mt-1 w-full rounded-md border border-border bg-control px-4 py-3"
                 />
               </label>
               <div className="grid grid-cols-2 gap-3 lg:col-span-2">
                 <label className="block text-sm">
                   <span className="font-medium text-muted-foreground">Status</span>
-                  <select {...register('status')} defaultValue={task.status} className="mt-1 w-full rounded-2xl border border-border bg-control px-4 py-3 capitalize">
+                  <select {...register('status')} defaultValue={task.status} className="mt-1 w-full rounded-md border border-border bg-control px-4 py-3 capitalize">
                     {STATUSES.map((s) => (
                       <option key={s.value} value={s.value}>{s.label}</option>
                     ))}
@@ -134,7 +134,7 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                 </label>
                 <label className="block text-sm">
                   <span className="font-medium text-muted-foreground">Priority</span>
-                  <select {...register('priority')} defaultValue={task.priority} className="mt-1 w-full rounded-2xl border border-border bg-control px-4 py-3 capitalize">
+                  <select {...register('priority')} defaultValue={task.priority} className="mt-1 w-full rounded-md border border-border bg-control px-4 py-3 capitalize">
                     {PRIORITIES.map((p) => (
                       <option key={p} value={p}>{p}</option>
                     ))}
@@ -148,12 +148,12 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                     type="date"
                     {...register('dueDate')}
                     defaultValue={task.dueDate ? task.dueDate.slice(0, 10) : ''}
-                    className="mt-1 w-full rounded-2xl border border-border bg-control px-4 py-3"
+                    className="mt-1 w-full rounded-md border border-border bg-control px-4 py-3"
                   />
                 </label>
                 <label className="block text-sm">
                   <span className="font-medium text-muted-foreground">Project</span>
-                  <select {...register('projectId')} defaultValue={task.projectId || ''} className="mt-1 w-full rounded-2xl border border-border bg-control px-4 py-3">
+                  <select {...register('projectId')} defaultValue={task.projectId || ''} className="mt-1 w-full rounded-md border border-border bg-control px-4 py-3">
                     <option value="">None</option>
                     {(projects || []).map((p) => (
                       <option key={p.id} value={p.id}>{p.name}</option>
@@ -167,7 +167,7 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                   multiple
                   {...register('assignees')}
                   defaultValue={task.assignees || []}
-                  className="mt-1 h-24 w-full rounded-2xl border border-border bg-control px-4 py-3"
+                  className="mt-1 h-24 w-full rounded-md border border-border bg-control px-4 py-3"
                 >
                   {(users || []).map((u) => (
                     <option key={u.userId || u.id} value={u.userId || u.id}>{u.name || u.email}</option>
@@ -180,10 +180,10 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                   {...register('nextStep')}
                   defaultValue={task.nextStep || ''}
                   placeholder="What happens next?"
-                  className="mt-1 w-full rounded-2xl border border-border bg-control px-4 py-3"
+                  className="mt-1 w-full rounded-md border border-border bg-control px-4 py-3"
                 />
               </label>
-              <button type="submit" disabled={updateMutation.isPending} className="h-11 rounded-full bg-brand px-5 text-sm font-semibold text-brand-foreground lg:col-span-2">
+              <button type="submit" disabled={updateMutation.isPending} className="h-10 rounded-md bg-brand px-5 text-sm font-semibold text-brand-foreground lg:col-span-2">
                 {updateMutation.isPending ? 'Saving…' : 'Save changes'}
               </button>
             </form>
@@ -196,7 +196,7 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                   value={newSubtask}
                   onChange={(e) => setNewSubtask(e.target.value)}
                   placeholder="Add subtask…"
-                  className="flex-1 rounded-2xl border border-border bg-control px-4 py-3 text-sm"
+                  className="flex-1 rounded-md border border-border bg-control px-4 py-3 text-sm"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && newSubtask.trim()) {
                       subtaskMutation.mutate({ action: 'add', subtask: { title: newSubtask.trim() } });
@@ -211,7 +211,7 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                     subtaskMutation.mutate({ action: 'add', subtask: { title: newSubtask.trim() } });
                     setNewSubtask('');
                   }}
-                  className="rounded-full bg-brand px-4 py-2 text-brand-foreground"
+                  className="rounded-md bg-brand px-4 py-2 text-brand-foreground"
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -219,7 +219,7 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
               <p className="text-xs text-muted-foreground">Progress: {task.progress || 0}%</p>
               <ul className="space-y-2">
                 {(task.subtasks || []).map((st) => (
-                  <li key={st.id} className="flex items-center gap-3 rounded-2xl border border-border bg-control px-4 py-3">
+                  <li key={st.id} className="flex items-center gap-3 rounded-md border border-border bg-control px-4 py-3">
                     <input
                       type="checkbox"
                       checked={st.completed}
@@ -255,7 +255,7 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                 <p className="text-sm text-muted-foreground">No workflow history yet.</p>
               ) : (
                 [...(task.workflowLog || [])].reverse().map((w) => (
-                  <li key={w.id} className="rounded-2xl border border-border bg-control px-4 py-3 text-sm">
+                  <li key={w.id} className="rounded-md border border-border bg-control px-4 py-3 text-sm">
                     <p className="font-medium capitalize">{w.action.replace(/_/g, ' ')}</p>
                     <p className="text-muted-foreground">{w.note}</p>
                     <p className="mt-1 text-xs text-muted-foreground">{w.userName} · {new Date(w.at).toLocaleString()}</p>
@@ -281,20 +281,20 @@ export function TaskDetailModal({ task, users, projects, currentUserId, currentU
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Write a comment…"
-                  className="flex-1 rounded-2xl border border-border bg-control px-4 py-3 text-sm"
+                  className="flex-1 rounded-md border border-border bg-control px-4 py-3 text-sm"
                 />
                 <button
                   type="button"
                   disabled={!comment.trim()}
                   onClick={() => commentMutation.mutate(comment.trim())}
-                  className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground disabled:opacity-50"
+                  className="rounded-md bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground disabled:opacity-50"
                 >
                   Send
                 </button>
               </div>
               <ul className="space-y-3">
                 {(task.comments || []).map((c) => (
-                  <li key={c.id} className="rounded-2xl bg-muted px-4 py-3 text-sm">
+                  <li key={c.id} className="rounded-md bg-muted px-4 py-3 text-sm">
                     <p className="font-medium">{c.userName}</p>
                     <p>{c.body}</p>
                     <p className="mt-1 text-xs text-muted-foreground">{new Date(c.createdAt).toLocaleString()}</p>
