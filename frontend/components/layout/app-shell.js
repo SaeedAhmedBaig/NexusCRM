@@ -8,7 +8,7 @@ export function AppShell({ subdomain, profile, children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
-  const sidebarWidth = collapsed ? 80 : 264;
+  const sidebarWidth = collapsed ? 80 : 248;
 
   return (
     <div className="min-h-screen bg-background">
@@ -34,7 +34,7 @@ export function AppShell({ subdomain, profile, children }) {
           onToggleCollapse={() => setCollapsed((v) => !v)}
         />
         <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto grid w-full max-w-[1400px] gap-6 px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
+          <div className="mx-auto grid w-full max-w-[1440px] gap-5 px-4 py-4 sm:px-6 lg:px-7 lg:py-6">
             {children}
           </div>
         </main>

@@ -50,7 +50,7 @@ export function ExecutiveDashboard({ widgets, salesTrend, funnelStages, activity
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-5">
+      <div className="grid gap-3 lg:grid-cols-5">
         <div className="lg:col-span-3">
           <ActivityFeed subdomain={subdomain} items={activity} compact />
         </div>
@@ -74,12 +74,12 @@ export function ExecutiveDashboard({ widgets, salesTrend, funnelStages, activity
         </Card>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-3 xl:grid-cols-2">
         <SalesChart data={salesTrend} compact />
         <SalesFunnel stages={funnelStages} title="Sales funnel" subtitle="Lead → Won conversion" compact />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-3 lg:grid-cols-2">
         <TeamPerformanceChart data={widgets?.teamPerformance || []} compact />
         <PipelineGauge value={widgets?.pipelineValue} max={widgets?.pipelineTarget} compact />
       </div>

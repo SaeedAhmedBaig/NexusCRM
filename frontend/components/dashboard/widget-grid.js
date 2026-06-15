@@ -89,5 +89,5 @@ export function WidgetGrid({ widgets }) {
     );
   }
 
-  return <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{cards}</div>;
+  return <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{cards}</div>;
 }

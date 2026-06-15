@@ -209,13 +209,14 @@ class TasksService {
 
     const user = await this.userModel.findById(userId).lean();
     const userName = user?.name || 'User';
+    const previousStatus = task.status;
     const allowed = ['title', 'description', 'status', 'priority', 'projectId', 'assignedTo', 'assignees', 'dueDate'];
 
     for (const key of allowed) {
       if (body[key] !== undefined) task[key] = body[key];
     }
 
-    if (body.status && body.status !== task.status) {
+    if (body.status && body.status !== previousStatus) {
       task.workflowLog.push({
         userId,
         userName,

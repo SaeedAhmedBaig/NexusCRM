@@ -21,12 +21,13 @@ export function OnboardingSteps() {
     <section className="marketing-section border-y border-border bg-surface">
       <div className="marketing-container">
         <div className="marketing-section-header">
-          <p className="marketing-eyebrow mb-4">Deployment</p>
+          <p className="marketing-eyebrow mb-4">Launch flow</p>
           <h2 className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl">
-            Launch without turning setup into a project
+            Make the first workspace feel effortless
           </h2>
           <p className="mt-4 text-base text-muted-foreground">
-            A structured rollout path designed for IT, RevOps, and business stakeholders.
+            Start like Fillout: choose the workflow, brand the experience, connect the tools, and
+            invite your team.
           </p>
         </div>
 

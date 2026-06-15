@@ -18,7 +18,7 @@ const INTEGRATIONS = [
 
 export function IntegrationsSection() {
   return (
-    <section className="marketing-section border-t border-border bg-surface">
+    <section id="integrations" className="marketing-section border-t border-border bg-surface">
       <div className="marketing-container">
         <div className="marketing-section-header">
           <p className="marketing-eyebrow mb-4">Integrations</p>

@@ -4,6 +4,8 @@ import { ArrowRight } from 'lucide-react';
 import { DashboardMockup } from './ui/dashboard-mockup';
 import { Button } from '../ui/button';
 
+const CAPABILITIES = ['CRM', 'Tasks', 'Campaigns', 'Reports', 'Workflows', 'Billing'];
+
 export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border bg-background py-16 sm:py-20 lg:py-24">
@@ -11,17 +13,26 @@ export function Hero() {
       <div className="marketing-container relative grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
         <div className="min-w-0 text-center lg:col-span-6 lg:text-left">
           <p className="marketing-eyebrow mb-5 sm:mb-6">
-            CRM built around customer movement
+            CRM that does it all
           </p>
 
           <h1 className="text-4xl font-semibold tracking-[-0.06em] text-foreground sm:text-6xl lg:text-[5rem] lg:leading-[0.92]">
-            Run every customer journey from one calm workspace
+            Manage every customer workflow in minutes
           </h1>
 
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg lg:mx-0">
-            NexusCRM brings leads, accounts, conversations, tasks, campaigns, deals, and renewals
-            into a governed CRM system that feels simple for teams and reliable for admins.
+            Build a complete operating system for leads, deals, tasks, campaigns, service, and
+            renewals. NexusCRM gives teams the simplicity of a form builder with the control of an
+            enterprise CRM.
           </p>
+
+          <div className="mx-auto mt-6 flex max-w-xl flex-wrap justify-center gap-2 lg:mx-0 lg:justify-start">
+            {CAPABILITIES.map((item) => (
+              <span key={item} className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold text-muted-foreground shadow-sm">
+                {item}
+              </span>
+            ))}
+          </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
             <Button href="/signup?plan=free" size="lg" className="w-full gap-2 sm:w-auto">

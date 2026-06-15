@@ -51,12 +51,13 @@ export function FeaturesGrid() {
     <section id="features" className="marketing-section bg-background">
       <div className="marketing-container">
         <div className="marketing-section-header">
-          <p className="marketing-eyebrow mb-4">Journey intelligence</p>
+          <p className="marketing-eyebrow mb-4">It all starts with one workspace</p>
           <h2 className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl">
-            A CRM system designed around how customers actually move
+            Build the exact customer system your team needs
           </h2>
           <p className="mt-4 text-base text-muted-foreground">
-            Give every team the same language for customer state, ownership, risk, and next action.
+            Create workspaces, automate handoffs, review results, and collaborate without spreading
+            customer data across disconnected tools.
           </p>
         </div>
 

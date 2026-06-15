@@ -14,8 +14,8 @@ export function KpiCard({ label, value, hint, icon: Icon, trend, trendLabel }) {
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
-            <p className="mt-1.5 text-2xl font-semibold tracking-tight text-foreground tabular-nums">{value}</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
+            <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground tabular-nums">{value}</p>
             <div className="mt-1.5 flex flex-wrap items-center gap-2">
               {trend != null && (
                 <span
@@ -36,7 +36,7 @@ export function KpiCard({ label, value, hint, icon: Icon, trend, trendLabel }) {
             </div>
           </div>
           {Icon && (
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
               <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
             </span>
           )}

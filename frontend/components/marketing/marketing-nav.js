@@ -17,6 +17,8 @@ import { Separator } from '../ui/separator';
 
 const NAV_LINKS = [
   { href: '/#features', label: 'Features' },
+  { href: '/#analytics', label: 'Outcomes' },
+  { href: '/#integrations', label: 'Integrations' },
   { href: '/#pricing', label: 'Pricing' },
   { href: '/#faq', label: 'FAQ' },
 ];
@@ -57,8 +59,8 @@ export function MarketingNav() {
           <Button href="/login" variant="ghost" size="sm">
             Sign in
           </Button>
-          <Button href="/contact" size="sm">
-            Get demo
+          <Button href="/signup?plan=free" size="sm">
+            Start free
           </Button>
         </div>
 
@@ -89,8 +91,8 @@ export function MarketingNav() {
                 <Button href="/login" variant="ghost" className="w-full justify-start">
                   Sign in
                 </Button>
-                <Button href="/contact" className="w-full">
-                  Get demo
+                <Button href="/signup?plan=free" className="w-full">
+                  Start free
                 </Button>
               </nav>
             </SheetContent>

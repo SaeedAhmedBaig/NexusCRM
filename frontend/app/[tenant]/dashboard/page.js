@@ -57,12 +57,12 @@ export default function TenantDashboardPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6 animate-fade-in">
+      <div className="space-y-5 animate-fade-in">
         <div className="space-y-2">
           <div className="skeleton h-8 w-48" />
           <div className="skeleton h-4 w-64" />
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <SkeletonCard key={i} />
           ))}
@@ -85,7 +85,7 @@ export default function TenantDashboardPage() {
   const isExecutive = widgets?.executiveView || EXEC_ROLES.includes(profile?.user?.role);
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <PageHeader
         title={`Good ${greeting}, ${name}`}
         description={`${roleLabel} · Customer journey health at a glance`}
@@ -103,7 +103,7 @@ export default function TenantDashboardPage() {
       ) : (
         <>
           <WidgetGrid widgets={widgets} />
-          <div className="grid gap-4 lg:grid-cols-5">
+          <div className="grid gap-3 lg:grid-cols-5">
             <div className="lg:col-span-3">
               <ActivityFeed subdomain={subdomain} items={activity} compact />
             </div>
@@ -119,7 +119,7 @@ export default function TenantDashboardPage() {
                   { label: 'Tasks due today', value: widgets?.tasksDueToday ?? widgets?.myTasks ?? '—' },
                 ].map((row) => (
                   <div key={row.label} className="flex items-center justify-between rounded-2xl bg-muted px-3 py-2">
-                    <span className="text-sm text-muted">{row.label}</span>
+                    <span className="text-sm text-muted-foreground">{row.label}</span>
                     <span className="text-base font-semibold tabular-nums text-foreground">{row.value}</span>
                   </div>
                 ))}

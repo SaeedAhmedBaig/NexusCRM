@@ -38,10 +38,10 @@ export function AppSidebar({
         href={`${base}${item.href}`}
         onClick={onClose}
         title={collapsed ? item.label : undefined}
-        className={`group flex items-center gap-2.5 rounded-full px-3 py-2 text-[13px] font-medium transition-all ${
+        className={`group flex h-9 items-center gap-2.5 rounded-xl px-3 text-[12px] font-semibold transition-all ${
           active
-            ? 'bg-sidebar-active text-sidebar-primary-foreground shadow-sm'
-            : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-sm'
+            ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
+            : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
         } ${collapsed ? 'justify-center px-2.5' : ''}`}
       >
         <Icon className="h-4 w-4 shrink-0 opacity-80" strokeWidth={active ? 2.25 : 1.75} />
@@ -71,35 +71,35 @@ export function AppSidebar({
       )}
       <aside
         className={`fixed inset-y-0 left-0 z-50 p-3 transition-all duration-150 ${
-          collapsed ? 'w-20' : 'w-[264px]'
+          collapsed ? 'w-20' : 'w-[248px]'
         } ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        <div className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-sidebar-border bg-sidebar shadow-lg">
+        <div className="flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-sidebar-border bg-sidebar shadow-sm">
         <div
-          className={`flex h-18 shrink-0 items-center border-b border-sidebar-border/70 ${
+          className={`flex h-16 shrink-0 items-center border-b border-sidebar-border/70 ${
             collapsed ? 'justify-center px-2' : 'gap-3 px-4'
           }`}
         >
           {tenantLogo ? (
-            <img src={tenantLogo} alt="" className="h-10 w-10 shrink-0 rounded-2xl object-cover" />
+            <img src={tenantLogo} alt="" className="h-9 w-9 shrink-0 rounded-2xl object-cover" />
           ) : (
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-foreground text-sm font-semibold text-background shadow-sm">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-foreground text-sm font-semibold text-background shadow-sm">
               {initial}
             </span>
           )}
           {!collapsed && (
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-foreground">{tenantName || subdomain}</p>
+              <p className="truncate text-[13px] font-semibold text-foreground">{tenantName || subdomain}</p>
               <p className="truncate text-[11px] text-muted-foreground capitalize">{tenantPlan || 'journey workspace'}</p>
             </div>
           )}
         </div>
 
-        <nav className={`flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto ${collapsed ? 'p-2.5' : 'p-3 pt-4'}`}>
+        <nav className={`flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto ${collapsed ? 'p-2.5' : 'p-3 pt-4'}`}>
           {NAV_SECTIONS.map((section) => (
             <div key={section.label || 'main'}>
               {section.label && !collapsed && (
-                <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="mb-2 px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
                   {section.label}
                 </p>
               )}

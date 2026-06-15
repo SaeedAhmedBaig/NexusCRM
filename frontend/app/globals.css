@@ -47,6 +47,12 @@
   --danger-light: rgba(206, 51, 40, 0.11);
   --info: #2f6edb;
   --info-light: rgba(47, 110, 219, 0.11);
+  --pending: #6b7280;
+  --pending-light: rgba(107, 114, 128, 0.12);
+  --progress: #0f7a94;
+  --progress-light: rgba(15, 122, 148, 0.12);
+  --overdue: #c0362c;
+  --overdue-light: rgba(192, 54, 44, 0.12);
 
   /* Shell */
   --sidebar: #fbfcfe;
@@ -94,6 +100,8 @@
   --shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.06);
   --shadow-md: 0 18px 48px rgba(15, 23, 42, 0.1);
   --shadow-lg: 0 30px 90px rgba(15, 23, 42, 0.14);
+  --app-gutter: clamp(1rem, 2vw, 2rem);
+  --app-grid-gap: 1rem;
 
   /* Unified shell header height (marketing + app + auth) */
   --header-height: 3.5rem;
@@ -129,10 +137,16 @@
   --warning: #facc15;
   --danger: #f87171;
   --info: #60a5fa;
+  --pending: #aeb7c6;
+  --progress: #67e8f9;
+  --overdue: #fca5a5;
   --success-light: rgba(74, 222, 128, 0.15);
   --warning-light: rgba(250, 204, 21, 0.15);
   --danger-light: rgba(248, 113, 113, 0.13);
   --info-light: rgba(96, 165, 250, 0.14);
+  --pending-light: rgba(174, 183, 198, 0.14);
+  --progress-light: rgba(103, 232, 249, 0.14);
+  --overdue-light: rgba(252, 165, 165, 0.14);
 
   --sidebar: #11151d;
   --sidebar-foreground: #f7f8fb;
@@ -202,6 +216,12 @@
   --color-danger-light: var(--danger-light);
   --color-info: var(--info);
   --color-info-light: var(--info-light);
+  --color-pending: var(--pending);
+  --color-pending-light: var(--pending-light);
+  --color-progress: var(--progress);
+  --color-progress-light: var(--progress-light);
+  --color-overdue: var(--overdue);
+  --color-overdue-light: var(--overdue-light);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-muted: var(--sidebar-muted);
@@ -280,6 +300,32 @@ body {
   border-radius: calc(var(--radius-lg) * 1.1);
   background: var(--card);
   color: var(--card-foreground);
+  box-shadow: var(--shadow-sm);
+}
+
+.app-grid {
+  display: grid;
+  gap: var(--app-grid-gap);
+}
+
+.app-grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--app-grid-gap);
+}
+
+.effix-panel {
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius-lg) * 1.1);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+}
+
+.effix-widget {
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius-lg) * 0.95);
+  background: var(--card);
+  padding: 1rem;
   box-shadow: var(--shadow-sm);
 }
 .marketing-eyebrow {
