@@ -20,7 +20,9 @@ function Inner() {
         OWNER_COLUMN,
       ]}
       fetchList={smsApi.list}
+      getRecord={smsApi.get}
       createRecord={smsApi.create}
+      updateRecord={smsApi.update}
       bulkAction={smsApi.bulk}
       filters={COMMON_FILTERS}
       filterOptions={{ statuses: statusOptions('sms') }}

@@ -67,6 +67,18 @@ export function bulkLeads(payload) {
   return apiFetch('/leads/bulk', { method: 'POST', body: payload });
 }
 
+export function getLead(id) {
+  return apiFetch(`/leads/${id}`);
+}
+
+export function updateLead(id, payload) {
+  return apiFetch(`/leads/${id}`, { method: 'PATCH', body: payload });
+}
+
+export function removeLead(id) {
+  return apiFetch(`/leads/${id}`, { method: 'DELETE' });
+}
+
 export function listCompanies(params) {
   return apiFetch(`/companies${buildQuery(params)}`);
 }
@@ -77,6 +89,18 @@ export function createCompany(payload) {
 
 export function bulkCompanies(payload) {
   return apiFetch('/companies/bulk', { method: 'POST', body: payload });
+}
+
+export function getCompany(id) {
+  return apiFetch(`/companies/${id}`);
+}
+
+export function updateCompany(id, payload) {
+  return apiFetch(`/companies/${id}`, { method: 'PATCH', body: payload });
+}
+
+export function removeCompany(id) {
+  return apiFetch(`/companies/${id}`, { method: 'DELETE' });
 }
 
 export function listContacts(params) {
@@ -91,6 +115,18 @@ export function bulkContacts(payload) {
   return apiFetch('/contacts/bulk', { method: 'POST', body: payload });
 }
 
+export function getContact(id) {
+  return apiFetch(`/contacts/${id}`);
+}
+
+export function updateContact(id, payload) {
+  return apiFetch(`/contacts/${id}`, { method: 'PATCH', body: payload });
+}
+
+export function removeContact(id) {
+  return apiFetch(`/contacts/${id}`, { method: 'DELETE' });
+}
+
 export function listRequests(params) {
   return apiFetch(`/requests${buildQuery(params)}`);
 }
@@ -101,4 +137,16 @@ export function createRequest(payload) {
 
 export function bulkRequests(payload) {
   return apiFetch('/requests/bulk', { method: 'POST', body: payload });
+}
+
+export function getRequest(id) {
+  return apiFetch(`/requests/${id}`);
+}
+
+export function updateRequest(id, payload) {
+  return apiFetch(`/requests/${id}`, { method: 'PATCH', body: payload });
+}
+
+export function removeRequest(id) {
+  return apiFetch(`/requests/${id}`, { method: 'DELETE' });
 }

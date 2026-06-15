@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { CrmListPage } from '../../../../components/crm/CrmListPage';
 import { useSession } from '../../../../components/providers/session-context';
-import { listContacts, bulkContacts, createContact } from '../../../../lib/crm-api';
+import { listContacts, bulkContacts, createContact, getContact, updateContact } from '../../../../lib/crm-api';
 import { Spinner } from '../../../../components/ui/spinner';
 
 const COLUMNS = [
@@ -40,7 +40,9 @@ function ContactsListInner() {
       subdomain={subdomain}
       columns={COLUMNS}
       fetchList={listContacts}
+      getRecord={getContact}
       createRecord={createContact}
+      updateRecord={updateContact}
       createFields={[
         { key: 'firstName', label: 'First name', required: true },
         { key: 'lastName', label: 'Last name' },

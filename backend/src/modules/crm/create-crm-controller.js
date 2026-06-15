@@ -1,4 +1,4 @@
-const { Controller, Get, Post, Bind, Body, Req, Query } = require('@nestjs/common');
+const { Controller, Get, Post, Patch, Delete, Bind, Body, Req, Query, Param } = require('@nestjs/common');
 const { defineParamTypes } = require('../../common/define-param-types');
 
 function createCrmController(route, ServiceClass) {
@@ -20,6 +20,24 @@ function createCrmController(route, ServiceClass) {
     @Bind(Body(), Req())
     create(body, req) {
       return this.service.create(req.tenantId, req.user.id, body);
+    }
+
+    @Get(':id')
+    @Bind(Req(), Param('id'))
+    getOne(req, id) {
+      return this.service.findOne(req.tenantId, id, req.user);
+    }
+
+    @Patch(':id')
+    @Bind(Body(), Req(), Param('id'))
+    update(body, req, id) {
+      return this.service.update(req.tenantId, req.user.id, id, body);
+    }
+
+    @Delete(':id')
+    @Bind(Req(), Param('id'))
+    remove(req, id) {
+      return this.service.remove(req.tenantId, req.user.id, id);
     }
 
     @Post('bulk')

@@ -14,7 +14,9 @@ function Inner() {
       entity="invoices"
       columns={[NAME_COLUMN, { key: 'invoiceNumber', label: 'Invoice #' }, STATUS_COLUMN, AMOUNT_COLUMN, OWNER_COLUMN]}
       fetchList={invoicesApi.list}
+      getRecord={invoicesApi.get}
       createRecord={invoicesApi.create}
+      updateRecord={invoicesApi.update}
       bulkAction={invoicesApi.bulk}
       filters={COMMON_FILTERS}
       filterOptions={{ statuses: statusOptions('invoices') }}

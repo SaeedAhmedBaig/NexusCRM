@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { CrmListPage } from '../../../../components/crm/CrmListPage';
 import { useSession } from '../../../../components/providers/session-context';
-import { listRequests, bulkRequests, createRequest } from '../../../../lib/crm-api';
+import { listRequests, bulkRequests, createRequest, getRequest, updateRequest } from '../../../../lib/crm-api';
 import { Spinner } from '../../../../components/ui/spinner';
 
 const COLUMNS = [
@@ -39,7 +39,9 @@ function RequestsListInner() {
       subdomain={subdomain}
       columns={COLUMNS}
       fetchList={listRequests}
+      getRecord={getRequest}
       createRecord={createRequest}
+      updateRecord={updateRequest}
       createFields={[
         { key: 'title', label: 'Request title', required: true },
         { key: 'description', label: 'Description', type: 'textarea' },

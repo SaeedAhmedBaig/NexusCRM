@@ -14,7 +14,9 @@ function Inner() {
       entity="orders"
       columns={[NAME_COLUMN, { key: 'orderNumber', label: 'Order #' }, STATUS_COLUMN, AMOUNT_COLUMN, OWNER_COLUMN]}
       fetchList={ordersApi.list}
+      getRecord={ordersApi.get}
       createRecord={ordersApi.create}
+      updateRecord={ordersApi.update}
       bulkAction={ordersApi.bulk}
       filters={COMMON_FILTERS}
       filterOptions={{ statuses: statusOptions('orders') }}

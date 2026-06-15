@@ -14,7 +14,9 @@ function Inner() {
       entity="quotations"
       columns={[NAME_COLUMN, { key: 'number', label: 'Number' }, STATUS_COLUMN, AMOUNT_COLUMN, OWNER_COLUMN]}
       fetchList={quotationsApi.list}
+      getRecord={quotationsApi.get}
       createRecord={quotationsApi.create}
+      updateRecord={quotationsApi.update}
       bulkAction={quotationsApi.bulk}
       filters={COMMON_FILTERS}
       filterOptions={{ statuses: statusOptions('quotations') }}

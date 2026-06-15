@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { CrmListPage } from '../../../../components/crm/CrmListPage';
 import { useSession } from '../../../../components/providers/session-context';
-import { listCompanies, bulkCompanies, createCompany } from '../../../../lib/crm-api';
+import { listCompanies, bulkCompanies, createCompany, getCompany, updateCompany } from '../../../../lib/crm-api';
 import { Spinner } from '../../../../components/ui/spinner';
 
 const COLUMNS = [
@@ -38,7 +38,9 @@ function CompaniesListInner() {
       subdomain={subdomain}
       columns={COLUMNS}
       fetchList={listCompanies}
+      getRecord={getCompany}
       createRecord={createCompany}
+      updateRecord={updateCompany}
       createFields={[
         { key: 'name', label: 'Company name', required: true },
         { key: 'industry', label: 'Industry' },

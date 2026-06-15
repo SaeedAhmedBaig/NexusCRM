@@ -20,7 +20,9 @@ function Inner() {
         OWNER_COLUMN,
       ]}
       fetchList={liveChatApi.list}
+      getRecord={liveChatApi.get}
       createRecord={liveChatApi.create}
+      updateRecord={liveChatApi.update}
       bulkAction={liveChatApi.bulk}
       filters={COMMON_FILTERS}
       filterOptions={{ statuses: statusOptions('live-chat') }}

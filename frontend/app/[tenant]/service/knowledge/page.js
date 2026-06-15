@@ -14,7 +14,9 @@ function Inner() {
       entity="knowledge"
       columns={[NAME_COLUMN, { key: 'category', label: 'Category' }, STATUS_COLUMN]}
       fetchList={knowledgeApi.list}
+      getRecord={knowledgeApi.get}
       createRecord={knowledgeApi.create}
+      updateRecord={knowledgeApi.update}
       bulkAction={knowledgeApi.bulk}
       filters={COMMON_FILTERS}
       filterOptions={{ statuses: statusOptions('knowledge') }}

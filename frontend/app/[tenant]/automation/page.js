@@ -19,7 +19,9 @@ function Inner() {
         STATUS_COLUMN,
       ]}
       fetchList={automationApi.list}
+      getRecord={automationApi.get}
       createRecord={automationApi.create}
+      updateRecord={automationApi.update}
       bulkAction={automationApi.bulk}
       filters={COMMON_FILTERS}
       filterOptions={{ statuses: statusOptions('automation') }}

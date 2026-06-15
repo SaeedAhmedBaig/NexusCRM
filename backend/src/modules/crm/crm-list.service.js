@@ -1,3 +1,4 @@
+const { NotFoundException } = require('@nestjs/common');
 const { parseListQuery, buildFilter, paginatedResponse, leanId } = require('./crm-query.helper');
 const { applyDepartmentScope } = require('../../common/utils/department-scope');
 
@@ -65,6 +66,39 @@ class CrmListService {
       .populate(this.config.populate || [])
       .lean();
     return this.config.formatRow ? this.config.formatRow(row) : this.formatDefault(row);
+  }
+
+  async findOne(tenantId, id) {
+    const row = await this.model
+      .findOne({ _id: id, tenantId })
+      .populate(this.config.populate || [])
+      .lean();
+    if (!row) throw new NotFoundException('Record not found');
+    return this.config.formatRow ? this.config.formatRow(row) : this.formatDefault(row);
+  }
+
+  async update(tenantId, userId, id, body = {}) {
+    const blocked = new Set(['_id', 'id', 'tenantId', 'createdAt', 'updatedAt', '__v']);
+    const payload = Object.fromEntries(
+      Object.entries(body).filter(([key]) => !blocked.has(key)),
+    );
+
+    const row = await this.model
+      .findOneAndUpdate(
+        { _id: id, tenantId },
+        { $set: payload },
+        { new: true, runValidators: true },
+      )
+      .populate(this.config.populate || [])
+      .lean();
+    if (!row) throw new NotFoundException('Record not found');
+    return this.config.formatRow ? this.config.formatRow(row) : this.formatDefault(row);
+  }
+
+  async remove(tenantId, userId, id) {
+    const result = await this.model.deleteOne({ _id: id, tenantId });
+    if (!result.deletedCount) throw new NotFoundException('Record not found');
+    return { id, deleted: true };
   }
 
   async bulk(tenantId, userId, { action, ids = [], payload = {} }) {

@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { CrmListPage } from '../../../../components/crm/CrmListPage';
 import { useSession } from '../../../../components/providers/session-context';
-import { listLeads, bulkLeads, createLead } from '../../../../lib/crm-api';
+import { listLeads, bulkLeads, createLead, getLead, updateLead } from '../../../../lib/crm-api';
 import { Spinner } from '../../../../components/ui/spinner';
 
 const COLUMNS = [
@@ -43,7 +43,9 @@ function LeadsListInner() {
       subdomain={subdomain}
       columns={COLUMNS}
       fetchList={listLeads}
+      getRecord={getLead}
       createRecord={createLead}
+      updateRecord={updateLead}
       createFields={[
         { key: 'title', label: 'Lead name', required: true },
         { key: 'value', label: 'Estimated value', type: 'number' },

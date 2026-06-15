@@ -34,6 +34,18 @@ class ContactsService {
   bulk(tenantId, userId, body) {
     return this.getListService().bulk(tenantId, userId, body);
   }
+
+  findOne(tenantId, id, user) {
+    return this.getListService().findOne(tenantId, id, user);
+  }
+
+  update(tenantId, userId, id, body) {
+    return this.getListService().update(tenantId, userId, id, body);
+  }
+
+  remove(tenantId, userId, id) {
+    return this.getListService().remove(tenantId, userId, id);
+  }
 }
 
 module.exports = { ContactsService };

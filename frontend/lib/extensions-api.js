@@ -14,7 +14,10 @@ function buildQuery(params = {}) {
 function entityApi(route) {
   return {
     list: (params) => apiFetch(`/${route}${buildQuery(params)}`),
+    get: (id) => apiFetch(`/${route}/${id}`),
     create: (payload) => apiFetch(`/${route}`, { method: 'POST', body: payload }),
+    update: (id, payload) => apiFetch(`/${route}/${id}`, { method: 'PATCH', body: payload }),
+    remove: (id) => apiFetch(`/${route}/${id}`, { method: 'DELETE' }),
     bulk: (payload) => apiFetch(`/${route}/bulk`, { method: 'POST', body: payload }),
   };
 }

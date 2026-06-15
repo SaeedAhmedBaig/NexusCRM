@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { DataTable } from './DataTable';
 import { useListParams } from './use-list-params';
 import { getTenantUrl } from '../../lib/tenant';
@@ -19,7 +19,9 @@ export function CrmListPage({
   entity,
   columns,
   fetchList,
+  getRecord,
   createRecord,
+  updateRecord,
   bulkAction,
   filters,
   filterOptions: staticFilterOptions = {},
@@ -33,6 +35,8 @@ export function CrmListPage({
   const queryClient = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState(createDefaults);
+  const [drawer, setDrawer] = useState({ open: false, mode: 'view', record: null, form: {} });
+  const [detailLoading, setDetailLoading] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: [entity, params],
@@ -64,6 +68,17 @@ export function CrmListPage({
     }),
   );
 
+  const updateMutation = useMutation(
+    withMutationNotify({
+      mutationFn: ({ id, payload }) => updateRecord(id, payload),
+      successMessage: 'Record updated',
+      onSuccess: (record) => {
+        queryClient.invalidateQueries({ queryKey: [entity] });
+        setDrawer({ open: true, mode: 'view', record, form: record });
+      },
+    }),
+  );
+
   const filterOptions = {
     ...staticFilterOptions,
     status: staticFilterOptions.statuses || [],
@@ -73,12 +88,21 @@ export function CrmListPage({
   };
 
   const handleRowClick = useCallback(
-    (row) => {
+    async (row, mode = 'view') => {
       if (detailSegment) {
         router.push(getTenantUrl(subdomain, `/crm/${detailSegment}/${row.id}`));
+        return;
+      }
+      setDetailLoading(true);
+      setDrawer({ open: true, mode, record: row, form: row });
+      try {
+        const record = getRecord ? await getRecord(row.id) : row;
+        setDrawer({ open: true, mode, record, form: record });
+      } finally {
+        setDetailLoading(false);
       }
     },
-    [router, subdomain, detailSegment],
+    [router, subdomain, detailSegment, getRecord],
   );
 
   const handleBulk = useCallback(
@@ -100,6 +124,27 @@ export function CrmListPage({
     },
     [bulkAction, entity, params.owner, queryClient],
   );
+
+  function renderFieldInput(field, value, onChange) {
+    if (field.type === 'select') {
+      return (
+        <select className="input-base" value={value ?? ''} onChange={(e) => onChange(e.target.value)}>
+          {(field.options || []).map((opt) => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      );
+    }
+    if (field.type === 'textarea') {
+      return <textarea className="input-base min-h-[96px]" value={value ?? ''} onChange={(e) => onChange(e.target.value)} />;
+    }
+    const inputValue = field.type === 'date' && value ? String(value).slice(0, 10) : value ?? '';
+    return <input className="input-base" type={field.type || 'text'} value={inputValue} onChange={(e) => onChange(e.target.value)} />;
+  }
+
+  function buildEditablePayload(values) {
+    return Object.fromEntries(createFields.map((field) => [field.key, values[field.key]]));
+  }
 
   if (error) {
     return (
@@ -196,10 +241,81 @@ export function CrmListPage({
         filters={filters}
         filterOptions={filterOptions}
         onBulkAction={bulkAction ? handleBulk : undefined}
-        onRowClick={detailSegment ? handleRowClick : undefined}
-        onRowView={detailSegment ? handleRowClick : undefined}
+        onRowClick={detailSegment || getRecord ? (row) => handleRowClick(row) : undefined}
+        onRowView={detailSegment || getRecord ? (row) => handleRowClick(row) : undefined}
+        onRowEdit={!detailSegment && updateRecord ? (row) => handleRowClick(row, 'edit') : undefined}
         subdomain={subdomain}
       />
+
+      {drawer.open && !detailSegment && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          <button type="button" className="absolute inset-0 bg-foreground/25 backdrop-blur-sm" onClick={() => setDrawer({ open: false, mode: 'view', record: null, form: {} })} />
+          <aside className="animate-slide-in-right relative flex h-full w-full max-w-xl flex-col border-l border-border bg-card shadow-xl">
+            <div className="flex items-start justify-between gap-4 border-b border-border bg-muted px-6 py-5">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{title}</p>
+                <h2 className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-foreground">
+                  {drawer.record?.name || drawer.record?.title || 'Record detail'}
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {detailLoading ? 'Loading latest record...' : 'View and update this CRM record.'}
+                </p>
+              </div>
+              <button type="button" onClick={() => setDrawer({ open: false, mode: 'view', record: null, form: {} })} className="rounded-full p-2 hover:bg-card">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6">
+              {drawer.mode === 'edit' && updateRecord ? (
+                <form
+                  className="space-y-4"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    updateMutation.mutate({ id: drawer.record.id, payload: buildEditablePayload(drawer.form) });
+                  }}
+                >
+                  {createFields.map((field) => (
+                    <label key={field.key} className="block text-sm">
+                      <span className="mb-1.5 block font-medium text-muted-foreground">{field.label}</span>
+                      {renderFieldInput(field, drawer.form[field.key], (value) =>
+                        setDrawer((state) => ({ ...state, form: { ...state.form, [field.key]: value } }))
+                      )}
+                    </label>
+                  ))}
+                  <div className="flex gap-2 pt-2">
+                    <Button type="submit" disabled={updateMutation.isPending}>
+                      {updateMutation.isPending ? 'Saving...' : 'Save changes'}
+                    </Button>
+                    <Button type="button" variant="outline" onClick={() => setDrawer((state) => ({ ...state, mode: 'view' }))}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              ) : (
+                <div className="space-y-4">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {Object.entries(drawer.record || {})
+                      .filter(([key, value]) => !['_id', 'id', '__v'].includes(key) && value !== null && value !== undefined && typeof value !== 'object')
+                      .slice(0, 12)
+                      .map(([key, value]) => (
+                        <div key={key} className="rounded-2xl border border-border bg-control p-4">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{key.replace(/([A-Z])/g, ' $1')}</p>
+                          <p className="mt-1 break-words text-sm font-semibold text-foreground">{String(value)}</p>
+                        </div>
+                      ))}
+                  </div>
+                  {updateRecord && (
+                    <Button type="button" onClick={() => setDrawer((state) => ({ ...state, mode: 'edit' }))}>
+                      Edit record
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 }
