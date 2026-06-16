@@ -8,6 +8,8 @@ class RequestsService {
 
   getListService() {
     return new CrmListService(this.requestModel, {
+      entityType: 'Request',
+      hrefBase: '/crm/requests',
       searchFields: ['title', 'description', 'status'],
       populate: [
         { path: 'assignedTo', select: 'name email' },

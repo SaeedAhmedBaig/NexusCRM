@@ -2,10 +2,14 @@ export const STATUS_COLS = {
   quotations: ['draft', 'sent', 'accepted', 'rejected', 'expired'],
   orders: ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'],
   invoices: ['draft', 'sent', 'paid', 'overdue', 'cancelled'],
+  products: ['active', 'draft', 'archived'],
   tickets: ['open', 'pending', 'in_progress', 'resolved', 'closed'],
+  'ticket-queues': ['active', 'inactive'],
+  'ticket-macros': ['active', 'inactive'],
   sms: ['draft', 'scheduled', 'sending', 'sent', 'failed'],
   knowledge: ['draft', 'published', 'archived'],
   automation: ['active', 'inactive'],
+  'report-export-jobs': ['queued', 'running', 'completed', 'failed', 'cancelled'],
   'live-chat': ['waiting', 'active', 'closed'],
 };
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Settings, Users, Shield, Mail, User, Building2, Layers, CreditCard } from 'lucide-react';
+import { Users, Shield, Mail, User, Building2, CreditCard, SlidersHorizontal, ShieldCheck, Database } from 'lucide-react';
 import { getOnboardingStatus } from '../../../lib/api';
 import { getTenantUrl } from '../../../lib/tenant';
 import { useSession } from '../../../components/providers/session-context';
@@ -14,6 +14,9 @@ const LINKS = [
   { href: '/settings/tenant', label: 'Tenant', icon: Building2, action: 'manage', subject: 'Settings' },
   { href: '/settings/users', label: 'Team', icon: Users, action: 'manage', subject: 'User' },
   { href: '/settings/departments', label: 'Roles & departments', icon: Shield, action: 'manage', subject: 'Department' },
+  { href: '/settings/custom-fields', label: 'Custom fields', icon: SlidersHorizontal, action: 'manage', subject: 'Settings' },
+  { href: '/settings/audit', label: 'Security & audit', icon: ShieldCheck, action: 'manage', subject: 'Settings' },
+  { href: '/settings/data-jobs', label: 'Data jobs', icon: Database, action: 'manage', subject: 'Settings' },
   { href: '/settings/billing', label: 'Billing', icon: CreditCard, action: 'manage', subject: 'Settings' },
   { href: '/settings/email', label: 'Email', icon: Mail, public: true },
 ];

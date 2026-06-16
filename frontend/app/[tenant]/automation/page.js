@@ -17,6 +17,8 @@ function Inner() {
         { key: 'trigger', label: 'Trigger' },
         { key: 'action', label: 'Action' },
         STATUS_COLUMN,
+        { key: 'lastRunStatus', label: 'Last run' },
+        { key: 'runCount', label: 'Runs' },
       ]}
       fetchList={automationApi.list}
       getRecord={automationApi.get}

@@ -56,6 +56,8 @@ async function proxyRequest(request, context) {
   const isBinary =
     contentType.includes('octet-stream') ||
     contentType.includes('application/pdf') ||
+    contentType.includes('spreadsheetml') ||
+    contentType.includes('application/vnd.ms-excel') ||
     contentType.includes('image/') ||
     contentType.includes('application/zip');
 

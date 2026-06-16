@@ -25,6 +25,11 @@ function buildFilter(tenantId, query, config) {
     filter.assignedTo = query.owner || query.assignedTo;
   }
   if (query.companyId) filter.companyId = query.companyId;
+  if (config.filterFields?.length) {
+    config.filterFields.forEach((field) => {
+      if (query[field]) filter[field] = query[field];
+    });
+  }
 
   if (query.dateFrom || query.dateTo) {
     filter.createdAt = {};

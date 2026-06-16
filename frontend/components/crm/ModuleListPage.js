@@ -6,9 +6,24 @@ import { Plus, X } from 'lucide-react';
 import { DataTable } from './DataTable';
 import { useListParams } from './use-list-params';
 import { listDepartments, listTenantUsers } from '../../lib/api';
+import { listEntityActivity } from '../../lib/activity-api';
 import { PageHeader } from '../ui/page-header';
 import { Button } from '../ui/button';
 import { withMutationNotify } from '../../lib/mutation-options';
+
+const ACTIVITY_ENTITY_TYPES = {
+  quotations: 'Quotation',
+  orders: 'Order',
+  invoices: 'Invoice',
+  products: 'Product',
+  tickets: 'Ticket',
+  'ticket-queues': 'TicketQueue',
+  'ticket-macros': 'TicketMacro',
+  sms: 'SmsCampaign',
+  knowledge: 'KnowledgeArticle',
+  automation: 'AutomationRule',
+  'live-chat': 'LiveChatSession',
+};
 
 export function ModuleListPage({
   title,
@@ -48,6 +63,13 @@ export function ModuleListPage({
     queryKey: ['tenant-users'],
     queryFn: () => listTenantUsers(),
     staleTime: 120_000,
+  });
+
+  const activityEntityType = ACTIVITY_ENTITY_TYPES[entity];
+  const { data: activityPage } = useQuery({
+    queryKey: ['entity-activity', activityEntityType, drawer.record?.id],
+    queryFn: () => listEntityActivity(activityEntityType, drawer.record.id, { limit: 8 }),
+    enabled: drawer.open && Boolean(activityEntityType && drawer.record?.id),
   });
 
   const createMutation = useMutation(
@@ -292,6 +314,28 @@ export function ModuleListPage({
                     <Button type="button" onClick={() => setDrawer((state) => ({ ...state, mode: 'edit' }))}>
                       Edit record
                     </Button>
+                  )}
+                  {activityEntityType && (
+                    <div className="rounded-lg border border-border bg-card p-4">
+                      <div className="mb-3">
+                        <p className="text-sm font-bold text-foreground">Recent activity</p>
+                        <p className="text-xs text-muted-foreground">Enterprise activity stream for this record.</p>
+                      </div>
+                      {activityPage?.data?.length ? (
+                        <ul className="space-y-2">
+                          {activityPage.data.map((event) => (
+                            <li key={event.id} className="rounded-md border border-border bg-control px-3 py-2 text-xs">
+                              <p className="font-semibold text-foreground">{event.summary}</p>
+                              <p className="mt-0.5 text-muted-foreground">
+                                {event.actorName || 'System'} · {new Date(event.createdAt).toLocaleString()}
+                              </p>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">No activity has been recorded yet.</p>
+                      )}
+                    </div>
                   )}
                 </div>
               )}

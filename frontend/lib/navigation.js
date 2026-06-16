@@ -6,6 +6,7 @@ import {
   Handshake,
   Activity,
   GitBranch,
+  Package,
   FileText,
   ShoppingCart,
   Receipt,
@@ -14,6 +15,8 @@ import {
   MessageSquare,
   Headphones,
   Ticket,
+  Inbox,
+  MessageCircle,
   BookOpen,
   FolderKanban,
   BarChart3,
@@ -22,9 +25,12 @@ import {
   Settings,
   Users,
   Shield,
+  ShieldCheck,
   CreditCard,
   User,
   Layers,
+  SlidersHorizontal,
+  Database,
 } from 'lucide-react';
 
 /** PRD-aligned sidebar navigation */
@@ -47,6 +53,7 @@ export const NAV_SECTIONS = [
     label: 'Sales',
     items: [
       { href: '/sales/pipeline', label: 'Pipeline', icon: GitBranch },
+      { href: '/sales/products', label: 'Products', icon: Package },
       { href: '/sales/quotations', label: 'Quotations', icon: FileText },
       { href: '/sales/orders', label: 'Orders', icon: ShoppingCart },
       { href: '/sales/invoices', label: 'Invoices', icon: Receipt },
@@ -64,6 +71,8 @@ export const NAV_SECTIONS = [
     label: 'Customer Service',
     items: [
       { href: '/service/tickets', label: 'Tickets', icon: Ticket },
+      { href: '/service/queues', label: 'Queues', icon: Inbox },
+      { href: '/service/macros', label: 'Macros', icon: MessageCircle },
       { href: '/service/chat', label: 'Live Chat', icon: Headphones },
       { href: '/service/knowledge', label: 'Knowledge Base', icon: BookOpen },
     ],
@@ -86,6 +95,9 @@ export const NAV_SECTIONS = [
       { href: '/settings/users', label: 'Team', icon: Users, action: 'manage', subject: 'User' },
       { href: '/settings/departments', label: 'Departments', icon: Layers, action: 'manage', subject: 'Department' },
       { href: '/settings/roles', label: 'Roles', icon: Shield, action: 'manage', subject: 'Group' },
+      { href: '/settings/custom-fields', label: 'Custom Fields', icon: SlidersHorizontal, action: 'manage', subject: 'Settings' },
+      { href: '/settings/audit', label: 'Security & Audit', icon: ShieldCheck, action: 'manage', subject: 'Settings' },
+      { href: '/settings/data-jobs', label: 'Data Jobs', icon: Database, action: 'manage', subject: 'Settings' },
       { href: '/settings/billing', label: 'Billing', icon: CreditCard, action: 'manage', subject: 'Settings' },
       { href: '/settings', label: 'Settings', icon: Settings },
     ],

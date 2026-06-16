@@ -8,6 +8,8 @@ class ContactsService {
 
   getListService() {
     return new CrmListService(this.contactModel, {
+      entityType: 'Contact',
+      hrefBase: '/crm/contacts',
       searchFields: ['firstName', 'lastName', 'email', 'phone', 'jobTitle'],
       populate: [
         { path: 'assignedTo', select: 'name email' },

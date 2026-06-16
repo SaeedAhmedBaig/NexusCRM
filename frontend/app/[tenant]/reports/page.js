@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BarChart3, TrendingUp, Users, Briefcase } from 'lucide-react';
+import { Archive, BarChart3, Briefcase, TrendingUp, Users } from 'lucide-react';
 import { useSession } from '../../../components/providers/session-context';
 import { getTenantUrl } from '../../../lib/tenant';
 import { PageHeader } from '../../../components/ui/page-header';
@@ -25,6 +25,12 @@ const REPORTS = [
     description: 'Deals won and tasks completed by team member',
     icon: Briefcase,
     href: '/reports/team',
+  },
+  {
+    title: 'Export queue',
+    description: 'Governed report export jobs and preparation status',
+    icon: Archive,
+    href: '/reports/exports',
   },
   {
     title: 'Full analytics',

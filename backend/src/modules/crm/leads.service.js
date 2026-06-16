@@ -8,6 +8,8 @@ class LeadsService {
 
   getListService() {
     return new CrmListService(this.leadModel, {
+      entityType: 'Lead',
+      hrefBase: '/crm/leads',
       searchFields: ['title', 'source', 'status'],
       populate: [
         { path: 'assignedTo', select: 'name email' },

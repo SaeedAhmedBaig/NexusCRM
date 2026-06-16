@@ -1,6 +1,7 @@
 const { NotFoundException } = require('@nestjs/common');
 const { parseListQuery, buildFilter, paginatedResponse, leanId } = require('./crm-query.helper');
 const { applyDepartmentScope } = require('../../common/utils/department-scope');
+const { recordActivityFromModel, getEntityName } = require('../activity/activity-recorder');
 
 class CrmListService {
   constructor(model, config) {
@@ -65,6 +66,7 @@ class CrmListService {
       .findById(doc._id)
       .populate(this.config.populate || [])
       .lean();
+    await this.recordActivity(tenantId, userId, 'created', row);
     return this.config.formatRow ? this.config.formatRow(row) : this.formatDefault(row);
   }
 
@@ -92,12 +94,15 @@ class CrmListService {
       .populate(this.config.populate || [])
       .lean();
     if (!row) throw new NotFoundException('Record not found');
+    await this.recordActivity(tenantId, userId, 'updated', row, { changes: payload });
     return this.config.formatRow ? this.config.formatRow(row) : this.formatDefault(row);
   }
 
   async remove(tenantId, userId, id) {
+    const existing = await this.model.findOne({ _id: id, tenantId }).lean();
     const result = await this.model.deleteOne({ _id: id, tenantId });
     if (!result.deletedCount) throw new NotFoundException('Record not found');
+    await this.recordActivity(tenantId, userId, 'deleted', existing || { _id: id });
     return { id, deleted: true };
   }
 
@@ -127,6 +132,25 @@ class CrmListService {
     }
 
     return { action, affected, ids };
+  }
+
+  async recordActivity(tenantId, userId, action, record = {}, metadata = {}) {
+    const entityType = this.config.entityType || this.model.modelName;
+    const entityId = record._id || record.id;
+    const entityName = getEntityName(record);
+    const href = this.config.hrefBase && entityId ? `${this.config.hrefBase}/${entityId}` : null;
+    const label = entityName ? `: ${entityName}` : '';
+
+    await recordActivityFromModel(this.model, tenantId, userId, {
+      action,
+      entityType,
+      entityId,
+      entityName,
+      record,
+      href,
+      summary: `${entityType} ${action}${label}`,
+      metadata,
+    });
   }
 }
 

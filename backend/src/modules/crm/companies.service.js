@@ -8,6 +8,8 @@ class CompaniesService {
 
   getListService() {
     return new CrmListService(this.companyModel, {
+      entityType: 'Company',
+      hrefBase: '/crm/companies',
       searchFields: ['name', 'industry', 'website', 'phone'],
       populate: [{ path: 'assignedTo', select: 'name email' }],
       formatRow: (row) => {

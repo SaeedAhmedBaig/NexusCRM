@@ -1,6 +1,7 @@
 const { Injectable, NotFoundException } = require('@nestjs/common');
 const { CrmListService } = require('./crm-list.service');
 const { leanId } = require('./crm-query.helper');
+const { recordActivityFromModel } = require('../activity/activity-recorder');
 
 const USER_POP = { path: 'assignedTo', select: 'name email' };
 const COMPANY_POP = { path: 'companyId', select: 'name industry' };
@@ -24,6 +25,8 @@ class DealsService {
   initListService() {
     if (!this.listService) {
       this.listService = new CrmListService(this.dealModel, {
+        entityType: 'Deal',
+        hrefBase: '/crm/deals',
         searchFields: ['title', 'description', 'stage', 'status'],
         populate: [USER_POP, COMPANY_POP, CONTACT_POP],
         formatRow: (row) => {
@@ -216,6 +219,15 @@ class DealsService {
       summary,
       href: `/crm/deals/${entityId}`,
       meta,
+    });
+    await recordActivityFromModel(this.dealModel, tenantId, userId, {
+      action,
+      entityType: 'Deal',
+      entityId,
+      entityName: summary.replace(/^Deal (created|updated): /, ''),
+      summary,
+      href: `/crm/deals/${entityId}`,
+      metadata: meta,
     });
   }
 }

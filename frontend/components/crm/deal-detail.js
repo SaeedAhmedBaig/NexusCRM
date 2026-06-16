@@ -18,6 +18,7 @@ import {
   addDealPayment,
 } from '../../lib/crm-api';
 import { sendEmail, syncImap } from '../../lib/mail-api';
+import { listEntityActivity } from '../../lib/activity-api';
 import { EmailComposer } from '../email/EmailComposer';
 import { ObjectChat } from '../chat/ObjectChat';
 import { useSession } from '../providers/session-context';
@@ -194,11 +195,18 @@ export function DealDetail({ dealId, subdomain }) {
     enabled: tab === 'history',
   });
 
+  const { data: activityPage } = useQuery({
+    queryKey: ['entity-activity', 'Deal', dealId],
+    queryFn: () => listEntityActivity('Deal', dealId, { limit: 50 }),
+    enabled: tab === 'history',
+  });
+
   const updateMutation = useMutation({
     mutationFn: (payload) => updateDeal(dealId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['deal', dealId] });
       queryClient.invalidateQueries({ queryKey: ['deal-history', dealId] });
+      queryClient.invalidateQueries({ queryKey: ['entity-activity', 'Deal', dealId] });
     },
   });
 
@@ -220,6 +228,7 @@ export function DealDetail({ dealId, subdomain }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['deal-payments', dealId] });
       queryClient.invalidateQueries({ queryKey: ['deal-history', dealId] });
+      queryClient.invalidateQueries({ queryKey: ['entity-activity', 'Deal', dealId] });
       setPaymentOpen(false);
     },
   });
@@ -272,6 +281,23 @@ export function DealDetail({ dealId, subdomain }) {
       </div>
     );
   }
+
+  const activityEvents = activityPage?.data || [];
+  const timeline = activityEvents.length
+    ? activityEvents.map((event) => ({
+        id: event.id,
+        summary: event.summary,
+        actorName: event.actorName,
+        createdAt: event.createdAt,
+        source: event.source,
+      }))
+    : history.map((event) => ({
+        id: event.id,
+        summary: event.summary,
+        actorName: event.userName,
+        createdAt: event.createdAt,
+        source: 'audit',
+      }));
 
   return (
     <div className="space-y-6">
@@ -448,14 +474,16 @@ export function DealDetail({ dealId, subdomain }) {
         )}
 
         {tab === 'history' && (
-          history.length === 0 ? (
-            <p className="text-sm text-muted">No history entries.</p>
+          timeline.length === 0 ? (
+            <p className="text-sm text-muted">No activity entries yet.</p>
           ) : (
             <ul className="space-y-3">
-              {history.map((h) => (
+              {timeline.map((h) => (
                 <li key={h.id} className="rounded-xl border border-border px-4 py-3 text-sm">
                   <p className="font-medium">{h.summary}</p>
-                  <p className="text-xs text-muted">{h.userName} · {new Date(h.createdAt).toLocaleString()}</p>
+                  <p className="text-xs text-muted">
+                    {h.actorName} · {new Date(h.createdAt).toLocaleString()} · {h.source}
+                  </p>
                 </li>
               ))}
             </ul>

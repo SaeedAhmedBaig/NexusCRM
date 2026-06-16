@@ -835,6 +835,98 @@ If the goal is maximum enterprise value quickly, build in this order:
 9. SSO, MFA, audit exports, field permissions.
 10. AI summaries, email drafts, ticket classification, and next-best action.
 
+## Remaining Enterprise Work After Foundation Build
+
+The latest implementation has added the first enterprise foundations: unified activity events, custom-field metadata management, product catalog and line-item totals, automation run logs, support queues and macros, report export jobs with generated downloadable content, data job tracking, and visible audit/data-operation screens. The remaining work is now less about adding module shells and more about making each foundation production-grade.
+
+### Platform Infrastructure
+
+- Replace synchronous/manual preparation flows with real background workers and queues for imports, exports, automations, SLA escalations, notifications, and scheduled reports.
+- Move generated files and uploaded import files to durable object storage such as S3, R2, Azure Blob, or a compatible provider instead of storing large binary content in database documents.
+- Add a Files module with tenant-scoped access control, virus scanning hooks, signed URLs, retention policies, and download audit events.
+- Introduce migrations and backfill scripts for existing tenant data as new schemas become required.
+- Add feature flags and entitlement checks so enterprise features can be enabled per plan, tenant, or rollout cohort.
+
+### Data Management
+
+- Build the full import wizard: upload, preview, mapping, validation, duplicate detection, dry run, commit, rollback, and downloadable error rows.
+- Extend Data Jobs from tracking records to executable import/export/sync/enrichment jobs with worker logs, retry policy, cancellation, and progress streaming.
+- Add record deduplication and merge workflows for leads, contacts, companies, and accounts.
+- Add retention, archival, legal hold, and tenant export controls for compliance.
+- Add API keys, webhooks, webhook delivery logs, rate limits, and replay support.
+
+### Customization and Metadata
+
+- Apply custom fields directly to record create/edit forms, detail drawers, list columns, filters, imports, exports, and report builder datasets.
+- Add custom layouts per object, role, department, and pipeline.
+- Add custom object definitions with relationships to standard CRM objects.
+- Add field-level permissions, required-field policies, validation rules, and calculated fields.
+- Add metadata versioning so admins can safely evolve fields and layouts without breaking records.
+
+### Automation
+
+- Replace placeholder automation runs with a real workflow engine that supports triggers, conditions, branches, delays, scheduled jobs, retries, idempotency keys, and failure recovery.
+- Add real actions: create/update records, assign owners, send email/SMS, create tasks, move deal stages, apply ticket macros, call webhooks, and notify users.
+- Add visual workflow builder UI with test-run mode and execution trace.
+- Add automation governance: owner, versioning, draft/published states, permission checks, audit trail, and rate limits.
+- Add automation analytics for success rate, failure count, average duration, and business impact.
+
+### Sales and Quote-to-Cash
+
+- Add price books, product bundles, recurring prices, subscriptions, contracts, renewals, tax rules, multi-currency, and discount approval workflows.
+- Add branded quote, order, and invoice PDF generation with email delivery and download audit logs.
+- Add quote-to-order-to-invoice conversion flows with approval states and version history.
+- Add payment tracking, partial payments, credit notes, refunds, dunning reminders, and accounting export integrations.
+- Add forecast categories, pipeline health scoring, weighted forecasts, and revenue intelligence dashboards.
+
+### Service Desk
+
+- Add ticket detail conversation threads, internal notes, attachments, email replies, macros applied to replies, and customer-visible updates.
+- Add SLA policies with business calendars, pause/resume rules, breach timers, escalations, and queue routing.
+- Add customer portal for ticket creation, status tracking, knowledge-base search, and CSAT surveys.
+- Add assignment rules by queue, department, skill, workload, priority, and customer tier.
+- Add service analytics for first-response time, resolution time, backlog, SLA breaches, CSAT, and agent workload.
+
+### Analytics and Reporting
+
+- Expand report exports into a full report builder with saved reports, chart types, filters, formulas, grouping, pivots, sharing, and scheduled delivery.
+- Add dashboard builder with configurable widgets, permissions, drill-downs, and saved views.
+- Add export history, download permissions, watermarking, expiration, and audit logs.
+- Add warehouse/BI connectors for advanced enterprise reporting.
+- Add analytics tests to verify tenant isolation and metric correctness.
+
+### Security, Admin, and Compliance
+
+- Add a Security Center with login history, active sessions, suspicious activity, admin action review, failed automation/export visibility, and tenant risk signals.
+- Add MFA policies, SSO/OIDC/SAML, SCIM provisioning, session controls, password policies, and device/session revocation.
+- Add immutable AuditEvent storage for sensitive actions, exports, permission changes, billing changes, and superadmin actions.
+- Add object-level, field-level, and record-sharing permissions beyond the current role/policy foundation.
+- Add compliance workflows for GDPR/CCPA data requests, consent, data deletion, and audit exports.
+
+### Integrations and Ecosystem
+
+- Add integration marketplace surfaces with setup, health checks, sync logs, reconnect flows, and tenant-level secrets management.
+- Add Google/Microsoft mail and calendar sync, shared inbox, attachment sync, and timeline email capture.
+- Add SMS/WhatsApp providers, Stripe/payment providers, accounting integrations, Zapier-style webhooks, and public REST API documentation.
+- Add webhook subscriptions and delivery retry analytics.
+- Add integration sandbox/test mode for admins.
+
+### Billing and Tenant Operations
+
+- Add plan definitions, feature limits, usage metering, overage handling, trials, upgrades, downgrades, and cancellation flows.
+- Add tenant billing invoices, payment methods, subscription status, and failed-payment handling.
+- Add superadmin operational tooling for tenant health, impersonation governance, plan changes, suspension, data export, and support diagnostics.
+- Add platform-level audit for every superadmin action.
+- Add tenant lifecycle automation for onboarding, trial expiration, renewal, and offboarding.
+
+### Quality and Release Hardening
+
+- Add backend API tests for every new module, including tenant isolation, permission checks, validation, and failure cases.
+- Add frontend workflow tests for key user journeys: import, export, custom fields, automation run, product line items, queues/macros, and audit explorer.
+- Add seed data and demo scripts for enterprise QA.
+- Add deployment smoke tests for Vercel/frontend and backend API health after every push.
+- Add observability: structured logs, metrics, tracing, error reporting, and admin-visible job/run failures.
+
 ## Conclusion
 
 NexusCRM has the right broad structure to become a serious enterprise SaaS CRM. The immediate opportunity is to turn broad CRUD coverage into deep operational workflows. The most important architectural moves are unified activity events, custom metadata, background jobs, audit logging, file storage, workflow runtime, and enterprise permissions. Once those foundations exist, each business module can grow into a high-value enterprise feature set without duplicating patterns or creating fragile one-off screens.

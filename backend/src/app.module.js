@@ -17,6 +17,9 @@ const { RealtimeModule } = require('./modules/realtime/realtime.module');
 const { VoipModule } = require('./modules/voip/voip.module');
 const { ExtensionsModule } = require('./modules/extensions/extensions.module');
 const { SuperadminModule } = require('./modules/superadmin/superadmin.module');
+const { ActivityModule } = require('./modules/activity/activity.module');
+const { MetadataModule } = require('./modules/metadata/metadata.module');
+const { DataJobsModule } = require('./modules/data-jobs/data-jobs.module');
 const { TenantMiddleware } = require('./common/middleware/tenant.middleware');
 const { TenantGuard } = require('./common/guards/tenant.guard');
 const { TenantScopeInterceptor } = require('./common/interceptors/tenant-scope.interceptor');
@@ -44,6 +47,9 @@ const { TenantScopeInterceptor } = require('./common/interceptors/tenant-scope.i
     AnalyticsModule,
     RealtimeModule,
     VoipModule,
+    ActivityModule,
+    MetadataModule,
+    DataJobsModule,
     ExtensionsModule,
     SuperadminModule,
   ],
