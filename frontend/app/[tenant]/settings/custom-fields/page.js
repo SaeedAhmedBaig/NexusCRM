@@ -5,9 +5,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2 } from 'lucide-react';
 import { createCustomField, listCustomFields, removeCustomField } from '../../../../lib/metadata-api';
 import { PageHeader } from '../../../../components/ui/page-header';
-import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
 import { notifyError, notifySuccess } from '../../../../lib/notify';
+import { SettingsPrimaryButton } from '../../../../components/settings/settings-layout';
 
 const OBJECT_TYPES = [
   'Lead',
@@ -108,15 +108,15 @@ export default function CustomFieldsPage() {
         title="Custom fields"
         description="Define tenant-specific fields that can power enterprise layouts, imports, reports, automations, and permissions."
         actions={
-          <Button type="submit" form="custom-field-form" disabled={createMutation.isPending}>
+          <SettingsPrimaryButton type="submit" form="custom-field-form" disabled={createMutation.isPending}>
             <Plus className="h-4 w-4" />
             Add field
-          </Button>
+          </SettingsPrimaryButton>
         }
       />
 
       <div className="grid gap-5 xl:grid-cols-[420px_1fr]">
-        <form id="custom-field-form" onSubmit={submit} className="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <form id="custom-field-form" onSubmit={submit} className="border border-border bg-card p-4">
           <h2 className="text-sm font-bold text-foreground">New field definition</h2>
           <div className="mt-4 grid gap-3">
             <label className="grid gap-1.5 text-sm">
@@ -195,7 +195,7 @@ export default function CustomFieldsPage() {
           </div>
         </form>
 
-        <div className="rounded-lg border border-border bg-card shadow-sm">
+        <div className="border border-border bg-card">
           <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-sm font-bold text-foreground">Field registry</h2>

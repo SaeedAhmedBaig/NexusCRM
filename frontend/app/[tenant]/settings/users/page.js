@@ -12,6 +12,7 @@ import {
 } from '../../../../lib/api';
 import { useSession } from '../../../../components/providers/session-context';
 import { inputClass } from '../../../../components/ui/form-field';
+import { SettingsButton, SettingsPageShell, SettingsPrimaryButton, SettingsSection } from '../../../../components/settings/settings-layout';
 
 const INVITE_ROLES = [
   'admin',
@@ -44,7 +45,10 @@ export default function UsersSettingsPage() {
   }
 
   useEffect(() => {
-    load().catch((e) => setError(e.message));
+    const timer = window.setTimeout(() => {
+      load().catch((e) => setError(e.message));
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   async function handleInvite(e) {
@@ -64,15 +68,14 @@ export default function UsersSettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 animate-fade-in">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Team management</h1>
-          <p className="mt-1 text-sm text-muted">Invite, assign roles, and manage access.</p>
-        </div>
+    <SettingsPageShell
+      title="Team management"
+      description="Invite users, assign roles, and manage workspace access."
+    >
 
         {error && <p className="text-sm text-danger">{error}</p>}
 
-        <form onSubmit={handleInvite} className="grid gap-3 rounded-2xl border border-border bg-card p-6 shadow-sm sm:grid-cols-4">
+        <form onSubmit={handleInvite} className="grid gap-3 border border-border bg-card p-4 sm:grid-cols-4">
           <input
             required
             type="email"
@@ -100,12 +103,12 @@ export default function UsersSettingsPage() {
               <option key={d._id} value={d._id}>{d.name}</option>
             ))}
           </select>
-          <button type="submit" className="rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark sm:col-span-4 sm:w-fit">
+          <SettingsPrimaryButton type="submit" className="sm:col-span-4 sm:w-fit">
             Send invite
-          </button>
+          </SettingsPrimaryButton>
         </form>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 border border-border bg-card px-4 py-3">
           <label className="text-sm text-muted">Filter by department</label>
           <select
             value={departmentFilter}
@@ -122,7 +125,8 @@ export default function UsersSettingsPage() {
           </select>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+        <SettingsSection title="Members" description="Current users and their assigned access.">
+        <div className="overflow-x-auto">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-surface text-xs uppercase tracking-wide text-muted">
               <tr>
@@ -146,7 +150,7 @@ export default function UsersSettingsPage() {
                         await updateMember(u.id, { role: e.target.value });
                         await load(departmentFilter);
                       }}
-                      className="rounded-lg border border-border px-2 py-1 text-sm"
+                      className="border border-border bg-control px-2 py-1 text-sm text-foreground"
                     >
                       {INVITE_ROLES.concat(['owner']).map((r) => (
                         <option key={r} value={r}>{r}</option>
@@ -160,7 +164,7 @@ export default function UsersSettingsPage() {
                         await updateMember(u.id, { departmentId: e.target.value || null });
                         await load(departmentFilter);
                       }}
-                      className="rounded-lg border border-border px-2 py-1 text-sm"
+                      className="border border-border bg-control px-2 py-1 text-sm text-foreground"
                     >
                       <option value="">No department</option>
                       {departments.map((d) => (
@@ -170,27 +174,27 @@ export default function UsersSettingsPage() {
                   </td>
                   <td className="px-4 py-3">
                     {u.role !== 'owner' && (
-                      <div className="flex gap-3">
-                        <button
+                      <div className="flex gap-2">
+                        <SettingsButton
                           type="button"
                           onClick={async () => {
                             await suspendMember(u.id);
                             await load(departmentFilter);
                           }}
-                          className="text-sm font-medium text-warning hover:underline"
+                          className="text-warning"
                         >
                           Suspend
-                        </button>
-                        <button
+                        </SettingsButton>
+                        <SettingsButton
                           type="button"
                           onClick={async () => {
                             await removeMember(u.id);
                             await load(departmentFilter);
                           }}
-                          className="text-sm font-medium text-danger hover:underline"
+                          className="border-danger/30 text-danger hover:bg-danger-light"
                         >
                           Remove
-                        </button>
+                        </SettingsButton>
                       </div>
                     )}
                   </td>
@@ -199,6 +203,7 @@ export default function UsersSettingsPage() {
             </tbody>
           </table>
         </div>
-    </div>
+        </SettingsSection>
+    </SettingsPageShell>
   );
 }

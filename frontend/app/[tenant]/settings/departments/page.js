@@ -10,9 +10,8 @@ import {
 } from '../../../../lib/api';
 import { useSession } from '../../../../components/providers/session-context';
 import { Can } from '../../../../components/can';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
 import { inputClass } from '../../../../components/ui/form-field';
+import { SettingsPageShell, SettingsPrimaryButton, SettingsSection } from '../../../../components/settings/settings-layout';
 
 const PERMISSION_PRESETS = [
   'read:Deal', 'manage:Deal', 'read:Contact', 'manage:Contact',
@@ -36,23 +35,23 @@ export default function DepartmentsSettingsPage() {
   }
 
   useEffect(() => {
-    load().catch((e) => setError(e.message));
+    const timer = window.setTimeout(() => {
+      load().catch((e) => setError(e.message));
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   return (
     <Can action="manage" subject="Department" rules={profile?.rules} fallback={<p className="text-muted-foreground">Admin access required.</p>}>
-      <div className="mx-auto max-w-5xl space-y-8 animate-fade-in">
-        <div>
-          <h1 className="text-h1 text-foreground">Roles & departments</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Organize teams and configure role permissions.</p>
-        </div>
+      <SettingsPageShell
+        title="Roles and departments"
+        description="Organize teams, defaults, and permission presets."
+      >
         {error && <p className="text-sm text-danger">{error}</p>}
 
-        <Card>
-          <CardHeader><CardTitle>Create department</CardTitle></CardHeader>
-          <CardContent>
+        <SettingsSection title="Create department" description="Add a department and optionally attach a default role group.">
             <form
-              className="grid gap-3 sm:grid-cols-3"
+              className="grid gap-3 p-4 sm:grid-cols-3"
               onSubmit={async (e) => {
                 e.preventDefault();
                 await createDepartment({
@@ -70,16 +69,13 @@ export default function DepartmentsSettingsPage() {
                 <option value="">Default role group</option>
                 {groups.map((g) => <option key={g._id} value={g._id}>{g.name}</option>)}
               </select>
-              <Button type="submit" className="sm:col-span-3 sm:w-fit">Add department</Button>
+              <SettingsPrimaryButton type="submit" className="sm:col-span-3 sm:w-fit">Add department</SettingsPrimaryButton>
             </form>
-          </CardContent>
-        </Card>
+        </SettingsSection>
 
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold">Departments</h2>
+        <SettingsSection title="Departments" description="Edit department labels and default role groups.">
           {departments.map((d) => (
-            <Card key={d._id}>
-              <CardContent className="grid gap-3 p-4 sm:grid-cols-3">
+              <div key={d._id} className="grid gap-3 px-4 py-3 sm:grid-cols-3">
                 <input
                   className={inputClass}
                   defaultValue={d.name}
@@ -110,20 +106,17 @@ export default function DepartmentsSettingsPage() {
                   <option value="">No default group</option>
                   {groups.map((g) => <option key={g._id} value={g._id}>{g.name}</option>)}
                 </select>
-              </CardContent>
-            </Card>
+              </div>
           ))}
-        </section>
+        </SettingsSection>
 
-        <section className="space-y-4">
-          <h2 className="text-lg font-semibold">Role permissions</h2>
+        <SettingsSection title="Role permissions" description="Toggle role permission presets for workspace modules.">
           {groups.map((group) => (
-            <Card key={group._id}>
-              <CardHeader>
-                <CardTitle className="text-base">{group.name}</CardTitle>
-                <p className="text-xs text-muted">Role: {group.role}</p>
-              </CardHeader>
-              <CardContent>
+            <div key={group._id} className="px-4 py-3">
+              <div className="mb-3">
+                <p className="text-sm font-semibold text-foreground">{group.name}</p>
+                <p className="text-xs text-muted-foreground">Role: {group.role}</p>
+              </div>
                 <div className="mb-3 flex flex-wrap gap-2">
                   {PERMISSION_PRESETS.map((perm) => {
                     const active = (group.permissions || []).includes(perm);
@@ -139,18 +132,17 @@ export default function DepartmentsSettingsPage() {
                           await updateGroup(group._id, [...perms]);
                           await load();
                         }}
-                        className={`rounded-md px-2 py-1 text-xs font-medium ${active ? 'bg-brand text-brand-foreground' : 'border border-border bg-surface text-muted'}`}
+                        className={`border px-2 py-1 text-xs font-medium ${active ? 'border-brand bg-brand text-brand-foreground' : 'border-border bg-control text-muted-foreground hover:bg-control-hover'}`}
                       >
                         {perm}
                       </button>
                     );
                   })}
                 </div>
-              </CardContent>
-            </Card>
+            </div>
           ))}
-        </section>
-      </div>
+        </SettingsSection>
+      </SettingsPageShell>
     </Can>
   );
 }

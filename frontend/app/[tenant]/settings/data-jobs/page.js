@@ -5,9 +5,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Database, Plus, RefreshCw, RotateCcw, XCircle } from 'lucide-react';
 import { createDataJob, listDataJobs, updateDataJobStatus } from '../../../../lib/data-jobs-api';
 import { PageHeader } from '../../../../components/ui/page-header';
-import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
 import { notifyError, notifySuccess } from '../../../../lib/notify';
+import { SettingsButton, SettingsPrimaryButton } from '../../../../components/settings/settings-layout';
 
 const OBJECT_TYPES = ['Lead', 'Contact', 'Company', 'Deal', 'Ticket', 'Invoice', 'Quotation', 'Order', 'Product'];
 const JOB_TYPES = ['import', 'export', 'report_export', 'sync', 'enrichment'];
@@ -90,7 +90,7 @@ export default function DataJobsPage() {
       />
 
       <div className="grid gap-5 xl:grid-cols-[380px_1fr]">
-        <form onSubmit={submit} className="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <form onSubmit={submit} className="border border-border bg-card p-4">
           <h2 className="text-sm font-bold text-foreground">Queue a data job</h2>
           <p className="mt-1 text-xs text-muted-foreground">
             Register import, export, sync, and enrichment work for the background processing pipeline.
@@ -124,24 +124,24 @@ export default function DataJobsPage() {
               <span className="font-semibold text-foreground">File name</span>
               <Input value={form.fileName} onChange={(e) => setForm({ ...form, fileName: e.target.value })} placeholder="leads.csv" />
             </label>
-            <Button type="submit" disabled={createMutation.isPending}>
+            <SettingsPrimaryButton type="submit" disabled={createMutation.isPending}>
               <Plus className="h-4 w-4" />
               Queue job
-            </Button>
+            </SettingsPrimaryButton>
           </div>
         </form>
 
-        <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+        <div className="overflow-hidden border border-border bg-card">
           <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-sm font-bold text-foreground">Job registry</h2>
               <p className="text-xs text-muted-foreground">Operational record of background data movement.</p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button type="button" variant="outline" size="sm" onClick={() => queryClient.invalidateQueries({ queryKey: ['data-jobs'] })}>
+              <SettingsButton onClick={() => queryClient.invalidateQueries({ queryKey: ['data-jobs'] })}>
                 <RefreshCw className="h-3.5 w-3.5" />
                 Refresh
-              </Button>
+              </SettingsButton>
               <select
                 value={filters.type}
                 onChange={(e) => setFilters((prev) => ({ ...prev, type: e.target.value }))}
@@ -188,14 +188,14 @@ export default function DataJobsPage() {
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">{job.objectType}</td>
                       <td className="px-4 py-3">
-                        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold capitalize ${STATUS_CLASSES[job.status] || STATUS_CLASSES.queued}`}>
+                        <span className={`inline-flex border px-2.5 py-1 text-xs font-bold capitalize ${STATUS_CLASSES[job.status] || STATUS_CLASSES.queued}`}>
                           {job.status}
                         </span>
                       </td>
                       <td className="px-4 py-3">
                         <div className="min-w-40">
-                          <div className="h-2 overflow-hidden rounded-full bg-muted">
-                            <div className="h-full rounded-full bg-brand" style={{ width: `${progressPercent(job)}%` }} />
+                          <div className="h-2 overflow-hidden bg-muted">
+                            <div className="h-full bg-brand" style={{ width: `${progressPercent(job)}%` }} />
                           </div>
                           <p className="mt-1 text-xs text-muted-foreground">
                             {job.processedRows || 0}/{job.totalRows || 0} rows · {job.successRows || 0} ok · {job.failedRows || 0} failed
@@ -206,22 +206,18 @@ export default function DataJobsPage() {
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-2">
                           {['queued', 'running'].includes(job.status) && (
-                            <Button
+                            <SettingsButton
                               type="button"
-                              variant="outline"
-                              size="sm"
                               disabled={statusMutation.isPending}
                               onClick={() => statusMutation.mutate({ id: job.id, payload: { status: 'cancelled' } })}
                             >
                               <XCircle className="h-3.5 w-3.5" />
                               Cancel
-                            </Button>
+                            </SettingsButton>
                           )}
                           {['failed', 'cancelled'].includes(job.status) && (
-                            <Button
+                            <SettingsButton
                               type="button"
-                              variant="outline"
-                              size="sm"
                               disabled={statusMutation.isPending}
                               onClick={() => statusMutation.mutate({
                                 id: job.id,
@@ -230,7 +226,7 @@ export default function DataJobsPage() {
                             >
                               <RotateCcw className="h-3.5 w-3.5" />
                               Retry
-                            </Button>
+                            </SettingsButton>
                           )}
                         </div>
                       </td>

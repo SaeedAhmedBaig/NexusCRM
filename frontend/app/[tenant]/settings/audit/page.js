@@ -31,7 +31,7 @@ export default function AuditPage() {
         }
       />
 
-      <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
+      <div className="border border-border bg-card p-4">
         <div className="grid gap-3 sm:grid-cols-3">
           <label className="grid gap-1.5 text-sm">
             <span className="font-semibold text-foreground">Object</span>
@@ -60,7 +60,7 @@ export default function AuditPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+      <div className="overflow-hidden border border-border bg-card">
         <div className="border-b border-border px-4 py-3">
           <h2 className="text-sm font-bold text-foreground">Latest activity events</h2>
         </div>

@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { getMe, updateProfile } from '../../../../lib/api';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
 import { inputClass } from '../../../../components/ui/form-field';
+import { SettingsPageShell, SettingsPrimaryButton, SettingsSection } from '../../../../components/settings/settings-layout';
 
 const LANGUAGES = [
   { value: 'en', label: 'English' },
@@ -73,22 +72,18 @@ export default function ProfileSettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Profile</h1>
-        <p className="mt-1 text-sm text-muted">Manage your personal account settings.</p>
-      </div>
+    <SettingsPageShell
+      title="Profile"
+      description="Manage your personal account, password, and notification defaults."
+      className="max-w-3xl"
+    >
 
       {error && <p className="text-sm text-danger">{error}</p>}
       {saved && <p className="text-sm text-success">Profile updated.</p>}
 
       <form onSubmit={handleSave} className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Personal info</CardTitle>
-            <CardDescription>Name, email, and avatar</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <SettingsSection title="Personal info" description="Name, email, avatar, and language.">
+          <div className="space-y-4 p-4">
             <div>
               <label className="text-sm font-medium text-foreground">Name</label>
               <input className={inputClass} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
@@ -107,45 +102,36 @@ export default function ProfileSettingsPage() {
                 {LANGUAGES.map((l) => <option key={l.value} value={l.value}>{l.label}</option>)}
               </select>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </SettingsSection>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Password</CardTitle>
-            <CardDescription>Leave blank to keep current password</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <SettingsSection title="Password" description="Leave blank to keep your current password.">
+          <div className="space-y-4 p-4">
             <input type="password" className={inputClass} placeholder="Current password" value={form.currentPassword} onChange={(e) => setForm({ ...form, currentPassword: e.target.value })} />
             <input type="password" className={inputClass} placeholder="New password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
-          </CardContent>
-        </Card>
+          </div>
+        </SettingsSection>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Notifications</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <SettingsSection title="Notifications" description="Choose which workspace updates should notify you.">
             {[
               ['emailNotifications', 'Email notifications'],
               ['taskReminders', 'Task reminders'],
               ['dealUpdates', 'Deal updates'],
               ['weeklyDigest', 'Weekly digest'],
             ].map(([key, label]) => (
-              <label key={key} className="flex items-center gap-2 text-sm">
+              <label key={key} className="flex items-center justify-between px-4 py-3 text-sm">
+                <span>{label}</span>
                 <input
                   type="checkbox"
                   checked={form.preferences[key]}
                   onChange={(e) => setForm({ ...form, preferences: { ...form.preferences, [key]: e.target.checked } })}
                 />
-                {label}
               </label>
             ))}
-          </CardContent>
-        </Card>
+        </SettingsSection>
 
-        <Button type="submit" disabled={loading}>{loading ? 'Saving…' : 'Save changes'}</Button>
+        <SettingsPrimaryButton type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save changes'}</SettingsPrimaryButton>
       </form>
-    </div>
+    </SettingsPageShell>
   );
 }
