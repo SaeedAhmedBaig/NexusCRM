@@ -1,11 +1,13 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { Plus, X } from 'lucide-react';
 import { DataTable } from './DataTable';
 import { useListParams } from './use-list-params';
 import { listDepartments, listTenantUsers } from '../../lib/api';
+import { getTenantUrl } from '../../lib/tenant';
 import { listEntityActivity } from '../../lib/activity-api';
 import { listCustomFields } from '../../lib/metadata-api';
 import { PageHeader } from '../ui/page-header';
@@ -49,7 +51,10 @@ export function ModuleListPage({
   filterOptions: staticFilterOptions = {},
   createFields = [],
   createDefaults = {},
+  detailSegment,
+  subdomain,
 }) {
+  const router = useRouter();
   const { params, setParams } = useListParams();
   const queryClient = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
@@ -139,6 +144,10 @@ export function ModuleListPage({
 
   const openRecord = useCallback(
     async (row, mode = 'view') => {
+      if (detailSegment) {
+        router.push(getTenantUrl(subdomain, `/sales/${detailSegment}/${row.id}`));
+        return;
+      }
       setDetailLoading(true);
       setDrawer({ open: true, mode, record: row, form: row });
       try {
@@ -148,7 +157,7 @@ export function ModuleListPage({
         setDetailLoading(false);
       }
     },
-    [getRecord],
+    [detailSegment, getRecord, router, subdomain],
   );
 
   function renderFieldInput(field, value, onChange) {

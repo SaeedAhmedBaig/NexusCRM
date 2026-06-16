@@ -23,6 +23,18 @@ export function bulkDeals(payload) {
   return apiFetch('/deals/bulk', { method: 'POST', body: payload });
 }
 
+export function listDealPipelines() {
+  return apiFetch('/deals/pipelines');
+}
+
+export function createDealPipeline(payload) {
+  return apiFetch('/deals/pipelines', { method: 'POST', body: payload });
+}
+
+export function updateDealPipeline(id, payload) {
+  return apiFetch(`/deals/pipelines/${id}`, { method: 'PATCH', body: payload });
+}
+
 export function getDeal(id) {
   return apiFetch(`/deals/${id}`);
 }
@@ -41,6 +53,22 @@ export function sendDealEmail(id, payload) {
 
 export function getDealPayments(id) {
   return apiFetch(`/deals/${id}/payments`);
+}
+
+export function getDealLineItems(id) {
+  return apiFetch(`/deals/${id}/line-items`);
+}
+
+export function addDealLineItem(id, payload) {
+  return apiFetch(`/deals/${id}/line-items`, { method: 'POST', body: payload });
+}
+
+export function updateDealLineItem(id, lineItemId, payload) {
+  return apiFetch(`/deals/${id}/line-items/${lineItemId}`, { method: 'PATCH', body: payload });
+}
+
+export function removeDealLineItem(id, lineItemId) {
+  return apiFetch(`/deals/${id}/line-items/${lineItemId}`, { method: 'DELETE' });
 }
 
 export function addDealPayment(id, payload) {
@@ -71,12 +99,40 @@ export function getLead(id) {
   return apiFetch(`/leads/${id}`);
 }
 
+export function getLeadDuplicates(id) {
+  return apiFetch(`/leads/${id}/duplicates`);
+}
+
 export function updateLead(id, payload) {
   return apiFetch(`/leads/${id}`, { method: 'PATCH', body: payload });
 }
 
+export function convertLead(id, payload) {
+  return apiFetch(`/leads/${id}/convert`, { method: 'POST', body: payload });
+}
+
+export function routeLead(id, payload = {}) {
+  return apiFetch(`/leads/${id}/route`, { method: 'POST', body: payload });
+}
+
 export function removeLead(id) {
   return apiFetch(`/leads/${id}`, { method: 'DELETE' });
+}
+
+export function listLeadRoutingRules() {
+  return apiFetch('/leads/routing-rules');
+}
+
+export function createLeadRoutingRule(payload) {
+  return apiFetch('/leads/routing-rules', { method: 'POST', body: payload });
+}
+
+export function updateLeadRoutingRule(id, payload) {
+  return apiFetch(`/leads/routing-rules/${id}`, { method: 'PATCH', body: payload });
+}
+
+export function deleteLeadRoutingRule(id) {
+  return apiFetch(`/leads/routing-rules/${id}`, { method: 'DELETE' });
 }
 
 export function listCompanies(params) {

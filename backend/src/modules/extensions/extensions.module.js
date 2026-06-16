@@ -19,13 +19,16 @@ const { ReportExportJobSchema, ReportExportJobModelName } = require('./schemas/r
 const { LiveChatSessionSchema, LiveChatSessionModelName } = require('./schemas/live-chat-session.schema');
 const { EmailAccountSchema, EmailAccountModelName } = require('../mail/schemas/email-account.schema');
 const { TenantSchema, TenantModelName } = require('../tenant/schemas/tenant.schema');
+const { DealSchema, DealModelName } = require('../crm/schemas/deal.schema');
+const { ContactSchema, ContactModelName } = require('../crm/schemas/contact.schema');
+const { CompanySchema, CompanyModelName } = require('../crm/schemas/company.schema');
+const { ActivityEventSchema, ActivityEventModelName } = require('../activity/schemas/activity-event.schema');
 const { IntegrationsService } = require('./integrations.service');
 const { IntegrationsController } = require('./integrations.controller');
+const { SalesDocumentsService } = require('./sales-documents.service');
+const { QuotationsController, OrdersController, InvoicesController } = require('./sales-documents.controller');
 
 const entities = [
-  { route: 'quotations', modelName: QuotationModelName, configKey: 'quotations' },
-  { route: 'orders', modelName: OrderModelName, configKey: 'orders' },
-  { route: 'invoices', modelName: InvoiceModelName, configKey: 'invoices' },
   { route: 'products', modelName: ProductModelName, configKey: 'products' },
   { route: 'tickets', modelName: TicketModelName, configKey: 'tickets' },
   { route: 'ticket-queues', modelName: TicketQueueModelName, configKey: 'ticket-queues' },
@@ -65,10 +68,25 @@ const providers = entities.map(({ modelName }, index) =>
       { name: LiveChatSessionModelName, schema: LiveChatSessionSchema },
       { name: EmailAccountModelName, schema: EmailAccountSchema },
       { name: TenantModelName, schema: TenantSchema },
+      { name: DealModelName, schema: DealSchema },
+      { name: ContactModelName, schema: ContactSchema },
+      { name: CompanyModelName, schema: CompanySchema },
+      { name: ActivityEventModelName, schema: ActivityEventSchema },
     ]),
   ],
-  controllers: [...controllers, IntegrationsController],
+  controllers: [QuotationsController, OrdersController, InvoicesController, ...controllers, IntegrationsController],
   providers: [
+    withModels(SalesDocumentsService, {
+      quotationModel: 'Quotation',
+      orderModel: 'Order',
+      invoiceModel: 'Invoice',
+      productModel: 'Product',
+      tenantModel: 'Tenant',
+      dealModel: 'Deal',
+      contactModel: 'Contact',
+      companyModel: 'Company',
+      activityEventModel: 'ActivityEvent',
+    }),
     ...providers,
     withModels(IntegrationsService, {
       emailAccountModel: 'EmailAccount',

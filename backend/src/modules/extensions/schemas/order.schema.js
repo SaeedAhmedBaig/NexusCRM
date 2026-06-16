@@ -13,7 +13,6 @@ const OrderLineItemSchema = new Schema(
     taxRate: { type: Number, default: 0 },
     total: { type: Number, default: 0 },
   },
-  { _id: false },
 );
 
 const OrderSchema = new Schema(
@@ -31,7 +30,16 @@ const OrderSchema = new Schema(
     grandTotal: { type: Number, default: 0 },
     dealId: { type: Schema.Types.ObjectId, ref: 'Deal', default: null },
     contactId: { type: Schema.Types.ObjectId, ref: 'Contact', default: null },
+    companyId: { type: Schema.Types.ObjectId, ref: 'Company', default: null },
     assignedTo: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    terms: { type: String, default: '' },
+    notes: { type: String, default: '' },
+    billingAddress: { type: String, default: '' },
+    shippingAddress: { type: String, default: '' },
+    pdfGeneratedAt: { type: Date, default: null },
+    confirmedAt: { type: Date, default: null },
+    sourceQuotationId: { type: Schema.Types.ObjectId, ref: 'Quotation', default: null },
+    convertedInvoiceId: { type: Schema.Types.ObjectId, ref: 'Invoice', default: null },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     customFields: { type: Schema.Types.Mixed, default: {} },
   },

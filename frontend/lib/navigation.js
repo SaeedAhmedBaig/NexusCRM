@@ -95,6 +95,8 @@ export const NAV_SECTIONS = [
       { href: '/settings/users', label: 'Team', icon: Users, action: 'manage', subject: 'User' },
       { href: '/settings/departments', label: 'Departments', icon: Layers, action: 'manage', subject: 'Department' },
       { href: '/settings/roles', label: 'Roles', icon: Shield, action: 'manage', subject: 'Group' },
+      { href: '/settings/lead-routing', label: 'Lead Routing', icon: GitBranch, action: 'manage', subject: 'Settings' },
+      { href: '/settings/pipelines', label: 'Pipelines', icon: GitBranch, action: 'manage', subject: 'Settings' },
       { href: '/settings/custom-fields', label: 'Custom Fields', icon: SlidersHorizontal, action: 'manage', subject: 'Settings' },
       { href: '/settings/audit', label: 'Security & Audit', icon: ShieldCheck, action: 'manage', subject: 'Settings' },
       { href: '/settings/data-jobs', label: 'Data Jobs', icon: Database, action: 'manage', subject: 'Settings' },

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Users, Mail, User, Building2, CreditCard, SlidersHorizontal, ShieldCheck, Database, Layers, Settings2 } from 'lucide-react';
+import { Users, Mail, User, Building2, CreditCard, SlidersHorizontal, ShieldCheck, Database, Layers, Settings2, GitBranch } from 'lucide-react';
 import { getOnboardingStatus } from '../../../lib/api';
 import { getTenantUrl } from '../../../lib/tenant';
 import { useSession } from '../../../components/providers/session-context';
@@ -24,6 +24,8 @@ const SETTINGS_GROUPS = [
       { href: '/settings/tenant', label: 'Organization', description: 'Company profile, workspace URL, domains, and defaults.', icon: Building2, action: 'manage', subject: 'Settings' },
       { href: '/settings/users', label: 'Team members', description: 'Invite people, assign departments, and manage membership.', icon: Users, action: 'manage', subject: 'User' },
       { href: '/settings/departments', label: 'Departments and roles', description: 'Department defaults, role groups, and permission presets.', icon: Layers, action: 'manage', subject: 'Department' },
+      { href: '/settings/lead-routing', label: 'Lead routing', description: 'Route leads by source, status, score, department, and value.', icon: GitBranch, action: 'manage', subject: 'Settings' },
+      { href: '/settings/pipelines', label: 'Pipelines', description: 'Configure opportunity stages, probabilities, and won/lost gates.', icon: GitBranch, action: 'manage', subject: 'Settings' },
       { href: '/settings/billing', label: 'Billing', description: 'Subscription, invoices, and plan usage.', icon: CreditCard, action: 'manage', subject: 'Settings' },
     ],
   },

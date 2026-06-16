@@ -5,13 +5,17 @@ import { ModuleListPage } from '../../../../components/crm/ModuleListPage';
 import { quotationsApi } from '../../../../lib/extensions-api';
 import { COMMON_FILTERS, statusOptions, AMOUNT_COLUMN, STATUS_COLUMN, OWNER_COLUMN, NAME_COLUMN } from '../../../../lib/module-configs';
 import { Spinner } from '../../../../components/ui/spinner';
+import { useSession } from '../../../../components/providers/session-context';
 
 function Inner() {
+  const { subdomain } = useSession();
   return (
     <ModuleListPage
       title="Quotations"
       description="Create and track sales quotes"
       entity="quotations"
+      detailSegment="quotations"
+      subdomain={subdomain}
       columns={[NAME_COLUMN, { key: 'number', label: 'Number' }, STATUS_COLUMN, AMOUNT_COLUMN, OWNER_COLUMN]}
       fetchList={quotationsApi.list}
       getRecord={quotationsApi.get}
@@ -20,11 +24,14 @@ function Inner() {
       bulkAction={quotationsApi.bulk}
       filters={COMMON_FILTERS}
       filterOptions={{ statuses: statusOptions('quotations') }}
-      createDefaults={{ status: 'draft', amount: 0 }}
+      createDefaults={{ status: 'draft', amount: 0, currency: 'USD' }}
       createFields={[
         { key: 'title', label: 'Title', required: true },
         { key: 'number', label: 'Quote number' },
-        { key: 'amount', label: 'Amount', type: 'number' },
+        { key: 'currency', label: 'Currency' },
+        { key: 'validUntil', label: 'Valid until', type: 'date' },
+        { key: 'terms', label: 'Terms', type: 'textarea' },
+        { key: 'notes', label: 'Notes', type: 'textarea' },
         { key: 'status', label: 'Status', type: 'select', options: statusOptions('quotations') },
       ]}
     />

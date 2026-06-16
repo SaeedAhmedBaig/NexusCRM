@@ -7,16 +7,22 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { ArrowLeft, Mail, Pencil, Trash2, Copy, X } from 'lucide-react';
 import {
+  addDealLineItem,
   getDeal,
   updateDeal,
   createDeal,
   bulkDeals,
   getDealEmails,
+  getDealLineItems,
+  listDealPipelines,
   getDealPayments,
   getDealAttachments,
   getDealHistory,
+  removeDealLineItem,
+  updateDealLineItem,
   addDealPayment,
 } from '../../lib/crm-api';
+import { productsApi } from '../../lib/extensions-api';
 import { sendEmail, syncImap } from '../../lib/mail-api';
 import { listEntityActivity } from '../../lib/activity-api';
 import { EmailComposer } from '../email/EmailComposer';
@@ -30,6 +36,7 @@ const TABS = [
   { id: 'details', label: 'Details' },
   { id: 'emails', label: 'Emails' },
   { id: 'chat', label: 'Chat' },
+  { id: 'line-items', label: 'Line items' },
   { id: 'payments', label: 'Payments' },
   { id: 'attachments', label: 'Attachments' },
   { id: 'history', label: 'History' },
@@ -48,11 +55,11 @@ function StatusBadge({ status }) {
   );
 }
 
-function EditDealModal({ deal, open, onClose, onSaved }) {
+function EditDealModal({ deal, open, onClose, onSaved, stages = [] }) {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     defaultValues: {
       name: deal?.name || deal?.title || '',
-      stage: deal?.stage || 'lead',
+      stageKey: deal?.stageKey || deal?.stage || 'lead',
       status: deal?.status || 'open',
       amount: deal?.amount ?? deal?.value ?? 0,
       closeDate: deal?.closeDate ? deal.closeDate.slice(0, 10) : '',
@@ -84,9 +91,9 @@ function EditDealModal({ deal, open, onClose, onSaved }) {
           <div className="grid grid-cols-2 gap-3">
             <label className="block text-sm">
               <span className="font-medium text-muted">Stage</span>
-              <select {...register('stage')} className="mt-1 w-full rounded-xl border border-border px-3 py-2">
-                {['lead', 'qualified', 'proposal', 'negotiation', 'won', 'lost'].map((s) => (
-                  <option key={s} value={s}>{s}</option>
+              <select {...register('stageKey')} className="mt-1 w-full rounded-xl border border-border px-3 py-2">
+                {(stages.length ? stages : ['lead', 'qualified', 'proposal', 'negotiation', 'won', 'lost'].map((s) => ({ key: s, label: s }))).map((s) => (
+                  <option key={s.key} value={s.key}>{s.label}</option>
                 ))}
               </select>
             </label>
@@ -154,6 +161,8 @@ function PaymentModal({ open, onClose, onAdd }) {
   );
 }
 
+const emptyLineItem = { productId: '', name: '', quantity: 1, unitPrice: 0, discount: 0, taxRate: 0 };
+
 export function DealDetail({ dealId, subdomain }) {
   const router = useRouter();
   const { profile } = useSession();
@@ -164,6 +173,8 @@ export function DealDetail({ dealId, subdomain }) {
   const [emailOpen, setEmailOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [actionPending, setActionPending] = useState(false);
+  const [lineItemForm, setLineItemForm] = useState(emptyLineItem);
+  const [editingLineItemId, setEditingLineItemId] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: deal, isLoading, error } = useQuery({
@@ -181,6 +192,30 @@ export function DealDetail({ dealId, subdomain }) {
     queryKey: ['deal-payments', dealId],
     queryFn: () => getDealPayments(dealId),
     enabled: tab === 'payments',
+  });
+
+  const { data: pipelines = [] } = useQuery({
+    queryKey: ['deal-pipelines'],
+    queryFn: listDealPipelines,
+    staleTime: 120_000,
+  });
+
+  const pipeline = pipelines.find((item) => item.id === deal?.pipeline?.id) || pipelines.find((item) => item.isDefault) || pipelines[0];
+  const stages = pipeline?.stages || [];
+
+  const { data: productsPage } = useQuery({
+    queryKey: ['products-for-line-items'],
+    queryFn: () => productsApi.list({ limit: 200, status: 'active' }),
+    enabled: tab === 'line-items',
+    staleTime: 120_000,
+  });
+
+  const products = productsPage?.data || productsPage || [];
+
+  const { data: lineItemsPage = { items: [], totals: {} } } = useQuery({
+    queryKey: ['deal-line-items', dealId],
+    queryFn: () => getDealLineItems(dealId),
+    enabled: tab === 'line-items',
   });
 
   const { data: attachments = [] } = useQuery({
@@ -233,6 +268,33 @@ export function DealDetail({ dealId, subdomain }) {
     },
   });
 
+  const lineItemMutation = useMutation({
+    mutationFn: (payload) => editingLineItemId
+      ? updateDealLineItem(dealId, editingLineItemId, payload)
+      : addDealLineItem(dealId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['deal-line-items', dealId] });
+      queryClient.invalidateQueries({ queryKey: ['deal', dealId] });
+      queryClient.invalidateQueries({ queryKey: ['pipeline-deals'] });
+      queryClient.invalidateQueries({ queryKey: ['entity-activity', 'Deal', dealId] });
+      setLineItemForm(emptyLineItem);
+      setEditingLineItemId(null);
+      notifySuccess(editingLineItemId ? 'Line item updated' : 'Line item added');
+    },
+    onError: notifyError,
+  });
+
+  const removeLineItemMutation = useMutation({
+    mutationFn: (lineItemId) => removeDealLineItem(dealId, lineItemId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['deal-line-items', dealId] });
+      queryClient.invalidateQueries({ queryKey: ['deal', dealId] });
+      queryClient.invalidateQueries({ queryKey: ['pipeline-deals'] });
+      notifySuccess('Line item removed');
+    },
+    onError: notifyError,
+  });
+
   async function handleClone() {
     if (!deal || actionPending) return;
     setActionPending(true);
@@ -270,6 +332,44 @@ export function DealDetail({ dealId, subdomain }) {
     }
   }
 
+  function updateLineItemField(key, value) {
+    setLineItemForm((current) => ({ ...current, [key]: value }));
+  }
+
+  function handleProductSelect(productId) {
+    const product = products.find((item) => item.id === productId);
+    setLineItemForm((current) => ({
+      ...current,
+      productId,
+      name: product?.name || current.name,
+      unitPrice: product?.unitPrice ?? current.unitPrice,
+      taxRate: current.taxRate || 0,
+    }));
+  }
+
+  function submitLineItem(event) {
+    event.preventDefault();
+    lineItemMutation.mutate({
+      ...lineItemForm,
+      quantity: Number(lineItemForm.quantity) || 0,
+      unitPrice: Number(lineItemForm.unitPrice) || 0,
+      discount: Number(lineItemForm.discount) || 0,
+      taxRate: Number(lineItemForm.taxRate) || 0,
+    });
+  }
+
+  function editLineItem(item) {
+    setEditingLineItemId(item.id);
+    setLineItemForm({
+      productId: item.productId || '',
+      name: item.name || '',
+      quantity: item.quantity || 1,
+      unitPrice: item.unitPrice || 0,
+      discount: item.discount || 0,
+      taxRate: item.taxRate || 0,
+    });
+  }
+
   if (isLoading) {
     return <div className="flex min-h-[40vh] items-center justify-center"><Spinner /></div>;
   }
@@ -283,6 +383,8 @@ export function DealDetail({ dealId, subdomain }) {
   }
 
   const activityEvents = activityPage?.data || [];
+  const lineItems = lineItemsPage.items || [];
+  const totals = lineItemsPage.totals || {};
   const timeline = activityEvents.length
     ? activityEvents.map((event) => ({
         id: event.id,
@@ -369,8 +471,11 @@ export function DealDetail({ dealId, subdomain }) {
             </div>
             <dl className="grid gap-4 sm:grid-cols-2">
               {[
-                ['Stage', deal.stage],
+                ['Pipeline', pipeline?.name || deal.pipeline?.name || 'Default'],
+                ['Stage', deal.stageKey || deal.stage],
                 ['Amount', deal.amount != null ? `$${Number(deal.amount).toLocaleString()}` : '—'],
+                ['Forecast', deal.forecastCategory || 'pipeline'],
+                ['Next step', deal.nextStep || '—'],
                 ['Close date', deal.closeDate ? new Date(deal.closeDate).toLocaleDateString() : '—'],
                 ['Company', deal.company?.name || '—'],
                 ['Contact', deal.contact?.name || '—'],
@@ -426,6 +531,117 @@ export function DealDetail({ dealId, subdomain }) {
             currentUserId={currentUserId}
             currentUserName={currentUserName}
           />
+        )}
+
+        {tab === 'line-items' && (
+          <div className="space-y-5">
+            <form onSubmit={submitLineItem} className="rounded-xl border border-border bg-surface p-4">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-sm font-semibold">{editingLineItemId ? 'Edit line item' : 'Add product line'}</h3>
+                  <p className="text-xs text-muted">Use catalog pricing, then adjust quantity, discount, or tax.</p>
+                </div>
+                {editingLineItemId && (
+                  <button
+                    type="button"
+                    className="text-xs font-semibold text-muted hover:text-foreground"
+                    onClick={() => {
+                      setEditingLineItemId(null);
+                      setLineItemForm(emptyLineItem);
+                    }}
+                  >
+                    Cancel edit
+                  </button>
+                )}
+              </div>
+              <div className="grid gap-3 lg:grid-cols-6">
+                <label className="grid gap-1 text-xs font-semibold text-muted lg:col-span-2">
+                  Product
+                  <select className="input-base" value={lineItemForm.productId} onChange={(e) => handleProductSelect(e.target.value)}>
+                    <option value="">Custom line item</option>
+                    {products.map((product) => (
+                      <option key={product.id} value={product.id}>{product.name} · ${Number(product.unitPrice || 0).toLocaleString()}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="grid gap-1 text-xs font-semibold text-muted lg:col-span-2">
+                  Name
+                  <input className="input-base" value={lineItemForm.name} onChange={(e) => updateLineItemField('name', e.target.value)} required />
+                </label>
+                <label className="grid gap-1 text-xs font-semibold text-muted">
+                  Qty
+                  <input className="input-base" type="number" min="0" value={lineItemForm.quantity} onChange={(e) => updateLineItemField('quantity', e.target.value)} />
+                </label>
+                <label className="grid gap-1 text-xs font-semibold text-muted">
+                  Unit price
+                  <input className="input-base" type="number" min="0" value={lineItemForm.unitPrice} onChange={(e) => updateLineItemField('unitPrice', e.target.value)} />
+                </label>
+                <label className="grid gap-1 text-xs font-semibold text-muted">
+                  Discount
+                  <input className="input-base" type="number" min="0" value={lineItemForm.discount} onChange={(e) => updateLineItemField('discount', e.target.value)} />
+                </label>
+                <label className="grid gap-1 text-xs font-semibold text-muted">
+                  Tax %
+                  <input className="input-base" type="number" min="0" value={lineItemForm.taxRate} onChange={(e) => updateLineItemField('taxRate', e.target.value)} />
+                </label>
+                <div className="flex items-end lg:col-span-4">
+                  <button type="submit" disabled={lineItemMutation.isPending} className="rounded-xl bg-brand px-3 py-2 text-sm font-semibold text-white disabled:opacity-60">
+                    {lineItemMutation.isPending ? 'Saving...' : editingLineItemId ? 'Save line item' : 'Add line item'}
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            {lineItems.length === 0 ? (
+              <p className="text-sm text-muted">No opportunity products have been added.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[720px] text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-left text-muted">
+                      <th className="pb-2">Product</th>
+                      <th className="pb-2">Qty</th>
+                      <th className="pb-2">Unit</th>
+                      <th className="pb-2">Discount</th>
+                      <th className="pb-2">Tax</th>
+                      <th className="pb-2">Total</th>
+                      <th className="pb-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {lineItems.map((item) => (
+                      <tr key={item.id} className="border-b border-border last:border-0">
+                        <td className="py-2 font-medium">{item.name}</td>
+                        <td className="py-2">{item.quantity}</td>
+                        <td className="py-2">${Number(item.unitPrice || 0).toLocaleString()}</td>
+                        <td className="py-2">${Number(item.discount || 0).toLocaleString()}</td>
+                        <td className="py-2">{Number(item.taxRate || 0)}%</td>
+                        <td className="py-2 font-semibold">${Number(item.total || 0).toLocaleString()}</td>
+                        <td className="py-2 text-right">
+                          <button type="button" className="mr-3 text-xs font-semibold text-brand" onClick={() => editLineItem(item)}>Edit</button>
+                          <button type="button" className="text-xs font-semibold text-danger" onClick={() => removeLineItemMutation.mutate(item.id)}>Remove</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div className="grid gap-3 sm:grid-cols-4">
+              {[
+                ['Subtotal', totals.subtotal],
+                ['Discount', totals.discountTotal],
+                ['Tax', totals.taxTotal],
+                ['Grand total', totals.grandTotal],
+              ].map(([label, value]) => (
+                <div key={label} className="rounded-xl border border-border bg-surface p-3">
+                  <p className="text-xs uppercase tracking-wide text-muted">{label}</p>
+                  <p className="mt-1 text-lg font-bold">${Number(value || 0).toLocaleString()}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         {tab === 'payments' && (
@@ -495,6 +711,7 @@ export function DealDetail({ dealId, subdomain }) {
         deal={deal}
         open={editOpen}
         onClose={() => setEditOpen(false)}
+        stages={stages}
         onSaved={(values) => updateMutation.mutateAsync(values)}
       />
       <EmailComposer

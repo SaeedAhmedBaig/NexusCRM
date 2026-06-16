@@ -41,6 +41,7 @@ function LeadsListInner() {
       description="Inbound and outbound prospects before conversion"
       entity="leads"
       subdomain={subdomain}
+      detailSegment="leads"
       columns={COLUMNS}
       fetchList={listLeads}
       getRecord={getLead}

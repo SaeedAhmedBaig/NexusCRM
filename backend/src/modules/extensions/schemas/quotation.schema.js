@@ -13,7 +13,6 @@ const QuoteLineItemSchema = new Schema(
     taxRate: { type: Number, default: 0 },
     total: { type: Number, default: 0 },
   },
-  { _id: false },
 );
 
 const QuotationSchema = new Schema(
@@ -31,8 +30,17 @@ const QuotationSchema = new Schema(
     grandTotal: { type: Number, default: 0 },
     dealId: { type: Schema.Types.ObjectId, ref: 'Deal', default: null },
     contactId: { type: Schema.Types.ObjectId, ref: 'Contact', default: null },
+    companyId: { type: Schema.Types.ObjectId, ref: 'Company', default: null },
     assignedTo: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     validUntil: { type: Date, default: null },
+    terms: { type: String, default: '' },
+    notes: { type: String, default: '' },
+    billingAddress: { type: String, default: '' },
+    shippingAddress: { type: String, default: '' },
+    pdfGeneratedAt: { type: Date, default: null },
+    sentAt: { type: Date, default: null },
+    convertedOrderId: { type: Schema.Types.ObjectId, ref: 'Order', default: null },
+    convertedInvoiceId: { type: Schema.Types.ObjectId, ref: 'Invoice', default: null },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     customFields: { type: Schema.Types.Mixed, default: {} },
   },

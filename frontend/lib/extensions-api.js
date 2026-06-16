@@ -22,9 +22,44 @@ function entityApi(route) {
   };
 }
 
-export const quotationsApi = entityApi('quotations');
-export const ordersApi = entityApi('orders');
-export const invoicesApi = entityApi('invoices');
+async function downloadEntityFile(route, id, suffix) {
+  const headers = {};
+  const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  if (typeof window !== 'undefined') {
+    headers['X-Forwarded-Host'] = window.location.host;
+    const tenant = localStorage.getItem('crm_is_superadmin') === 'true' ? null : localStorage.getItem('crm_tenant');
+    if (tenant) headers['X-Tenant-Subdomain'] = tenant;
+  }
+  const res = await fetch(`/api/${route}/${id}/${suffix}`, { headers });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || `Download failed (HTTP ${res.status})`);
+  }
+  const disposition = res.headers.get('content-disposition') || '';
+  const match = disposition.match(/filename="([^"]+)"/);
+  return {
+    blob: await res.blob(),
+    fileName: match?.[1] || `${route}-${id}.${suffix}`,
+  };
+}
+
+function salesDocumentApi(route) {
+  return {
+    ...entityApi(route),
+    lineItems: (id) => apiFetch(`/${route}/${id}/line-items`),
+    addLineItem: (id, payload) => apiFetch(`/${route}/${id}/line-items`, { method: 'POST', body: payload }),
+    updateLineItem: (id, lineItemId, payload) => apiFetch(`/${route}/${id}/line-items/${lineItemId}`, { method: 'PATCH', body: payload }),
+    removeLineItem: (id, lineItemId) => apiFetch(`/${route}/${id}/line-items/${lineItemId}`, { method: 'DELETE' }),
+    convertToOrder: (id) => apiFetch(`/${route}/${id}/convert-to-order`, { method: 'POST' }),
+    convertToInvoice: (id) => apiFetch(`/${route}/${id}/convert-to-invoice`, { method: 'POST' }),
+    downloadPdf: (id) => downloadEntityFile(route, id, 'pdf'),
+  };
+}
+
+export const quotationsApi = salesDocumentApi('quotations');
+export const ordersApi = salesDocumentApi('orders');
+export const invoicesApi = salesDocumentApi('invoices');
 export const productsApi = entityApi('products');
 export const ticketsApi = entityApi('tickets');
 export const ticketQueuesApi = entityApi('ticket-queues');

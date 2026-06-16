@@ -12,7 +12,7 @@ import {
 import { KanbanCard, KanbanColumn } from '../ui/kanban';
 import { getTenantUrl } from '../../lib/tenant';
 
-const STAGES = [
+const FALLBACK_STAGES = [
   { id: 'lead', label: 'Lead', accent: 'border-t-muted-foreground' },
   { id: 'qualified', label: 'Qualified', accent: 'border-t-foreground/20' },
   { id: 'proposal', label: 'Proposal', accent: 'border-t-warning' },
@@ -20,6 +20,8 @@ const STAGES = [
   { id: 'won', label: 'Won', accent: 'border-t-success' },
   { id: 'lost', label: 'Lost', accent: 'border-t-danger' },
 ];
+
+const ACCENTS = ['border-t-muted-foreground', 'border-t-foreground/20', 'border-t-warning', 'border-t-foreground/40', 'border-t-success', 'border-t-danger'];
 
 function formatCurrency(v) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(v || 0);
@@ -51,16 +53,23 @@ function StageColumn({ stage, deals, subdomain, activeId }) {
   );
 }
 
-export function DealPipelineKanban({ deals = [], subdomain, onStageChange }) {
+export function DealPipelineKanban({ deals = [], stages = FALLBACK_STAGES, subdomain, onStageChange }) {
   const [activeId, setActiveId] = useState(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
 
-  const columns = STAGES.map((stage) => ({
+  const normalizedStages = (stages?.length ? stages : FALLBACK_STAGES).map((stage, index) => ({
+    ...stage,
+    id: stage.id || stage.key,
+    key: stage.key || stage.id,
+    accent: stage.accent || ACCENTS[index % ACCENTS.length],
+  }));
+
+  const columns = normalizedStages.map((stage) => ({
     ...stage,
     deals: deals.filter((d) => {
-      if (stage.id === 'lost') return d.status === 'lost';
-      if (stage.id === 'won') return d.status === 'won';
-      return d.status === 'open' && (d.stage || 'lead') === stage.id;
+      if (stage.isLost) return d.status === 'lost' || (d.stageKey || d.stage) === stage.key;
+      if (stage.isWon) return d.status === 'won' || (d.stageKey || d.stage) === stage.key;
+      return d.status === 'open' && (d.stageKey || d.stage || 'lead') === stage.key;
     }),
   }));
 
@@ -70,8 +79,8 @@ export function DealPipelineKanban({ deals = [], subdomain, onStageChange }) {
     const { active, over } = event;
     setActiveId(null);
     if (!over || active.id === over.id) return;
-    const target = STAGES.find((s) => s.id === over.id);
-    if (target) onStageChange?.(active.id, target.id);
+    const target = normalizedStages.find((s) => s.id === over.id);
+    if (target) onStageChange?.(active.id, target.key, target);
   }
 
   return (
