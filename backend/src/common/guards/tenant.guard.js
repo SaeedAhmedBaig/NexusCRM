@@ -9,6 +9,7 @@ const { IS_PUBLIC_KEY } = require('../decorators/public.decorator');
 const { IS_SUPERADMIN_KEY } = require('../decorators/superadmin.decorator');
 const { AuthService } = require('../../modules/auth/auth.service');
 const { defineParamTypes } = require('../define-param-types');
+const { canUsePlanModule, requiredPlanForApiPath } = require('../constants/plans');
 
 @Injectable()
 class TenantGuard extends AuthGuard('jwt') {
@@ -62,7 +63,19 @@ class TenantGuard extends AuthGuard('jwt') {
       throw new ForbiddenException('Tenant mismatch');
     }
 
-    await this.authService.assertTenantActive(tenantId);
+    const path = request.originalUrl || request.url || '';
+    const allowExpired =
+      path.startsWith('/api/billing') ||
+      path.startsWith('/api/auth/me') ||
+      path.startsWith('/api/auth/my-tenants') ||
+      path.startsWith('/api/auth/switch-tenant');
+    const tenant = await this.authService.assertTenantActive(tenantId, user.id, { allowExpired });
+    const requirement = requiredPlanForApiPath(path);
+    if (!canUsePlanModule(tenant.plan, requirement.module)) {
+      throw new ForbiddenException(
+        `${requirement.module} requires the ${requirement.plan} plan. Upgrade your workspace to access this module.`,
+      );
+    }
 
     const membership = await this.authService.validateMembership(user.id, tenantId);
     if (!membership) {

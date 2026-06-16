@@ -14,8 +14,9 @@ const { TenantService } = require('../tenant/tenant.service');
 const { RbacService } = require('../rbac/rbac.service');
 const { UsersService } = require('../rbac/users.service');
 const { EmailService } = require('../email/email.service');
+const { emitNotification } = require('../../realtime/socket-hub');
 const { ROLES } = require('../../common/constants/roles');
-const { PLANS } = require('../../common/constants/plans');
+const { PLANS, TENANT_STATUSES } = require('../../common/constants/plans');
 const { verifyRecaptcha } = require('../../common/utils/recaptcha');
 const { OnboardingService } = require('../tenant/onboarding.service');
 const { defineParamTypes } = require('../../common/define-param-types');
@@ -211,10 +212,6 @@ class AuthService {
       tenant = await this.tenantService.findBySubdomain(subdomain);
     }
 
-    if (tenant.status === 'suspended') {
-      throw new UnauthorizedException('This workspace is suspended');
-    }
-
     const membership = await this.userTenantModel.findOne({
       userId: user._id,
       tenantId: tenant._id,
@@ -224,6 +221,8 @@ class AuthService {
     if (!membership) {
       throw new UnauthorizedException('You do not have access to this tenant');
     }
+
+    await this.assertTenantActive(tenant._id, user._id, { allowExpired: true });
 
     user.lastLogin = new Date();
     await user.save();
@@ -247,8 +246,8 @@ class AuthService {
 
     const subdomain = this.configService.get('SUPERADMIN_TENANT_SUBDOMAIN', 'system').toLowerCase().trim();
     const tenant = await this.tenantService.findBySubdomain(subdomain);
-    if (tenant.status === 'suspended') {
-      throw new UnauthorizedException('System workspace is suspended');
+    if (tenant.status === TENANT_STATUSES.SUSPENDED || tenant.status === TENANT_STATUSES.EXPIRED) {
+      throw new UnauthorizedException('System workspace is not active');
     }
 
     const membership = await this.userTenantModel.findOne({
@@ -277,11 +276,11 @@ class AuthService {
     }
     const memberships = await this.userTenantModel
       .find({ userId: user._id, isActive: true })
-      .populate('tenantId', 'name subdomain plan status')
+      .populate('tenantId', 'name subdomain plan status trialEndsAt billingPeriodEnd')
       .lean();
 
     return memberships
-      .filter((m) => m.tenantId && m.tenantId.status !== 'suspended')
+      .filter((m) => m.tenantId && ![TENANT_STATUSES.SUSPENDED, TENANT_STATUSES.EXPIRED].includes(m.tenantId.status))
       .map((m) => ({
         tenantId: m.tenantId._id.toString(),
         name: m.tenantId.name,
@@ -294,7 +293,7 @@ class AuthService {
   async myTenants(userId) {
     const memberships = await this.userTenantModel
       .find({ userId, isActive: true })
-      .populate('tenantId', 'name subdomain plan status')
+      .populate('tenantId', 'name subdomain plan status trialEndsAt billingPeriodEnd')
       .lean();
 
     return memberships
@@ -316,9 +315,7 @@ class AuthService {
 
     const user = await this.userModel.findById(userId);
     const tenant = await this.tenantService.findById(tenantId);
-    if (tenant.status === 'suspended') {
-      throw new UnauthorizedException('This workspace is suspended');
-    }
+    await this.assertTenantActive(tenant._id, user._id, { allowExpired: true });
     await this.recordSecurityEvent(tenant._id, user._id, 'tenant_switched', 'User switched tenant', {
       email: user.email,
       role: membership.role,
@@ -326,12 +323,33 @@ class AuthService {
     return this.buildAuthResponse(user, tenant, membership.role);
   }
 
-  async assertTenantActive(tenantId) {
-    const tenant = await this.tenantService.findById(tenantId);
-    if (tenant.status === 'suspended') {
-      throw new ForbiddenException('This workspace is suspended');
+  async assertTenantActive(tenantId, userId = null, options = {}) {
+    const tenantDoc = await this.tenantService.tenantModel.findById(tenantId);
+    if (!tenantDoc) throw new ForbiddenException('Workspace is not available');
+
+    const lifecycle = this.evaluateTenantLifecycle(tenantDoc);
+    if (lifecycle.expired && tenantDoc.status !== TENANT_STATUSES.EXPIRED) {
+      tenantDoc.status = TENANT_STATUSES.EXPIRED;
+      tenantDoc.settings = {
+        ...(tenantDoc.settings || {}),
+        accessBlockedAt: new Date().toISOString(),
+        accessBlockedReason: lifecycle.reason,
+      };
+      tenantDoc.markModified('settings');
+      await tenantDoc.save();
     }
-    return tenant;
+
+    if (userId && lifecycle.notifyType) {
+      await this.createLifecycleNotification(tenantDoc, userId, lifecycle);
+    }
+
+    if (tenantDoc.status === TENANT_STATUSES.SUSPENDED) {
+      throw new ForbiddenException('This workspace is suspended by the platform administrator');
+    }
+    if ((tenantDoc.status === TENANT_STATUSES.EXPIRED || lifecycle.expired) && !options.allowExpired) {
+      throw new ForbiddenException(lifecycle.reason || 'This workspace subscription has expired. Update billing to restore access.');
+    }
+    return tenantDoc.toObject();
   }
 
   async getProfile(userId, tenantId) {
@@ -674,9 +692,96 @@ class AuthService {
     });
   }
 
+  evaluateTenantLifecycle(tenant) {
+    const now = Date.now();
+    if (tenant.status === TENANT_STATUSES.SUSPENDED) {
+      return { expired: false, reason: 'This workspace is suspended by the platform administrator' };
+    }
+
+    if (tenant.status === TENANT_STATUSES.TRIAL && tenant.trialEndsAt) {
+      const endsAt = new Date(tenant.trialEndsAt).getTime();
+      const daysRemaining = Math.ceil((endsAt - now) / (24 * 60 * 60 * 1000));
+      if (endsAt <= now) {
+        return {
+          expired: true,
+          notifyType: 'trial.expired',
+          daysRemaining: 0,
+          reason: 'Your 7-day trial has expired. Upgrade your plan to restore workspace access.',
+        };
+      }
+      if (daysRemaining <= 3) {
+        return {
+          expired: false,
+          notifyType: 'trial.ending',
+          daysRemaining,
+          reason: `Your trial expires in ${daysRemaining} day${daysRemaining === 1 ? '' : 's'}.`,
+        };
+      }
+    }
+
+    if (tenant.status === TENANT_STATUSES.ACTIVE && tenant.billingPeriodEnd) {
+      const endsAt = new Date(tenant.billingPeriodEnd).getTime();
+      const daysRemaining = Math.ceil((endsAt - now) / (24 * 60 * 60 * 1000));
+      if (endsAt <= now) {
+        return {
+          expired: true,
+          notifyType: 'subscription.expired',
+          daysRemaining: 0,
+          reason: 'Your subscription period has expired. Update billing to restore workspace access.',
+        };
+      }
+      if (daysRemaining <= 7) {
+        return {
+          expired: false,
+          notifyType: 'subscription.renewal_due',
+          daysRemaining,
+          reason: `Your subscription renews or expires in ${daysRemaining} day${daysRemaining === 1 ? '' : 's'}.`,
+        };
+      }
+    }
+
+    return { expired: tenant.status === TENANT_STATUSES.EXPIRED, reason: 'This workspace subscription has expired.' };
+  }
+
+  async createLifecycleNotification(tenant, userId, lifecycle) {
+    if (!this.notificationModel || !userId || !lifecycle.notifyType) return null;
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const existing = await this.notificationModel.findOne({
+      tenantId: tenant._id,
+      userId,
+      type: lifecycle.notifyType,
+      createdAt: { $gte: since },
+    });
+    if (existing) return existing;
+
+    const titles = {
+      'trial.ending': 'Trial ending soon',
+      'trial.expired': 'Trial expired',
+      'subscription.renewal_due': 'Plan renewal required',
+      'subscription.expired': 'Subscription expired',
+    };
+    const note = await this.notificationModel.create({
+      tenantId: tenant._id,
+      userId,
+      type: lifecycle.notifyType,
+      title: titles[lifecycle.notifyType] || 'Workspace billing alert',
+      body: lifecycle.reason,
+      href: '/settings/billing',
+      entityType: 'Tenant',
+      entityId: tenant._id,
+      read: false,
+    });
+    const formatted = note.toObject();
+    formatted.id = note._id.toString();
+    delete formatted._id;
+    delete formatted.__v;
+    emitNotification(tenant._id, String(userId), formatted);
+    return formatted;
+  }
+
   async createNotification(tenantId, userId, payload) {
     if (!this.notificationModel) return null;
-    return this.notificationModel.create({
+    const note = await this.notificationModel.create({
       tenantId,
       userId,
       type: payload.type,
@@ -687,6 +792,12 @@ class AuthService {
       entityId: payload.entityId || null,
       read: false,
     });
+    const formatted = note.toObject();
+    formatted.id = note._id.toString();
+    delete formatted._id;
+    delete formatted.__v;
+    emitNotification(tenantId, String(userId), formatted);
+    return formatted;
   }
 }
 

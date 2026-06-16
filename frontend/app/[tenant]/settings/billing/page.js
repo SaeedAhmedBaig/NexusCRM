@@ -82,6 +82,32 @@ export default function BillingSettingsPage() {
               </div>
             )}
 
+            {billing.status === 'expired' && (
+              <div className="border border-danger/30 bg-danger-light p-4 text-sm text-danger">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                  <div>
+                    <p className="font-semibold">Workspace access is blocked</p>
+                    <p>Your trial or subscription has expired. Choose an active paid plan to restore access.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {billing.status === 'active' && billing.billingPeriodEnd && billing.subscriptionDaysRemaining != null && billing.subscriptionDaysRemaining <= 7 && (
+              <div className="border border-warning/30 bg-warning-light p-4 text-sm text-warning">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                  <div>
+                    <p className="font-semibold">Plan renewal coming up</p>
+                    <p>
+                      Your {billing.plan} plan renews or expires in {billing.subscriptionDaysRemaining} day{billing.subscriptionDaysRemaining === 1 ? '' : 's'}.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <SettingsSection
               title="Current plan"
               description={

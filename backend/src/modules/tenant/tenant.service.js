@@ -6,7 +6,7 @@ const {
 } = require('@nestjs/common');
 const { PLANS, TENANT_STATUSES } = require('../../common/constants/plans');
 
-const DEFAULT_TRIAL_DAYS = Number(process.env.DEFAULT_TRIAL_DAYS || 14);
+const DEFAULT_TRIAL_DAYS = Number(process.env.DEFAULT_TRIAL_DAYS || 7);
 
 @Injectable()
 class TenantService {

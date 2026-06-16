@@ -29,6 +29,14 @@ export function changeSuperadminTenantPlan(id, plan) {
   return apiFetch(`/superadmin/tenants/${id}/plan`, { method: 'PATCH', body: { plan } });
 }
 
+export function updateSuperadminTenantLifecycle(id, payload) {
+  return apiFetch(`/superadmin/tenants/${id}/lifecycle`, { method: 'PATCH', body: payload });
+}
+
+export function resetSuperadminTenantUserPassword(id, userId, payload = {}) {
+  return apiFetch(`/superadmin/tenants/${id}/users/${userId}/password`, { method: 'POST', body: payload });
+}
+
 export function getSuperadminStats() {
   return apiFetch('/superadmin/stats');
 }

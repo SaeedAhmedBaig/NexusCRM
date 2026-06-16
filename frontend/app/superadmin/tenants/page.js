@@ -14,7 +14,7 @@ import { Spinner } from '../../../components/ui/spinner';
 import { cn } from '@/lib/utils';
 
 const PLANS = ['', 'Starter', 'Professional', 'Business', 'Enterprise'];
-const STATUSES = ['', 'active', 'trial', 'suspended'];
+const STATUSES = ['', 'active', 'trial', 'expired', 'suspended'];
 
 function formatDate(value) {
   if (!value) return '—';

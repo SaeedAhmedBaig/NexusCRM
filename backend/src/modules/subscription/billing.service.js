@@ -45,6 +45,9 @@ class BillingService {
     const trialDaysRemaining = trialEndsAt
       ? Math.max(Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / (24 * 60 * 60 * 1000)), 0)
       : null;
+    const subscriptionDaysRemaining = tenant.billingPeriodEnd
+      ? Math.max(Math.ceil((new Date(tenant.billingPeriodEnd).getTime() - Date.now()) / (24 * 60 * 60 * 1000)), 0)
+      : null;
     const activeUsers = await this.userTenantModel.countDocuments({
       tenantId,
       isActive: true,
@@ -64,6 +67,7 @@ class BillingService {
       billingPeriodEnd: tenant.billingPeriodEnd || null,
       trialEndsAt,
       trialDaysRemaining,
+      subscriptionDaysRemaining,
       availablePlans: this.subscriptionService.getPublicPlans().plans,
       invoices: tenant.settings?.billing?.invoices || [],
     };

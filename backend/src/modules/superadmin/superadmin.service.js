@@ -3,6 +3,8 @@ const {
   NotFoundException,
   BadRequestException,
 } = require('@nestjs/common');
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const {
   PLANS,
   TENANT_STATUSES,
@@ -134,7 +136,7 @@ class SuperadminService {
     }
 
     const tenantId = tenant._id;
-    const [userCount, massMailAgg, storageAgg, dealCount, contactCount] = await Promise.all([
+    const [userCount, massMailAgg, storageAgg, dealCount, contactCount, members] = await Promise.all([
       this.userTenantModel.countDocuments({ tenantId, isActive: true }),
       this.campaignModel.aggregate([
         { $match: { tenantId } },
@@ -153,6 +155,11 @@ class SuperadminService {
       ]),
       this.dealModel.countDocuments({ tenantId }),
       this.contactModel.countDocuments({ tenantId }),
+      this.userTenantModel
+        .find({ tenantId })
+        .populate('userId', 'name email emailVerified isActive lastLogin')
+        .sort({ role: 1, createdAt: 1 })
+        .lean(),
     ]);
 
     const mail = massMailAgg[0] || { sent: 0, campaigns: 0, completed: 0 };
@@ -166,8 +173,18 @@ class SuperadminService {
       plan: tenant.plan,
       status: tenant.status,
       customDomain: tenant.customDomain || null,
+      trialEndsAt: tenant.trialEndsAt || null,
+      billingPeriodEnd: tenant.billingPeriodEnd || null,
+      stripeCustomerId: tenant.stripeCustomerId || null,
+      stripeSubscriptionId: tenant.stripeSubscriptionId || null,
       createdAt: tenant.createdAt,
       updatedAt: tenant.updatedAt,
+      lifecycle: {
+        accessBlockedAt: tenant.settings?.accessBlockedAt || null,
+        accessBlockedReason: tenant.settings?.accessBlockedReason || null,
+        planChangedAt: tenant.settings?.planChangedAt || null,
+        planChangedBy: tenant.settings?.planChangedBy || null,
+      },
       limits,
       usage: {
         users: userCount,
@@ -180,6 +197,20 @@ class SuperadminService {
         storageMb: Math.round((storage.bytes / (1024 * 1024)) * 100) / 100,
         attachmentCount: storage.files,
       },
+      users: members
+        .filter((member) => member.userId)
+        .map((member) => ({
+          memberId: member._id.toString(),
+          userId: member.userId._id.toString(),
+          name: member.userId.name,
+          email: member.userId.email,
+          role: member.role,
+          isActive: member.isActive,
+          emailVerified: member.userId.emailVerified,
+          userActive: member.userId.isActive,
+          lastLogin: member.userId.lastLogin || null,
+          createdAt: member.createdAt,
+        })),
     };
   }
 
@@ -189,7 +220,7 @@ class SuperadminService {
       throw new NotFoundException('Tenant not found');
     }
 
-    if (![TENANT_STATUSES.ACTIVE, TENANT_STATUSES.SUSPENDED, TENANT_STATUSES.TRIAL].includes(status)) {
+    if (![TENANT_STATUSES.ACTIVE, TENANT_STATUSES.SUSPENDED, TENANT_STATUSES.TRIAL, TENANT_STATUSES.EXPIRED].includes(status)) {
       throw new BadRequestException('Invalid status');
     }
 
@@ -234,6 +265,77 @@ class SuperadminService {
       id: tenant._id.toString(),
       plan: tenant.plan,
       limits: getPlanLimits(tenant.plan),
+    };
+  }
+
+  async updateTenantLifecycle(id, body = {}) {
+    const tenant = await this.tenantModel.findById(id);
+    if (!tenant || this.isSystemTenant(tenant)) {
+      throw new NotFoundException('Tenant not found');
+    }
+
+    if (body.plan !== undefined) {
+      const normalized = normalizePlan(body.plan);
+      if (!Object.values(PLANS).includes(normalized)) throw new BadRequestException('Invalid plan');
+      tenant.plan = normalized;
+    }
+
+    if (body.status !== undefined) {
+      if (!Object.values(TENANT_STATUSES).includes(body.status)) throw new BadRequestException('Invalid status');
+      tenant.status = body.status;
+    }
+
+    if (body.trialEndsAt !== undefined) {
+      tenant.trialEndsAt = body.trialEndsAt ? new Date(body.trialEndsAt) : null;
+    }
+
+    if (body.billingPeriodEnd !== undefined) {
+      tenant.billingPeriodEnd = body.billingPeriodEnd ? new Date(body.billingPeriodEnd) : null;
+    }
+
+    if (body.clearBlockedReason) {
+      tenant.settings = {
+        ...(tenant.settings || {}),
+        accessBlockedAt: null,
+        accessBlockedReason: null,
+      };
+      tenant.markModified('settings');
+    }
+
+    tenant.settings = {
+      ...(tenant.settings || {}),
+      lifecycleChangedAt: new Date().toISOString(),
+      lifecycleChangedBy: 'superadmin',
+    };
+    tenant.markModified('settings');
+    await tenant.save();
+    return this.getTenantDetail(id);
+  }
+
+  async resetTenantUserPassword(tenantId, userId, body = {}) {
+    const tenant = await this.tenantModel.findById(tenantId).lean();
+    if (!tenant || this.isSystemTenant(tenant)) throw new NotFoundException('Tenant not found');
+
+    const membership = await this.userTenantModel.findOne({ tenantId, userId }).lean();
+    if (!membership) throw new NotFoundException('User does not belong to this tenant');
+
+    const user = await this.userModel.findById(userId);
+    if (!user) throw new NotFoundException('User not found');
+
+    const password = body.password || `Nexus-${crypto.randomBytes(4).toString('hex')}!`;
+    if (password.length < 8) throw new BadRequestException('Password must be at least 8 characters');
+    user.passwordHash = await bcrypt.hash(password, 10);
+    user.emailVerified = true;
+    user.emailVerificationToken = null;
+    user.emailVerificationExpires = null;
+    user.emailVerificationOtpHash = null;
+    await user.save();
+
+    return {
+      userId: user._id.toString(),
+      email: user.email,
+      temporaryPassword: body.password ? null : password,
+      message: body.password ? 'Password reset' : 'Temporary password generated',
     };
   }
 

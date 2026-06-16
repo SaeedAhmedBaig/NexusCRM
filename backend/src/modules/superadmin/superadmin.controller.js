@@ -42,6 +42,18 @@ class SuperadminController {
     return this.superadminService.changePlan(id, body.plan);
   }
 
+  @Patch('tenants/:id/lifecycle')
+  @Bind(Param('id'), Body())
+  updateLifecycle(id, body) {
+    return this.superadminService.updateTenantLifecycle(id, body);
+  }
+
+  @Post('tenants/:id/users/:userId/password')
+  @Bind(Param('id'), Param('userId'), Body())
+  resetTenantUserPassword(id, userId, body) {
+    return this.superadminService.resetTenantUserPassword(id, userId, body);
+  }
+
   @Get('stats')
   getStats() {
     return this.superadminService.getStats();

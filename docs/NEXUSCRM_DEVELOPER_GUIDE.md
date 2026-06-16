@@ -2138,7 +2138,7 @@ New tenants receive:
 Trial length defaults to:
 
 ```env
-DEFAULT_TRIAL_DAYS=14
+DEFAULT_TRIAL_DAYS=7
 ```
 
 Trial reminders are created when billing is viewed near trial expiration.
@@ -2401,7 +2401,7 @@ Recommended env:
 
 ```env
 REQUEST_BODY_LIMIT=12mb
-DEFAULT_TRIAL_DAYS=14
+DEFAULT_TRIAL_DAYS=7
 DNS_SERVERS=1.1.1.1,8.8.8.8
 ```
 

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Can } from '../can';
 import { getTenantUrl } from '../../lib/tenant';
 import { NAV_SECTIONS } from '../../lib/navigation';
+import { canUsePlan } from '../../lib/plan-access';
 
 export function AppSidebar({
   subdomain,
@@ -31,6 +32,7 @@ export function AppSidebar({
   const initial = (tenantName || subdomain || 'N').charAt(0).toUpperCase();
 
   function renderLink(item) {
+    if (item.minPlan && !canUsePlan(item.minPlan, tenantPlan)) return null;
     const Icon = item.icon;
     const active = isActive(item.href);
     const link = (
