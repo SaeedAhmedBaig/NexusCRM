@@ -36,6 +36,7 @@ function CompaniesListInner() {
       description="Organizations and accounts in your CRM"
       entity="companies"
       subdomain={subdomain}
+      detailSegment="companies"
       columns={COLUMNS}
       fetchList={listCompanies}
       getRecord={getCompany}

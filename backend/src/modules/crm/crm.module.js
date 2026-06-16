@@ -12,16 +12,21 @@ const { AttachmentSchema, AttachmentModelName } = require('./schemas/attachment.
 const { AuditLogSchema, AuditLogModelName } = require('./schemas/audit-log.schema');
 const { TenantSchema, TenantModelName } = require('../tenant/schemas/tenant.schema');
 const { UserSchema, UserModelName } = require('../auth/schemas/user.schema');
+const { TicketSchema, TicketModelName } = require('../extensions/schemas/ticket.schema');
+const { InvoiceSchema, InvoiceModelName } = require('../extensions/schemas/invoice.schema');
+const { OrderSchema, OrderModelName } = require('../extensions/schemas/order.schema');
+const { QuotationSchema, QuotationModelName } = require('../extensions/schemas/quotation.schema');
+const { ActivityEventSchema, ActivityEventModelName } = require('../activity/schemas/activity-event.schema');
 const { DealsService } = require('./deals.service');
 const { DealsController } = require('./deals.controller');
 const { CompaniesService } = require('./companies.service');
+const { CompaniesController } = require('./companies.controller');
 const { ContactsService } = require('./contacts.service');
 const { LeadsService } = require('./leads.service');
 const { RequestsService } = require('./requests.service');
 const { CrmSeedService } = require('./crm-seed.service');
 const { createCrmController } = require('./create-crm-controller');
 
-const CompaniesController = createCrmController('companies', CompaniesService);
 const ContactsController = createCrmController('contacts', ContactsService);
 const LeadsController = createCrmController('leads', LeadsService);
 const RequestsController = createCrmController('requests', RequestsService);
@@ -40,6 +45,11 @@ const RequestsController = createCrmController('requests', RequestsService);
       { name: AuditLogModelName, schema: AuditLogSchema },
       { name: TenantModelName, schema: TenantSchema },
       { name: UserModelName, schema: UserSchema },
+      { name: TicketModelName, schema: TicketSchema },
+      { name: InvoiceModelName, schema: InvoiceSchema },
+      { name: OrderModelName, schema: OrderSchema },
+      { name: QuotationModelName, schema: QuotationSchema },
+      { name: ActivityEventModelName, schema: ActivityEventSchema },
     ]),
   ],
   controllers: [
@@ -61,7 +71,19 @@ const RequestsController = createCrmController('requests', RequestsService);
       },
       [{ token: CrmSeedService }],
     ),
-    withModels(CompaniesService, { companyModel: 'Company' }),
+    withModels(CompaniesService, {
+      companyModel: 'Company',
+      contactModel: 'Contact',
+      dealModel: 'Deal',
+      ticketModel: 'Ticket',
+      invoiceModel: 'Invoice',
+      orderModel: 'Order',
+      quotationModel: 'Quotation',
+      paymentModel: 'Payment',
+      crmEmailModel: 'CrmEmail',
+      attachmentModel: 'Attachment',
+      activityEventModel: 'ActivityEvent',
+    }),
     withModels(ContactsService, { contactModel: 'Contact' }),
     withModels(LeadsService, { leadModel: 'Lead' }),
     withModels(RequestsService, { requestModel: 'Request' }),

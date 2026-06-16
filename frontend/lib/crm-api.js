@@ -95,8 +95,16 @@ export function getCompany(id) {
   return apiFetch(`/companies/${id}`);
 }
 
+export function getCompany360(id) {
+  return apiFetch(`/companies/${id}/360`);
+}
+
 export function updateCompany(id, payload) {
   return apiFetch(`/companies/${id}`, { method: 'PATCH', body: payload });
+}
+
+export function updateCompanyAccountPlan(id, payload) {
+  return apiFetch(`/companies/${id}/account-plan`, { method: 'PATCH', body: payload });
 }
 
 export function removeCompany(id) {
