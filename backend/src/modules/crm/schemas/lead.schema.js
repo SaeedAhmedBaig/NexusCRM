@@ -14,6 +14,7 @@ const LeadSchema = new Schema(
     contactId: { type: Schema.Types.ObjectId, ref: 'Contact', default: null },
     departmentId: { type: Schema.Types.ObjectId, ref: 'Department', default: null },
     assignedTo: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

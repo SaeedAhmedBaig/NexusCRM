@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Database, Plus } from 'lucide-react';
-import { createDataJob, listDataJobs } from '../../../../lib/data-jobs-api';
+import { Database, Plus, RefreshCw, RotateCcw, XCircle } from 'lucide-react';
+import { createDataJob, listDataJobs, updateDataJobStatus } from '../../../../lib/data-jobs-api';
 import { PageHeader } from '../../../../components/ui/page-header';
 import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
@@ -12,6 +12,13 @@ import { notifyError, notifySuccess } from '../../../../lib/notify';
 const OBJECT_TYPES = ['Lead', 'Contact', 'Company', 'Deal', 'Ticket', 'Invoice', 'Quotation', 'Order', 'Product'];
 const JOB_TYPES = ['import', 'export', 'report_export', 'sync', 'enrichment'];
 const STATUSES = ['', 'queued', 'running', 'completed', 'failed', 'cancelled'];
+const STATUS_CLASSES = {
+  queued: 'bg-warning-light text-warning',
+  running: 'bg-brand-light text-brand',
+  completed: 'bg-success-light text-success',
+  failed: 'bg-danger-light text-danger',
+  cancelled: 'bg-muted text-muted-foreground',
+};
 
 const initialForm = {
   type: 'export',
@@ -28,6 +35,10 @@ export default function DataJobsPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['data-jobs', filters],
     queryFn: () => listDataJobs({ ...filters, limit: 50 }),
+    refetchInterval: (query) => {
+      const rows = query.state.data?.data || [];
+      return rows.some((job) => ['queued', 'running'].includes(job.status)) ? 5000 : false;
+    },
   });
 
   const createMutation = useMutation({
@@ -36,6 +47,15 @@ export default function DataJobsPage() {
       queryClient.invalidateQueries({ queryKey: ['data-jobs'] });
       setForm(initialForm);
       notifySuccess('Data job queued');
+    },
+    onError: notifyError,
+  });
+
+  const statusMutation = useMutation({
+    mutationFn: ({ id, payload }) => updateDataJobStatus(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['data-jobs'] });
+      notifySuccess('Data job updated');
     },
     onError: notifyError,
   });
@@ -49,6 +69,12 @@ export default function DataJobsPage() {
   }
 
   const jobs = data?.data || [];
+  const activeCount = jobs.filter((job) => ['queued', 'running'].includes(job.status)).length;
+
+  function progressPercent(job) {
+    if (!job.totalRows) return job.status === 'completed' ? 100 : 0;
+    return Math.min(Math.round(((job.processedRows || 0) / job.totalRows) * 100), 100);
+  }
 
   return (
     <div className="space-y-5">
@@ -58,16 +84,16 @@ export default function DataJobsPage() {
         badge={
           <span className="inline-flex items-center gap-1 rounded-md bg-brand-light px-2.5 py-1 text-xs font-bold text-brand">
             <Database className="h-3.5 w-3.5" />
-            Data operations
+            {activeCount ? `${activeCount} active` : 'Data operations'}
           </span>
         }
       />
 
       <div className="grid gap-5 xl:grid-cols-[380px_1fr]">
         <form onSubmit={submit} className="rounded-lg border border-border bg-card p-4 shadow-sm">
-          <h2 className="text-sm font-bold text-foreground">Queue a job placeholder</h2>
+          <h2 className="text-sm font-bold text-foreground">Queue a data job</h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            This registers the job record now; file processing workers can attach later without changing the audit model.
+            Register import, export, sync, and enrichment work for the background processing pipeline.
           </p>
           <div className="mt-4 grid gap-3">
             <label className="grid gap-1.5 text-sm">
@@ -112,6 +138,10 @@ export default function DataJobsPage() {
               <p className="text-xs text-muted-foreground">Operational record of background data movement.</p>
             </div>
             <div className="flex flex-wrap gap-2">
+              <Button type="button" variant="outline" size="sm" onClick={() => queryClient.invalidateQueries({ queryKey: ['data-jobs'] })}>
+                <RefreshCw className="h-3.5 w-3.5" />
+                Refresh
+              </Button>
               <select
                 value={filters.type}
                 onChange={(e) => setFilters((prev) => ({ ...prev, type: e.target.value }))}
@@ -146,6 +176,7 @@ export default function DataJobsPage() {
                     <th className="px-4 py-3">Status</th>
                     <th className="px-4 py-3">Progress</th>
                     <th className="px-4 py-3">Created</th>
+                    <th className="px-4 py-3 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -156,11 +187,53 @@ export default function DataJobsPage() {
                         <p className="text-xs text-muted-foreground">{job.type} · {job.fileName || 'no file attached'}</p>
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">{job.objectType}</td>
-                      <td className="px-4 py-3 font-semibold text-foreground">{job.status}</td>
-                      <td className="px-4 py-3 text-muted-foreground">
-                        {job.processedRows || 0}/{job.totalRows || 0} rows
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold capitalize ${STATUS_CLASSES[job.status] || STATUS_CLASSES.queued}`}>
+                          {job.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="min-w-40">
+                          <div className="h-2 overflow-hidden rounded-full bg-muted">
+                            <div className="h-full rounded-full bg-brand" style={{ width: `${progressPercent(job)}%` }} />
+                          </div>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {job.processedRows || 0}/{job.totalRows || 0} rows · {job.successRows || 0} ok · {job.failedRows || 0} failed
+                          </p>
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">{new Date(job.createdAt).toLocaleString()}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex justify-end gap-2">
+                          {['queued', 'running'].includes(job.status) && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              disabled={statusMutation.isPending}
+                              onClick={() => statusMutation.mutate({ id: job.id, payload: { status: 'cancelled' } })}
+                            >
+                              <XCircle className="h-3.5 w-3.5" />
+                              Cancel
+                            </Button>
+                          )}
+                          {['failed', 'cancelled'].includes(job.status) && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              disabled={statusMutation.isPending}
+                              onClick={() => statusMutation.mutate({
+                                id: job.id,
+                                payload: { status: 'queued', processedRows: 0, successRows: 0, failedRows: 0 },
+                              })}
+                            >
+                              <RotateCcw className="h-3.5 w-3.5" />
+                              Retry
+                            </Button>
+                          )}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

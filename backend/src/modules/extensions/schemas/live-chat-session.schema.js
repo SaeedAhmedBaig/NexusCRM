@@ -12,6 +12,7 @@ const LiveChatSessionSchema = new Schema(
     lastMessage: { type: String, default: '' },
     lastMessageAt: { type: Date, default: null },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

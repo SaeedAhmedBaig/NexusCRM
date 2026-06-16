@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Archive, Download, Play } from 'lucide-react';
+import { Archive, Download, Play, RefreshCw } from 'lucide-react';
 import { reportExportJobsApi } from '../../../../lib/extensions-api';
 import { withMutationNotify } from '../../../../lib/mutation-options';
 import { PageHeader } from '../../../../components/ui/page-header';
@@ -55,12 +55,16 @@ function saveBlob(blob, fileName) {
 export default function ReportExportsPage() {
   const queryClient = useQueryClient();
   const [form, setForm] = useState({ reportType: 'analytics', format: 'xlsx', title: defaultTitle('analytics') });
-  const [filters, setFilters] = useState({ status: '', reportType: '' });
+  const [filters, setFilters] = useState({ status: '', reportType: '', dateFrom: '', dateTo: '' });
   const params = useMemo(() => ({ ...filters, limit: 50 }), [filters]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['report-export-jobs', params],
     queryFn: () => reportExportJobsApi.list(params),
+    refetchInterval: (query) => {
+      const rows = query.state.data?.data || [];
+      return rows.some((job) => ['queued', 'running'].includes(job.status)) ? 5000 : false;
+    },
   });
 
   const createMutation = useMutation(
@@ -98,7 +102,7 @@ export default function ReportExportsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Report export queue"
-        description="Queue governed report exports, track generation status, and retain a tenant-scoped audit trail for downstream file delivery."
+        description="Queue governed report exports, track generation status, and download prepared tenant-scoped files."
         badge={
           <span className="inline-flex items-center gap-1 rounded-md bg-brand-light px-2.5 py-1 text-xs font-bold text-brand">
             <Archive className="h-3.5 w-3.5" />
@@ -113,7 +117,7 @@ export default function ReportExportsPage() {
             <div>
               <h2 className="text-base font-bold text-foreground">Queue an export</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                This foundation records the request and prepares a durable job record for a file worker.
+                Queue a governed export job and prepare the file when it is ready to run.
               </p>
             </div>
           </div>
@@ -182,7 +186,7 @@ export default function ReportExportsPage() {
       </div>
 
       <section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-        <div className="grid gap-3 border-b border-border p-4 sm:grid-cols-3">
+        <div className="grid gap-3 border-b border-border p-4 lg:grid-cols-6">
           <label className="grid gap-1.5 text-sm">
             <span className="font-semibold text-foreground">Status</span>
             <select
@@ -209,9 +213,33 @@ export default function ReportExportsPage() {
               ))}
             </select>
           </label>
+          <label className="grid gap-1.5 text-sm">
+            <span className="font-semibold text-foreground">From</span>
+            <input
+              type="date"
+              value={filters.dateFrom}
+              onChange={(event) => setFilters((prev) => ({ ...prev, dateFrom: event.target.value }))}
+              className="input-base"
+            />
+          </label>
+          <label className="grid gap-1.5 text-sm">
+            <span className="font-semibold text-foreground">To</span>
+            <input
+              type="date"
+              value={filters.dateTo}
+              onChange={(event) => setFilters((prev) => ({ ...prev, dateTo: event.target.value }))}
+              className="input-base"
+            />
+          </label>
           <div className="rounded-md border border-border bg-muted p-3">
             <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Total matching</p>
             <p className="mt-1 text-2xl font-bold text-foreground">{data?.total ?? 0}</p>
+          </div>
+          <div className="flex items-end">
+            <Button type="button" variant="outline" onClick={() => queryClient.invalidateQueries({ queryKey: ['report-export-jobs'] })}>
+              <RefreshCw className="h-3.5 w-3.5" />
+              Refresh
+            </Button>
           </div>
         </div>
 
@@ -247,12 +275,20 @@ export default function ReportExportsPage() {
                       <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold capitalize ${STATUS_CLASSES[job.status] || STATUS_CLASSES.queued}`}>
                         {statusLabel(job.status)}
                       </span>
+                      {job.status === 'running' ? (
+                        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
+                          <div className="h-full rounded-full bg-brand" style={{ width: `${job.progress || 10}%` }} />
+                        </div>
+                      ) : null}
+                      {job.error ? <p className="mt-1 text-xs text-danger">{job.error}</p> : null}
                     </td>
                     <td className="px-4 py-3">
                       {job.fileName ? (
                         <div>
                           <p className="font-medium text-foreground">{job.fileName}</p>
-                          <p className="text-xs text-muted-foreground">Expires {job.expiresAt ? new Date(job.expiresAt).toLocaleDateString() : 'later'}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {job.rowCount || 0} rows · Expires {job.expiresAt ? new Date(job.expiresAt).toLocaleDateString() : 'later'}
+                          </p>
                         </div>
                       ) : (
                         <span className="text-muted-foreground">Not prepared</span>
@@ -271,7 +307,7 @@ export default function ReportExportsPage() {
                             <Download className="h-3.5 w-3.5" />
                             Download
                           </Button>
-                        ) : (
+                        ) : ['queued', 'failed', 'cancelled'].includes(job.status) ? (
                           <Button
                             type="button"
                             variant="outline"
@@ -280,8 +316,10 @@ export default function ReportExportsPage() {
                             onClick={() => runMutation.mutate(job.id)}
                           >
                             <Play className="h-3.5 w-3.5" />
-                            Prepare
+                            {job.status === 'queued' ? 'Prepare' : 'Retry'}
                           </Button>
+                        ) : (
+                          <span className="text-sm text-muted-foreground">Preparing...</span>
                         )}
                       </div>
                     </td>

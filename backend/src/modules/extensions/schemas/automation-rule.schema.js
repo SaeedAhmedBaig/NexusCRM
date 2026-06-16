@@ -16,6 +16,7 @@ const AutomationRuleSchema = new Schema(
     runCount: { type: Number, default: 0 },
     failureCount: { type: Number, default: 0 },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

@@ -12,6 +12,7 @@ const CompanySchema = new Schema(
     status: { type: String, enum: COMPANY_STATUSES, default: 'active' },
     departmentId: { type: Schema.Types.ObjectId, ref: 'Department', default: null },
     assignedTo: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

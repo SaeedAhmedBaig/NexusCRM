@@ -10,6 +10,7 @@ const { ContactSchema, ContactModelName } = require('../crm/schemas/contact.sche
 const { UserTenantSchema, UserTenantModelName } = require('../auth/schemas/user-tenant.schema');
 const { TicketSchema, TicketModelName } = require('../extensions/schemas/ticket.schema');
 const { LiveChatSessionSchema, LiveChatSessionModelName } = require('../extensions/schemas/live-chat-session.schema');
+const { ActivityEventSchema, ActivityEventModelName } = require('../activity/schemas/activity-event.schema');
 const { DashboardService } = require('./dashboard.service');
 const { DashboardController } = require('./dashboard.controller');
 const { withModels } = require('../../common/providers/with-models');
@@ -27,6 +28,7 @@ const { withModels } = require('../../common/providers/with-models');
       { name: UserTenantModelName, schema: UserTenantSchema },
       { name: TicketModelName, schema: TicketSchema },
       { name: LiveChatSessionModelName, schema: LiveChatSessionSchema },
+      { name: ActivityEventModelName, schema: ActivityEventSchema },
     ]),
   ],
   controllers: [DashboardController],
@@ -44,6 +46,7 @@ const { withModels } = require('../../common/providers/with-models');
         userTenantModel: 'UserTenant',
         ticketModel: 'Ticket',
         liveChatSessionModel: 'LiveChatSession',
+        activityEventModel: 'ActivityEvent',
       },
       [],
     ),

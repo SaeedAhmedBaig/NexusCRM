@@ -21,6 +21,7 @@ const TicketSchema = new Schema(
     dealId: { type: Schema.Types.ObjectId, ref: 'Deal', default: null },
     assignedTo: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

@@ -19,6 +19,7 @@ class DashboardService {
   contactModel;
   ticketModel;
   liveChatSessionModel;
+  activityEventModel;
 
   async getWidgets(tenantId, userId, role) {
     const startOfToday = new Date();
@@ -171,6 +172,27 @@ class DashboardService {
   }
 
   async getRecentActivity(tenantId, limit = 10) {
+    if (this.activityEventModel) {
+      const activityEntries = await this.activityEventModel
+        .find({ tenantId })
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .lean();
+
+      if (activityEntries.length > 0) {
+        return activityEntries.map((e) => ({
+          id: e._id.toString(),
+          action: e.action,
+          entityType: e.entityType,
+          entityId: e.entityId?.toString() || null,
+          summary: e.summary,
+          userName: e.actorName,
+          href: e.href,
+          createdAt: e.createdAt,
+        }));
+      }
+    }
+
     const entries = await this.auditLogModel
       .find({ tenantId })
       .sort({ createdAt: -1 })

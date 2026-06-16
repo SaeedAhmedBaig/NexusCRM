@@ -33,6 +33,7 @@ const OrderSchema = new Schema(
     contactId: { type: Schema.Types.ObjectId, ref: 'Contact', default: null },
     assignedTo: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

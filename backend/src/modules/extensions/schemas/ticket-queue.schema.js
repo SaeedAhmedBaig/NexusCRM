@@ -17,6 +17,7 @@ const TicketQueueSchema = new Schema(
     routingRules: { type: Schema.Types.Mixed, default: {} },
     assignedTo: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

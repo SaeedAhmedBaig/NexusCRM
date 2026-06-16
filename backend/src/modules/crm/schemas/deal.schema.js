@@ -17,6 +17,7 @@ const DealSchema = new Schema(
     assignedTo: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     closedAt: { type: Date, default: null },
     description: { type: String, default: '' },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

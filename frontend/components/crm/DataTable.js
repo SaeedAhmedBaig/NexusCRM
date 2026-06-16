@@ -104,9 +104,14 @@ export function DataTable({
   }
 
   function askBulk(action, title, message, danger) {
-    setConfirm({ action, title, message, danger });
+    setConfirm({ action, title, message, danger, value: '' });
     setBulkMenuOpen(false);
   }
+
+  const statusBulkOptions = filterOptions.statuses?.length ? filterOptions.statuses : filterOptions.status || [];
+  const ownerBulkOptions = filterOptions.owner || [];
+  const confirmNeedsValue = confirm?.action === 'change_status' || confirm?.action === 'assign_owner';
+  const confirmDisabled = confirmNeedsValue && !confirm?.value;
 
   return (
     <div className="space-y-5">
@@ -384,20 +389,51 @@ export function DataTable({
         message={confirm?.message}
         danger={confirm?.danger}
         loading={bulkLoading}
+        confirmDisabled={confirmDisabled}
         onCancel={() => setConfirm(null)}
         onConfirm={() => {
           if (confirm?.action === 'delete_single') {
             runBulk('delete', {}, [confirm.rowId]);
           } else if (confirm?.action === 'change_status') {
-            const status = filterOptions.status?.[0]?.value || filterOptions.statuses?.[0]?.value || 'open';
-            runBulk('change_status', { status });
+            runBulk('change_status', { status: confirm.value });
           } else if (confirm?.action === 'assign_owner') {
-            runBulk('assign_owner', { assignedTo: params.owner || '' });
+            runBulk('assign_owner', { assignedTo: confirm.value });
           } else {
             runBulk(confirm?.action);
           }
         }}
-      />
+      >
+        {confirm?.action === 'change_status' && (
+          <label className="grid gap-1.5 text-sm">
+            <span className="font-semibold text-foreground">New status</span>
+            <select
+              value={confirm.value}
+              onChange={(e) => setConfirm((current) => ({ ...current, value: e.target.value }))}
+              className="input-base"
+            >
+              <option value="">Choose status...</option>
+              {statusBulkOptions.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </label>
+        )}
+        {confirm?.action === 'assign_owner' && (
+          <label className="grid gap-1.5 text-sm">
+            <span className="font-semibold text-foreground">Owner</span>
+            <select
+              value={confirm.value}
+              onChange={(e) => setConfirm((current) => ({ ...current, value: e.target.value }))}
+              className="input-base"
+            >
+              <option value="">Choose owner...</option>
+              {ownerBulkOptions.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </label>
+        )}
+      </ConfirmModal>
     </div>
   );
 }

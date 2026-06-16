@@ -9,10 +9,20 @@ import { useListParams } from './use-list-params';
 import { getTenantUrl } from '../../lib/tenant';
 import { listDepartments, listTenantUsers } from '../../lib/api';
 import { listEntityActivity } from '../../lib/activity-api';
+import { listCustomFields } from '../../lib/metadata-api';
 import { notifySuccess, notifyError } from '../../lib/notify';
 import { PageHeader } from '../ui/page-header';
 import { Button } from '../ui/button';
 import { withMutationNotify } from '../../lib/mutation-options';
+import {
+  buildInitialForm,
+  buildPayload,
+  formatCustomFieldValue,
+  getCustomFieldObjectType,
+  getFieldValue,
+  normalizeCustomField,
+  setFieldValue,
+} from './custom-field-form';
 
 const ACTIVITY_ENTITY_TYPES = {
   leads: 'Lead',
@@ -65,6 +75,16 @@ export function CrmListPage({
   });
 
   const activityEntityType = ACTIVITY_ENTITY_TYPES[entity];
+  const customFieldObjectType = getCustomFieldObjectType(entity);
+  const { data: metadataFields } = useQuery({
+    queryKey: ['custom-fields', customFieldObjectType],
+    queryFn: () => listCustomFields({ objectType: customFieldObjectType }),
+    enabled: Boolean(customFieldObjectType),
+    staleTime: 120_000,
+  });
+  const customFields = (metadataFields || []).map(normalizeCustomField);
+  const editableFields = [...createFields, ...customFields];
+
   const { data: activityPage } = useQuery({
     queryKey: ['entity-activity', activityEntityType, drawer.record?.id],
     queryFn: () => listEntityActivity(activityEntityType, drawer.record.id, { limit: 8 }),
@@ -78,7 +98,7 @@ export function CrmListPage({
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [entity] });
         setShowCreate(false);
-        setForm(createDefaults);
+        setForm(buildInitialForm(createDefaults, customFields));
       },
     }),
   );
@@ -141,9 +161,33 @@ export function CrmListPage({
   );
 
   function renderFieldInput(field, value, onChange) {
+    if (field.type === 'checkbox') {
+      return (
+        <label className="inline-flex items-center gap-2 text-sm text-foreground">
+          <input type="checkbox" checked={Boolean(value)} onChange={(e) => onChange(e.target.checked)} className="rounded border-border bg-card" />
+          Enabled
+        </label>
+      );
+    }
+    if (field.type === 'multiselect') {
+      const selected = Array.isArray(value) ? value : [];
+      return (
+        <select
+          multiple
+          className="input-base min-h-[104px]"
+          value={selected}
+          onChange={(e) => onChange(Array.from(e.target.selectedOptions).map((option) => option.value))}
+        >
+          {(field.options || []).map((opt) => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      );
+    }
     if (field.type === 'select') {
       return (
         <select className="input-base" value={value ?? ''} onChange={(e) => onChange(e.target.value)}>
+          <option value="">Select...</option>
           {(field.options || []).map((opt) => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
@@ -153,12 +197,13 @@ export function CrmListPage({
     if (field.type === 'textarea') {
       return <textarea className="input-base min-h-[96px]" value={value ?? ''} onChange={(e) => onChange(e.target.value)} />;
     }
+    const type = field.type === 'currency' ? 'number' : field.type === 'datetime' ? 'datetime-local' : field.type || 'text';
     const inputValue = field.type === 'date' && value ? String(value).slice(0, 10) : value ?? '';
-    return <input className="input-base" type={field.type || 'text'} value={inputValue} onChange={(e) => onChange(e.target.value)} />;
+    return <input className="input-base" type={type} value={inputValue} onChange={(e) => onChange(e.target.value)} />;
   }
 
   function buildEditablePayload(values) {
-    return Object.fromEntries(createFields.map((field) => [field.key, values[field.key]]));
+    return buildPayload(values, createFields, customFields);
   }
 
   if (error) {
@@ -176,7 +221,13 @@ export function CrmListPage({
         description={description}
         actions={
           createRecord && createFields.length > 0 ? (
-            <Button type="button" onClick={() => setShowCreate(true)}>
+            <Button
+              type="button"
+              onClick={() => {
+                setForm(buildInitialForm(createDefaults, customFields));
+                setShowCreate(true);
+              }}
+            >
               <Plus className="h-4 w-4" />
               New
             </Button>
@@ -189,41 +240,15 @@ export function CrmListPage({
           className="rounded-lg border border-border bg-card p-5"
           onSubmit={(e) => {
             e.preventDefault();
-            createMutation.mutate(form);
+            createMutation.mutate(buildEditablePayload(form));
           }}
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            {createFields.map((field) => (
+            {editableFields.map((field) => (
               <label key={field.key} className="block text-sm">
                 <span className="mb-1 block font-medium text-foreground">{field.label}</span>
-                {field.type === 'select' ? (
-                  <select
-                    className="input-base"
-                    value={form[field.key] ?? ''}
-                    onChange={(e) => setForm((f) => ({ ...f, [field.key]: e.target.value }))}
-                  >
-                    {(field.options || []).map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                ) : field.type === 'textarea' ? (
-                  <textarea
-                    className="input-base min-h-[80px]"
-                    value={form[field.key] ?? ''}
-                    onChange={(e) => setForm((f) => ({ ...f, [field.key]: e.target.value }))}
-                    required={field.required}
-                  />
-                ) : (
-                  <input
-                    className="input-base"
-                    type={field.type || 'text'}
-                    value={form[field.key] ?? ''}
-                    onChange={(e) => setForm((f) => ({ ...f, [field.key]: e.target.value }))}
-                    required={field.required}
-                  />
-                )}
+                {renderFieldInput(field, getFieldValue(form, field), (value) => setForm((f) => setFieldValue(f, field, value)))}
+                {field.helpText ? <span className="mt-1 block text-xs text-muted-foreground">{field.helpText}</span> : null}
               </label>
             ))}
           </div>
@@ -290,12 +315,13 @@ export function CrmListPage({
                     updateMutation.mutate({ id: drawer.record.id, payload: buildEditablePayload(drawer.form) });
                   }}
                 >
-                  {createFields.map((field) => (
+                  {editableFields.map((field) => (
                     <label key={field.key} className="block text-sm">
                       <span className="mb-1.5 block font-medium text-muted-foreground">{field.label}</span>
-                      {renderFieldInput(field, drawer.form[field.key], (value) =>
-                        setDrawer((state) => ({ ...state, form: { ...state.form, [field.key]: value } }))
+                      {renderFieldInput(field, getFieldValue(drawer.form, field), (value) =>
+                        setDrawer((state) => ({ ...state, form: setFieldValue(state.form, field, value) }))
                       )}
+                      {field.helpText ? <span className="mt-1 block text-xs text-muted-foreground">{field.helpText}</span> : null}
                     </label>
                   ))}
                   <div className="flex gap-2 pt-2">
@@ -311,7 +337,7 @@ export function CrmListPage({
                 <div className="space-y-4">
                   <div className="grid gap-3 sm:grid-cols-2">
                     {Object.entries(drawer.record || {})
-                      .filter(([key, value]) => !['_id', 'id', '__v'].includes(key) && value !== null && value !== undefined && typeof value !== 'object')
+                      .filter(([key, value]) => !['_id', 'id', '__v', 'customFields'].includes(key) && value !== null && value !== undefined && typeof value !== 'object')
                       .slice(0, 12)
                       .map(([key, value]) => (
                         <div key={key} className="rounded-md border border-border bg-control p-4">
@@ -320,6 +346,24 @@ export function CrmListPage({
                         </div>
                       ))}
                   </div>
+                  {customFields.length > 0 && (
+                    <div className="rounded-lg border border-border bg-card p-4">
+                      <div className="mb-3">
+                        <p className="text-sm font-bold text-foreground">Custom fields</p>
+                        <p className="text-xs text-muted-foreground">Metadata fields configured for {customFieldObjectType} records.</p>
+                      </div>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {customFields.map((field) => (
+                          <div key={field.key} className="rounded-md border border-border bg-control p-3">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{field.label}</p>
+                            <p className="mt-1 break-words text-sm font-semibold text-foreground">
+                              {formatCustomFieldValue(field, drawer.record?.customFields?.[field.customKey])}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {updateRecord && (
                     <Button type="button" onClick={() => setDrawer((state) => ({ ...state, mode: 'edit' }))}>
                       Edit record

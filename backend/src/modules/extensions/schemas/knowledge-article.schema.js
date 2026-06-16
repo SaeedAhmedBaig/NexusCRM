@@ -10,6 +10,7 @@ const KnowledgeArticleSchema = new Schema(
     content: { type: String, default: '' },
     status: { type: String, enum: ARTICLE_STATUSES, default: 'draft' },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

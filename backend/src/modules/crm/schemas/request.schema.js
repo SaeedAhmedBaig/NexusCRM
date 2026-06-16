@@ -21,6 +21,7 @@ const RequestSchema = new Schema(
     ipAddress: { type: String, default: null },
     country: { type: String, default: null },
     city: { type: String, default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

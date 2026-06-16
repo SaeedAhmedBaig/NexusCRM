@@ -13,6 +13,7 @@ const SmsCampaignSchema = new Schema(
     scheduledAt: { type: Date, default: null },
     sentAt: { type: Date, default: null },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );

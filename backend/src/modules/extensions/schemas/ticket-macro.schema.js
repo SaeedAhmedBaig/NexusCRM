@@ -13,6 +13,7 @@ const TicketMacroSchema = new Schema(
     usageCount: { type: Number, default: 0 },
     assignedTo: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
+    customFields: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true },
 );
