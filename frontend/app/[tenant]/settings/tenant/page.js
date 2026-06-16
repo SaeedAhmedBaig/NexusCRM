@@ -77,7 +77,6 @@ export default function TenantSettingsPage() {
       <SettingsPageShell
         title="Organization"
         description="Company profile, workspace URL, and default routing configuration."
-        className="max-w-3xl"
       >
 
         {error && <p className="text-sm text-danger">{error}</p>}

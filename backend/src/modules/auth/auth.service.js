@@ -36,6 +36,7 @@ class AuthService {
   userModel;
   userTenantModel;
   activityEventModel;
+  notificationModel;
   tenantService;
   rbacService;
   usersService;
@@ -133,6 +134,17 @@ class AuthService {
         tenantId: tenant._id,
         role: ROLES.OWNER,
         groupId: ownerGroup?._id || null,
+      });
+
+      await this.createNotification(tenant._id, user._id, {
+        type: 'trial.started',
+        title: 'Trial started',
+        body: tenant.trialEndsAt
+          ? `Your ${tenant.plan} trial is active until ${new Date(tenant.trialEndsAt).toLocaleDateString()}.`
+          : `Your ${tenant.plan} trial is active.`,
+        href: '/settings/billing',
+        entityType: 'Tenant',
+        entityId: tenant._id,
       });
 
       let verificationDelivery;
@@ -346,6 +358,8 @@ class AuthService {
         customDomain: tenant.customDomain || null,
         plan: tenant.plan,
         status: tenant.status,
+        trialEndsAt: tenant.trialEndsAt || null,
+        billingPeriodEnd: tenant.billingPeriodEnd || null,
         defaultDepartmentId: tenant.defaultDepartmentId || null,
         onboardingCompleted: Boolean(tenant.onboardingCompleted),
         settings: tenant.settings || {},
@@ -601,6 +615,8 @@ class AuthService {
         subdomain: tenant.subdomain,
         plan: tenant.plan,
         status: tenant.status,
+        trialEndsAt: tenant.trialEndsAt || null,
+        billingPeriodEnd: tenant.billingPeriodEnd || null,
         onboardingCompleted: Boolean(tenant.onboardingCompleted),
       },
       role,
@@ -655,6 +671,21 @@ class AuthService {
     return this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_SECRET', 'dev-secret-change-me'),
       expiresIn: this.configService.get('JWT_EXPIRES_IN', '7d'),
+    });
+  }
+
+  async createNotification(tenantId, userId, payload) {
+    if (!this.notificationModel) return null;
+    return this.notificationModel.create({
+      tenantId,
+      userId,
+      type: payload.type,
+      title: payload.title,
+      body: payload.body || '',
+      href: payload.href || null,
+      entityType: payload.entityType || null,
+      entityId: payload.entityId || null,
+      read: false,
     });
   }
 }

@@ -31,6 +31,7 @@ const TenantSchema = new Schema(
     stripeCustomerId: { type: String, default: null },
     stripeSubscriptionId: { type: String, default: null },
     billingPeriodEnd: { type: Date, default: null },
+    trialEndsAt: { type: Date, default: null },
     onboardingCompleted: { type: Boolean, default: false },
   },
   { timestamps: true },

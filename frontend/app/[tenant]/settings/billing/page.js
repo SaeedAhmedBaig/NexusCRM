@@ -1,12 +1,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CreditCard, ArrowUpRight } from 'lucide-react';
+import { AlertTriangle, ArrowUpRight, CheckCircle2, CreditCard } from 'lucide-react';
 import { getBillingSummary, createBillingPortal, createBillingCheckout } from '../../../../lib/api';
 import { getTenantUrl } from '../../../../lib/tenant';
 import { useSession } from '../../../../components/providers/session-context';
 import { Can } from '../../../../components/can';
 import { SettingsButton, SettingsPageShell, SettingsPrimaryButton, SettingsSection } from '../../../../components/settings/settings-layout';
+
+function formatLimit(limit) {
+  if (limit === -1) return 'Unlimited';
+  return limit;
+}
+
+function normalizePlanName(plan) {
+  if (plan === 'Free') return 'Starter';
+  if (plan === 'Pro') return 'Professional';
+  return plan;
+}
 
 export default function BillingSettingsPage() {
   const { profile, subdomain } = useSession();
@@ -49,13 +60,28 @@ export default function BillingSettingsPage() {
       <SettingsPageShell
         title="Billing"
         description="Plan, usage, subscription management, and invoices."
-        className="max-w-4xl"
       >
 
         {error && <p className="text-sm text-danger">{error}</p>}
 
         {billing && (
           <>
+            {billing.status === 'trial' && (
+              <div className="border border-warning/30 bg-warning-light p-4 text-sm text-warning">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                  <div>
+                    <p className="font-semibold">Trial workspace</p>
+                    <p>
+                      {billing.trialEndsAt
+                        ? `${billing.trialDaysRemaining ?? 0} day${billing.trialDaysRemaining === 1 ? '' : 's'} remaining. Trial ends ${new Date(billing.trialEndsAt).toLocaleDateString()}.`
+                        : 'Trial is active. Choose a paid plan when you are ready to continue without interruption.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <SettingsSection
               title="Current plan"
               description={
@@ -72,12 +98,13 @@ export default function BillingSettingsPage() {
                     { label: 'Team members', used: billing.usage.users, limit: billing.limits.users },
                     { label: 'Storage (MB)', used: billing.usage.storageMb, limit: billing.limits.storageMb },
                     { label: 'Deals', used: billing.usage.deals, limit: billing.limits.deals },
+                    { label: 'Emails / month', used: billing.usage.emailsPerMonth || 0, limit: billing.limits.emailsPerMonth },
                   ].map((row) => (
                     <div key={row.label} className="border border-border bg-control px-3 py-2">
                       <p className="text-xs text-muted">{row.label}</p>
                       <p className="font-semibold tabular-nums">
                         {row.used}
-                        {row.limit > 0 ? ` / ${row.limit}` : row.limit === -1 ? ' / ∞' : ''}
+                        {row.limit > 0 ? ` / ${row.limit}` : row.limit === -1 ? ' / Unlimited' : ''}
                       </p>
                     </div>
                   ))}
@@ -96,6 +123,47 @@ export default function BillingSettingsPage() {
                     <SettingsButton onClick={() => upgrade('Enterprise')} disabled={loading}>Upgrade to Enterprise</SettingsButton>
                   )}
                 </div>
+              </div>
+            </SettingsSection>
+
+            <SettingsSection title="Plans and pricing" description="Upgrade paths are based on the existing SaaS plans configured for this workspace.">
+              <div className="grid gap-3 p-4 lg:grid-cols-4">
+                {(billing.availablePlans || []).map((plan) => {
+                  const isCurrent = normalizePlanName(billing.plan) === plan.name;
+                  const canCheckout = plan.name !== 'Starter';
+                  return (
+                    <div key={plan.id || plan.name} className={`flex flex-col border p-4 ${isCurrent ? 'border-brand bg-brand/5' : 'border-border bg-control'}`}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{plan.name}</p>
+                          <p className="mt-1 text-xs leading-5 text-muted">{plan.description}</p>
+                        </div>
+                        {isCurrent ? <span className="text-xs font-semibold text-brand">Current</span> : null}
+                      </div>
+                      <p className="mt-4 text-2xl font-semibold text-foreground">
+                        ${plan.monthlyPrice}
+                        <span className="text-xs font-normal text-muted"> / user / mo</span>
+                      </p>
+                      <p className="mt-1 text-xs text-muted">${plan.yearlyPrice} / user / mo billed yearly</p>
+                      <div className="mt-4 space-y-2 text-xs text-muted">
+                        <p>Users: {formatLimit(plan.limits?.users)}</p>
+                        <p>Storage: {formatLimit(plan.limits?.storageMb)} MB</p>
+                        <p>Deals: {formatLimit(plan.limits?.deals)}</p>
+                      </div>
+                      <ul className="mt-4 flex-1 space-y-2 text-xs text-muted">
+                        {(plan.features || []).slice(0, 5).map((feature) => (
+                          <li key={feature} className="flex gap-2">
+                            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <SettingsButton className="mt-4 justify-center" disabled={loading || isCurrent || !canCheckout} onClick={() => upgrade(plan.name)}>
+                        {isCurrent ? 'Current plan' : canCheckout ? `Choose ${plan.name}` : 'Included'}
+                      </SettingsButton>
+                    </div>
+                  );
+                })}
               </div>
             </SettingsSection>
 

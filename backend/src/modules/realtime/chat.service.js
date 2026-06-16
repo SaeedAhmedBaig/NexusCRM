@@ -2,10 +2,11 @@ const { Injectable, NotFoundException } = require('@nestjs/common');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { emitChatMessage } = require('../../realtime/socket-hub');
+const { emitChatMessage, emitChatReadReceipt } = require('../../realtime/socket-hub');
 const { NotificationsService } = require('./notifications.service');
 
 const UPLOAD_DIR = path.join(process.cwd(), 'uploads', 'chat');
+const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024;
 
 function leanId(doc) {
   if (!doc) return doc;
@@ -21,10 +22,16 @@ function formatMessage(row) {
   base.entityId = row.entityId?.toString?.() || row.entityId;
   base.attachments = (row.attachments || []).map((a) => ({
     id: a._id?.toString(),
+    fileAssetId: a.fileAssetId?.toString?.() || a.fileAssetId,
     filename: a.filename,
     mimeType: a.mimeType,
     size: a.size,
     url: a.url,
+  }));
+  base.readBy = (row.readBy || []).map((r) => ({
+    userId: r.userId?.toString?.() || r.userId,
+    userName: r.userName,
+    readAt: r.readAt,
   }));
   return base;
 }
@@ -73,10 +80,21 @@ class ChatService {
       userName,
       body: body.body || '',
       attachments,
+      readBy: [{ userId, userName, readAt: new Date() }],
     });
 
     const formatted = formatMessage(msg.toObject());
     emitChatMessage(tenantId, body.entityType, String(body.objectId || body.entityId), formatted);
+    await this.notificationsService?.notifyObjectParticipants({
+      tenantId,
+      excludeUserId: userId,
+      entityType: body.entityType,
+      entityId: body.objectId || body.entityId,
+      type: 'chat.message',
+      title: `New message from ${userName}`,
+      body: body.body || `${userName} shared ${attachments.length} attachment${attachments.length === 1 ? '' : 's'}.`,
+      href: this.buildHref(body.entityType, body.objectId || body.entityId),
+    });
     return formatted;
   }
 
@@ -87,6 +105,7 @@ class ChatService {
     const storageName = `${id}-${safeName}`;
     const storagePath = path.join(UPLOAD_DIR, storageName);
     const buffer = Buffer.from(file.data, 'base64');
+    if (buffer.length > MAX_ATTACHMENT_BYTES) return null;
     fs.writeFileSync(storagePath, buffer);
     return {
       filename: file.filename,
@@ -95,6 +114,28 @@ class ChatService {
       url: `/api/chat/attachments/${id}/download`,
       storagePath: storageName,
     };
+  }
+
+  async markRead(tenantId, userId, messageId) {
+    const user = await this.userModel.findById(userId).lean();
+    const userName = user?.name || 'User';
+    const message = await this.chatMessageModel.findOne({ _id: messageId, tenantId });
+    if (!message) throw new NotFoundException('Message not found');
+
+    const alreadyRead = (message.readBy || []).some((entry) => String(entry.userId) === String(userId));
+    if (!alreadyRead) {
+      message.readBy.push({ userId, userName, readAt: new Date() });
+      await message.save();
+    }
+
+    const receipt = {
+      messageId: String(message._id),
+      userId: String(userId),
+      userName,
+      readAt: (message.readBy || []).find((entry) => String(entry.userId) === String(userId))?.readAt || new Date(),
+    };
+    emitChatReadReceipt(tenantId, message.entityType, String(message.entityId), receipt);
+    return receipt;
   }
 
   async getAttachment(tenantId, id) {

@@ -51,7 +51,7 @@ export function getStoredRules() {
   }
 }
 
-const DEFAULT_TIMEOUT_MS = 15_000;
+const DEFAULT_TIMEOUT_MS = 60_000;
 
 export async function apiFetch(path, options = {}) {
   const headers = {
@@ -90,9 +90,9 @@ export async function apiFetch(path, options = {}) {
   } catch (err) {
     const hint =
       err?.name === 'AbortError'
-        ? 'Request timed out. Check that the backend is running and NEXT_PUBLIC_API_URL is set.'
+        ? 'Request timed out. The Render backend may be cold starting or API_URL/NEXT_PUBLIC_API_URL may be incorrect.'
         : err?.message === 'Failed to fetch'
-          ? 'Cannot reach the API. Check that the backend is running and NEXT_PUBLIC_API_URL is configured.'
+          ? 'Cannot reach the API. Check that the Render backend is running and API_URL/NEXT_PUBLIC_API_URL is configured.'
           : err?.message;
     throw new Error(hint || 'Network request failed');
   } finally {
@@ -148,7 +148,7 @@ export function superadminLogin(payload) {
 }
 
 export function getMe() {
-  return apiFetch('/auth/me', { timeout: 10_000 });
+  return apiFetch('/auth/me', { timeout: 30_000 });
 }
 
 export function getMyTenants() {

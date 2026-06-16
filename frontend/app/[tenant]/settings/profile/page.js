@@ -75,7 +75,6 @@ export default function ProfileSettingsPage() {
     <SettingsPageShell
       title="Profile"
       description="Manage your personal account, password, and notification defaults."
-      className="max-w-3xl"
     >
 
       {error && <p className="text-sm text-danger">{error}</p>}

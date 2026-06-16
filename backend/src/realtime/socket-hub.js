@@ -74,6 +74,11 @@ function emitChatMessage(tenantId, entityType, entityId, message) {
   io.to(objectRoom(tenantId, entityType, entityId)).emit('message', message);
 }
 
+function emitChatReadReceipt(tenantId, entityType, entityId, receipt) {
+  if (!io) return;
+  io.to(objectRoom(tenantId, entityType, entityId)).emit('message:read', receipt);
+}
+
 function emitNotification(tenantId, userId, notification) {
   if (!io) return;
   io.to(userRoom(tenantId, userId)).emit('notification', notification);
@@ -82,6 +87,7 @@ function emitNotification(tenantId, userId, notification) {
 module.exports = {
   initSocketIO,
   emitChatMessage,
+  emitChatReadReceipt,
   emitNotification,
   objectRoom,
   userRoom,

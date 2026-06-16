@@ -1,4 +1,4 @@
-const { Controller, Get, Post, Bind, Body, Req, Query, Param, Res } = require('@nestjs/common');
+const { Controller, Get, Post, Patch, Bind, Body, Req, Query, Param, Res } = require('@nestjs/common');
 const { ChatService } = require('./chat.service');
 const { defineParamTypes } = require('../../common/define-param-types');
 
@@ -20,6 +20,12 @@ class ChatController {
   @Bind(Body(), Req())
   create(body, req) {
     return this.chatService.createMessage(req.tenantId, req.user.id, body);
+  }
+
+  @Patch('messages/:id/read')
+  @Bind(Req(), Param('id'))
+  markRead(req, id) {
+    return this.chatService.markRead(req.tenantId, req.user.id, id);
   }
 
   @Get('attachments/:id/download')

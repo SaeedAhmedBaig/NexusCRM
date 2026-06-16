@@ -5,9 +5,9 @@ export const FALLBACK_PLANS = {
   billing: ['monthly', 'yearly'],
   plans: [
     {
-      id: 'free',
-      name: 'Free',
-      slug: 'free',
+      id: 'starter',
+      name: 'Starter',
+      slug: 'starter',
       description: 'For solo founders and small teams getting started.',
       monthlyPrice: 0,
       yearlyPrice: 0,
@@ -15,9 +15,9 @@ export const FALLBACK_PLANS = {
       features: ['Up to 3 team members', 'Sales pipeline & deals', 'Task management', 'Basic web forms', 'Email support'],
     },
     {
-      id: 'pro',
-      name: 'Pro',
-      slug: 'pro',
+      id: 'professional',
+      name: 'Professional',
+      slug: 'professional',
       description: 'For growing teams that need automation and analytics.',
       monthlyPrice: 29,
       yearlyPrice: 24,
@@ -32,7 +32,7 @@ export const FALLBACK_PLANS = {
       monthlyPrice: 59,
       yearlyPrice: 49,
       popular: false,
-      features: ['Up to 75 team members', 'Advanced journey automation', 'Customer health scoring', 'Sales and support handoffs', 'Revenue forecasting', 'Custom reports', 'Priority chat support'],
+      features: ['Up to 100 team members', 'Multi-branch support', 'Advanced automation', 'Custom domains', 'Priority support'],
     },
     {
       id: 'enterprise',

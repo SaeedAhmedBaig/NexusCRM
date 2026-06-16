@@ -6,6 +6,7 @@ const { MongooseModule, getModelToken } = require('@nestjs/mongoose');
 const { UserSchema, UserModelName } = require('./schemas/user.schema');
 const { UserTenantSchema, UserTenantModelName } = require('./schemas/user-tenant.schema');
 const { ActivityEventSchema, ActivityEventModelName } = require('../activity/schemas/activity-event.schema');
+const { NotificationSchema, NotificationModelName } = require('../realtime/schemas/notification.schema');
 const { AuthService } = require('./auth.service');
 const { SuperadminBootstrapService } = require('./superadmin-bootstrap.service');
 const { AuthController } = require('./auth.controller');
@@ -34,13 +35,14 @@ const { withModels } = require('../../common/providers/with-models');
       { name: UserModelName, schema: UserSchema },
       { name: UserTenantModelName, schema: UserTenantSchema },
       { name: ActivityEventModelName, schema: ActivityEventSchema },
+      { name: NotificationModelName, schema: NotificationSchema },
     ]),
   ],
   controllers: [AuthController, UsersController],
   providers: [
     withModels(
       AuthService,
-      { userModel: 'User', userTenantModel: 'UserTenant', activityEventModel: 'ActivityEvent' },
+      { userModel: 'User', userTenantModel: 'UserTenant', activityEventModel: 'ActivityEvent', notificationModel: 'Notification' },
       [
         { token: require('../tenant/tenant.service').TenantService },
         { token: require('../rbac/rbac.service').RbacService },

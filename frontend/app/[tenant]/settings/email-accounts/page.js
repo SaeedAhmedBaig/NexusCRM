@@ -68,7 +68,6 @@ export default function EmailAccountsPage() {
     <SettingsPageShell
       title="Email accounts"
       description="Connect SMTP/IMAP or Gmail for sending and import."
-      className="max-w-4xl"
       actions={
         <>
           <SettingsButton onClick={connectGmail}>

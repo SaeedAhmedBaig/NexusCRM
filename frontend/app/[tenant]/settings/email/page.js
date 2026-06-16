@@ -48,7 +48,6 @@ export default function EmailSettingsPage({ params }) {
       <SettingsPageShell
         title="Email account"
         description="Connect SMTP to send mail from your workspace."
-        className="max-w-2xl"
       >
 
         {saved ? (

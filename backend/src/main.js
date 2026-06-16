@@ -1,17 +1,29 @@
 require('reflect-metadata');
+const dns = require('dns');
 const { NestFactory } = require('@nestjs/core');
 const { ConfigService } = require('@nestjs/config');
 const { AppModule } = require('./app.module');
 const { initSocketIO } = require('./realtime/socket-hub');
 
 async function bootstrap() {
+  if (process.env.DNS_SERVERS !== 'system') {
+    const servers = (process.env.DNS_SERVERS || '1.1.1.1,8.8.8.8')
+      .split(',')
+      .map((server) => server.trim())
+      .filter(Boolean);
+    if (servers.length) dns.setServers(servers);
+  }
+
   const express = require('express');
-  const app = await NestFactory.create(AppModule, { rawBody: true });
-  app.setGlobalPrefix('api');
-  app.use('/api/billing/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
+  const app = await NestFactory.create(AppModule, { rawBody: true, bodyParser: false });
+  const bodyLimit = process.env.REQUEST_BODY_LIMIT || '12mb';
+  app.use('/api/billing/webhook', express.raw({ type: 'application/json', limit: bodyLimit }), (req, res, next) => {
     req.rawBody = req.body;
     next();
   });
+  app.use(express.json({ limit: bodyLimit }));
+  app.use(express.urlencoded({ limit: bodyLimit, extended: true }));
+  app.setGlobalPrefix('api');
 
   const config = app.get(ConfigService);
   const jwtSecret = config.get('JWT_SECRET', 'dev-secret-change-me');

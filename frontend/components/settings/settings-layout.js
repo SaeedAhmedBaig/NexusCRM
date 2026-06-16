@@ -6,7 +6,7 @@ import { cn } from '../../lib/utils';
 
 export function SettingsPageShell({ title, description, actions, children, className = '' }) {
   return (
-    <div className={cn('mx-auto max-w-6xl animate-fade-in space-y-5', className)}>
+    <div className={cn('w-full animate-fade-in space-y-5', className)}>
       <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-[-0.03em] text-foreground">{title}</h1>

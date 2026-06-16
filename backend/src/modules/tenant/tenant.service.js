@@ -6,6 +6,8 @@ const {
 } = require('@nestjs/common');
 const { PLANS, TENANT_STATUSES } = require('../../common/constants/plans');
 
+const DEFAULT_TRIAL_DAYS = Number(process.env.DEFAULT_TRIAL_DAYS || 14);
+
 @Injectable()
 class TenantService {
   tenantModel;
@@ -22,6 +24,7 @@ class TenantService {
       subdomain: normalized,
       plan,
       status: TENANT_STATUSES.TRIAL,
+      trialEndsAt: new Date(Date.now() + DEFAULT_TRIAL_DAYS * 24 * 60 * 60 * 1000),
       settings: {},
     });
   }

@@ -23,7 +23,7 @@ class BillingController {
   @CheckPolicies(canManageSettings)
   @Bind(Req())
   summary(req) {
-    return this.billingService.getBillingSummary(req.tenantId);
+    return this.billingService.getBillingSummary(req.tenantId, req.user.id);
   }
 
   @Post('portal')
@@ -33,7 +33,7 @@ class BillingController {
   @Bind(Body(), Req())
   portal(body, req) {
     const returnUrl = body.returnUrl || `${process.env.FRONTEND_URL || 'http://localhost:3000'}/settings/billing`;
-    return this.billingService.createPortalSession(req.tenantId, returnUrl);
+    return this.billingService.createPortalSession(req.tenantId, returnUrl, req.user.id);
   }
 
   @Post('checkout')
@@ -43,7 +43,7 @@ class BillingController {
   @Bind(Body(), Req())
   checkout(body, req) {
     const returnUrl = body.returnUrl || `${process.env.FRONTEND_URL || 'http://localhost:3000'}/settings/billing`;
-    return this.billingService.createCheckoutSession(req.tenantId, body.plan, returnUrl);
+    return this.billingService.createCheckoutSession(req.tenantId, body.plan, returnUrl, req.user.id);
   }
 
   @Public()

@@ -7,6 +7,7 @@ const { ConfigService } = require('@nestjs/config');
 const { SubscriptionService } = require('./subscription.service');
 const { PLANS } = require('../../common/constants/plans');
 const { defineParamTypes } = require('../../common/define-param-types');
+const { emitNotification } = require('../../realtime/socket-hub');
 
 const PLAN_PRICE_MAP = {
   [PLANS.PROFESSIONAL]: process.env.STRIPE_PRICE_PRO || 'price_pro_monthly',
@@ -18,6 +19,7 @@ const PLAN_PRICE_MAP = {
 class BillingService {
   tenantModel;
   userTenantModel;
+  notificationModel;
   subscriptionService;
   configService;
 
@@ -34,15 +36,20 @@ class BillingService {
     return new Stripe(key, { apiVersion: '2024-11-20.acacia' });
   }
 
-  async getBillingSummary(tenantId) {
+  async getBillingSummary(tenantId, userId) {
     const tenant = await this.tenantModel.findById(tenantId).lean();
     if (!tenant) throw new NotFoundException('Tenant not found');
 
     const limits = this.subscriptionService.getPlanLimits(tenant.plan);
+    const trialEndsAt = tenant.trialEndsAt || null;
+    const trialDaysRemaining = trialEndsAt
+      ? Math.max(Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / (24 * 60 * 60 * 1000)), 0)
+      : null;
     const activeUsers = await this.userTenantModel.countDocuments({
       tenantId,
       isActive: true,
     });
+    await this.ensureTrialReminder(tenant, userId, trialDaysRemaining);
 
     return {
       plan: tenant.plan,
@@ -55,17 +62,28 @@ class BillingService {
       },
       stripeCustomerId: tenant.stripeCustomerId || null,
       billingPeriodEnd: tenant.billingPeriodEnd || null,
+      trialEndsAt,
+      trialDaysRemaining,
+      availablePlans: this.subscriptionService.getPublicPlans().plans,
       invoices: tenant.settings?.billing?.invoices || [],
     };
   }
 
-  async createPortalSession(tenantId, returnUrl) {
+  async createPortalSession(tenantId, returnUrl, userId) {
     const stripe = this.getStripe();
     const tenant = await this.tenantModel.findById(tenantId);
     if (!tenant) throw new NotFoundException('Tenant not found');
 
     if (!stripe) {
       const mockUrl = `${returnUrl}?billing=mock`;
+      await this.notifyUser(tenantId, userId, {
+        type: 'billing.portal',
+        title: 'Billing portal opened',
+        body: 'Stripe is not configured, so a mock billing portal was used.',
+        href: '/settings/billing',
+        entityType: 'Tenant',
+        entityId: tenantId,
+      });
       return { url: mockUrl, mock: true };
     }
 
@@ -88,17 +106,25 @@ class BillingService {
     return { url: session.url };
   }
 
-  async createCheckoutSession(tenantId, plan, returnUrl) {
+  async createCheckoutSession(tenantId, plan, returnUrl, userId) {
     const stripe = this.getStripe();
-    if (!stripe) {
-      return { url: `${returnUrl}?checkout=mock&plan=${plan}`, mock: true };
-    }
-
     const tenant = await this.tenantModel.findById(tenantId);
     if (!tenant) throw new NotFoundException('Tenant not found');
 
     const priceId = PLAN_PRICE_MAP[plan];
     if (!priceId) throw new BadRequestException('Invalid plan for checkout');
+
+    if (!stripe) {
+      await this.notifyUser(tenantId, userId, {
+        type: 'billing.checkout',
+        title: `Checkout started for ${plan}`,
+        body: 'Stripe is not configured, so a mock checkout URL was returned.',
+        href: '/settings/billing',
+        entityType: 'Tenant',
+        entityId: tenantId,
+      });
+      return { url: `${returnUrl}?checkout=mock&plan=${plan}`, mock: true };
+    }
 
     let customerId = tenant.stripeCustomerId;
     if (!customerId) {
@@ -118,6 +144,15 @@ class BillingService {
       success_url: `${returnUrl}?checkout=success`,
       cancel_url: `${returnUrl}?checkout=cancel`,
       metadata: { tenantId: tenantId.toString(), plan },
+    });
+
+    await this.notifyUser(tenantId, userId, {
+      type: 'billing.checkout',
+      title: `Checkout started for ${plan}`,
+      body: 'Complete checkout to activate your subscription.',
+      href: '/settings/billing',
+      entityType: 'Tenant',
+      entityId: tenantId,
     });
 
     return { url: session.url };
@@ -151,6 +186,14 @@ class BillingService {
             billingPeriodEnd: new Date(sub.current_period_end * 1000),
             status: sub.status === 'active' ? 'active' : 'trial',
           });
+          await this.notifyTenantAdmins(tenantId, {
+            type: 'billing.subscription',
+            title: `Subscription updated to ${plan}`,
+            body: `Stripe subscription is now ${sub.status}.`,
+            href: '/settings/billing',
+            entityType: 'Tenant',
+            entityId: tenantId,
+          });
         }
         break;
       }
@@ -182,6 +225,57 @@ class BillingService {
     }
 
     return { received: true };
+  }
+
+  async notifyUser(tenantId, userId, payload) {
+    if (!this.notificationModel || !userId) return null;
+    const note = await this.notificationModel.create({
+      tenantId,
+      userId,
+      type: payload.type,
+      title: payload.title,
+      body: payload.body || '',
+      href: payload.href || null,
+      entityType: payload.entityType || null,
+      entityId: payload.entityId || null,
+      read: false,
+    });
+    const formatted = { ...note.toObject(), id: note._id.toString() };
+    delete formatted._id;
+    delete formatted.__v;
+    emitNotification(tenantId, String(userId), formatted);
+    return formatted;
+  }
+
+  async notifyTenantAdmins(tenantId, payload) {
+    const members = await this.userTenantModel
+      .find({ tenantId, isActive: true, role: { $in: ['owner', 'admin'] } })
+      .lean();
+    await Promise.all(members.map((member) => this.notifyUser(tenantId, member.userId, payload)));
+  }
+
+  async ensureTrialReminder(tenant, userId, trialDaysRemaining) {
+    if (!this.notificationModel || !userId || tenant.status !== 'trial' || trialDaysRemaining == null) return;
+    if (trialDaysRemaining > 3) return;
+    const type = trialDaysRemaining === 0 ? 'trial.expired' : 'trial.ending';
+    const existing = await this.notificationModel.findOne({
+      tenantId: tenant._id,
+      userId,
+      type,
+      read: false,
+    });
+    if (existing) return;
+    await this.notifyUser(tenant._id, userId, {
+      type,
+      title: trialDaysRemaining === 0 ? 'Trial ended' : 'Trial ending soon',
+      body:
+        trialDaysRemaining === 0
+          ? 'Your trial has ended. Choose a paid plan to keep the workspace active.'
+          : `Your trial ends in ${trialDaysRemaining} day${trialDaysRemaining === 1 ? '' : 's'}. Choose a plan to avoid interruption.`,
+      href: '/settings/billing',
+      entityType: 'Tenant',
+      entityId: tenant._id,
+    });
   }
 }
 

@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
+
 const configuredApiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
 const API_URL = (configuredApiUrl || 'http://127.0.0.1:4000')
   .replace(/\/$/, '')
   .replace('://localhost', '://127.0.0.1');
+const PROXY_TIMEOUT_MS = Number(process.env.API_PROXY_TIMEOUT_MS || 55_000);
 
 async function proxyRequest(request, context) {
   if (!configuredApiUrl && process.env.NODE_ENV === 'production') {
@@ -35,18 +39,20 @@ async function proxyRequest(request, context) {
   }
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15_000);
+  const timeoutId = setTimeout(() => controller.abort(), PROXY_TIMEOUT_MS);
 
   let res;
   try {
     res = await fetch(target, { ...init, signal: controller.signal });
-  } catch {
+  } catch (err) {
+    const timedOut = err?.name === 'AbortError';
     return NextResponse.json(
       {
-        message:
-          'Cannot reach the API server. Set API_URL or NEXT_PUBLIC_API_URL to your Render backend URL and redeploy.',
+        message: timedOut
+          ? `Render API did not respond within ${Math.round(PROXY_TIMEOUT_MS / 1000)} seconds. The backend may be cold starting; retry in a moment or increase API_PROXY_TIMEOUT_MS.`
+          : 'Cannot reach the API server. Set API_URL or NEXT_PUBLIC_API_URL to your Render backend URL and redeploy.',
       },
-      { status: 502 },
+      { status: timedOut ? 504 : 502 },
     );
   } finally {
     clearTimeout(timeoutId);

@@ -4,6 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { leanId } = require('../crm/crm-query.helper');
 const { recordActivityFromModel } = require('../activity/activity-recorder');
+const { emitNotification } = require('../../realtime/socket-hub');
 
 const STORAGE_ROOT = path.resolve(process.env.LOCAL_FILE_STORAGE_DIR || path.join(process.cwd(), 'storage'));
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
@@ -21,6 +22,7 @@ function bufferFromPayload(body = {}) {
 @Injectable()
 class FilesService {
   fileAssetModel;
+  notificationModel;
 
   async list(tenantId, query = {}) {
     const page = Math.max(parseInt(query.page, 10) || 1, 1);
@@ -65,6 +67,14 @@ class FilesService {
       metadata: body.metadata || {},
     });
     await this.recordActivity(tenantId, userId, 'uploaded', asset.toObject());
+    await this.notifyUser(tenantId, userId, {
+      type: 'file.uploaded',
+      title: 'File uploaded',
+      body: `${asset.originalName} is now available.`,
+      href: '/settings/data-jobs',
+      entityType: 'FileAsset',
+      entityId: asset._id,
+    });
     return leanId(asset.toObject());
   }
 
@@ -101,6 +111,24 @@ class FilesService {
       href: `/api/files/${asset._id}/download`,
       metadata: { purpose: asset.purpose, mimeType: asset.mimeType, size: asset.size },
     });
+  }
+
+  async notifyUser(tenantId, userId, payload) {
+    if (!this.notificationModel || !userId) return null;
+    const note = await this.notificationModel.create({
+      tenantId,
+      userId,
+      type: payload.type,
+      title: payload.title,
+      body: payload.body || '',
+      href: payload.href || null,
+      entityType: payload.entityType || null,
+      entityId: payload.entityId || null,
+      read: false,
+    });
+    const formatted = leanId(note.toObject());
+    emitNotification(tenantId, String(userId), formatted);
+    return formatted;
   }
 }
 
