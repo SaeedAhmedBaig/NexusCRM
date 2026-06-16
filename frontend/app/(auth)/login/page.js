@@ -5,9 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 import { LoginForm } from '../../../components/auth/login-form';
 import { AuthShell } from '../../../components/layout/auth-shell';
-import { discoverTenants, login, setSession } from '../../../lib/api';
+import { discoverTenants, getMe, getToken, login, setSession } from '../../../lib/api';
 import { extractSubdomain, getTenantUrl } from '../../../lib/tenant';
-import { isAuthenticated } from '../../../lib/auth';
+import { clearSession, isAuthenticated } from '../../../lib/auth';
 
 function LoginContent() {
   const router = useRouter();
@@ -20,18 +20,32 @@ function LoginContent() {
   const [savedForm, setSavedForm] = useState(null);
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => {
+    let cancelled = false;
+    const frame = requestAnimationFrame(async () => {
       setTenantSubdomain(extractSubdomain(window.location.host) || '');
       if (isAuthenticated() && !redirect) {
-        if (localStorage.getItem('crm_is_superadmin') === 'true') {
-          router.replace('/superadmin');
-          return;
+        try {
+          const token = getToken();
+          const profile = await getMe();
+          if (cancelled) return;
+          if (localStorage.getItem('crm_is_superadmin') === 'true' || profile.user?.isSuperadmin) {
+            router.replace('/superadmin');
+            return;
+          }
+          if (profile.tenant?.subdomain) {
+            setSession({ token, tenant: profile.tenant, rules: profile.rules, user: profile.user });
+            const target = profile.tenant?.onboardingCompleted === false ? '/onboarding' : '/dashboard';
+            router.replace(getTenantUrl(profile.tenant.subdomain, target));
+          }
+        } catch {
+          clearSession();
         }
-        const stored = localStorage.getItem('crm_tenant');
-        if (stored) router.replace(getTenantUrl(stored, '/dashboard'));
       }
     });
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+    };
   }, [redirect, router]);
 
   async function handleLogin(form, tenantId, subdomain) {

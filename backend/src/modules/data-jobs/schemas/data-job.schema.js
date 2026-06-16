@@ -3,6 +3,16 @@ const { Schema } = require('mongoose');
 const DATA_JOB_STATUSES = ['queued', 'running', 'completed', 'failed', 'cancelled'];
 const DATA_JOB_TYPES = ['import', 'export', 'report_export', 'sync', 'enrichment'];
 
+const DataJobLogSchema = new Schema(
+  {
+    level: { type: String, enum: ['info', 'warning', 'error'], default: 'info' },
+    message: { type: String, required: true },
+    data: { type: Schema.Types.Mixed, default: {} },
+    at: { type: Date, default: Date.now },
+  },
+  { _id: false },
+);
+
 const DataJobSchema = new Schema(
   {
     tenantId: { type: Schema.Types.ObjectId, ref: 'Tenant', required: true, index: true },
@@ -15,13 +25,25 @@ const DataJobSchema = new Schema(
     processedRows: { type: Number, default: 0 },
     successRows: { type: Number, default: 0 },
     failedRows: { type: Number, default: 0 },
+    progress: { type: Number, default: 0 },
     fileName: { type: String, default: '' },
     fileUrl: { type: String, default: '' },
+    sourceFileId: { type: Schema.Types.ObjectId, ref: 'FileAsset', default: null },
+    resultFileId: { type: Schema.Types.ObjectId, ref: 'FileAsset', default: null },
+    errorFileId: { type: Schema.Types.ObjectId, ref: 'FileAsset', default: null },
     resultUrl: { type: String, default: '' },
     errorUrl: { type: String, default: '' },
     mapping: { type: Schema.Types.Mixed, default: {} },
     options: { type: Schema.Types.Mixed, default: {} },
+    previewRows: { type: [Schema.Types.Mixed], default: [] },
     errorRows: { type: [Schema.Types.Mixed], default: [] },
+    logs: { type: [DataJobLogSchema], default: [] },
+    attempt: { type: Number, default: 0 },
+    maxAttempts: { type: Number, default: 3 },
+    leaseOwner: { type: String, default: '' },
+    leaseExpiresAt: { type: Date, default: null },
+    rollbackOfJobId: { type: Schema.Types.ObjectId, ref: 'DataJob', default: null },
+    committedRecordIds: { type: [Schema.Types.ObjectId], default: [] },
     requestedBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     startedAt: { type: Date, default: null },
     finishedAt: { type: Date, default: null },

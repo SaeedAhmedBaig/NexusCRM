@@ -25,16 +25,21 @@ function Inner() {
       bulkAction={ticketQueuesApi.bulk}
       filters={COMMON_FILTERS}
       filterOptions={{ statuses: statusOptions('ticket-queues') }}
-      createDefaults={{ status: 'active', priority: 'medium' }}
+      createDefaults={{ status: 'active', priority: 'medium', slaPolicy: { firstResponseHours: 24, resolutionHours: 72, businessHoursOnly: false } }}
       createFields={[
         { key: 'name', label: 'Queue name', required: true },
         { key: 'description', label: 'Description', type: 'textarea' },
+        { key: 'defaultAssignee', label: 'Default assignee user ID' },
+        { key: 'departmentId', label: 'Department ID' },
         { key: 'priority', label: 'Priority', type: 'select', options: [
           { value: 'low', label: 'Low' },
           { value: 'medium', label: 'Medium' },
           { value: 'high', label: 'High' },
           { value: 'urgent', label: 'Urgent' },
         ] },
+        { key: 'slaPolicy.firstResponseHours', label: 'First response SLA hours', type: 'number' },
+        { key: 'slaPolicy.resolutionHours', label: 'Resolution SLA hours', type: 'number' },
+        { key: 'slaPolicy.businessHoursOnly', label: 'Business hours only', type: 'checkbox' },
         { key: 'status', label: 'Status', type: 'select', options: statusOptions('ticket-queues') },
       ]}
     />

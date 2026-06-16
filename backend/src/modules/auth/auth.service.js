@@ -35,6 +35,7 @@ const OTP_EXPIRY_MS = 15 * 60 * 1000;
 class AuthService {
   userModel;
   userTenantModel;
+  activityEventModel;
   tenantService;
   rbacService;
   usersService;
@@ -214,6 +215,10 @@ class AuthService {
 
     user.lastLogin = new Date();
     await user.save();
+    await this.recordSecurityEvent(tenant._id, user._id, 'login_success', 'User signed in', {
+      email: user.email,
+      role: membership.role,
+    });
 
     return this.buildAuthResponse(user, tenant, membership.role);
   }
@@ -245,6 +250,10 @@ class AuthService {
 
     user.lastLogin = new Date();
     await user.save();
+    await this.recordSecurityEvent(tenant._id, user._id, 'superadmin_login_success', 'Superadmin signed in', {
+      email: user.email,
+      role: membership.role,
+    });
 
     return this.buildAuthResponse(user, tenant, membership.role);
   }
@@ -298,6 +307,10 @@ class AuthService {
     if (tenant.status === 'suspended') {
       throw new UnauthorizedException('This workspace is suspended');
     }
+    await this.recordSecurityEvent(tenant._id, user._id, 'tenant_switched', 'User switched tenant', {
+      email: user.email,
+      role: membership.role,
+    });
     return this.buildAuthResponse(user, tenant, membership.role);
   }
 
@@ -463,6 +476,10 @@ class AuthService {
     user.passwordResetToken = token;
     user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000);
     await user.save();
+    const membership = await this.userTenantModel.findOne({ userId: user._id, isActive: true }).lean();
+    if (membership?.tenantId) {
+      await this.recordSecurityEvent(membership.tenantId, user._id, 'password_reset_requested', 'Password reset requested', { email: user.email });
+    }
 
     const appUrl = this.configService.get('FRONTEND_URL', 'http://localhost:3000');
     try {
@@ -492,6 +509,10 @@ class AuthService {
     user.passwordResetToken = null;
     user.passwordResetExpires = null;
     await user.save();
+    const membership = await this.userTenantModel.findOne({ userId: user._id, isActive: true }).lean();
+    if (membership?.tenantId) {
+      await this.recordSecurityEvent(membership.tenantId, user._id, 'password_reset_completed', 'Password reset completed', { email: user.email });
+    }
 
     const appUrl = this.configService.get('FRONTEND_URL', 'http://localhost:3000');
     try {
@@ -518,15 +539,40 @@ class AuthService {
   async validateUserCredentials(email, password) {
     const user = await this.userModel.findOne({ email: email.toLowerCase().trim() });
     if (!user || !user.isActive) {
+      await this.recordSecurityEvent(null, null, 'login_failed', 'Login failed for unknown or inactive user', { email });
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) {
+      const membership = await this.userTenantModel.findOne({ userId: user._id, isActive: true }).lean();
+      await this.recordSecurityEvent(membership?.tenantId, user._id, 'login_failed', 'Login failed due to invalid password', { email: user.email });
       throw new UnauthorizedException('Invalid credentials');
     }
 
     return user;
+  }
+
+  async recordSecurityEvent(tenantId, userId, action, summary, metadata = {}) {
+    if (!this.activityEventModel || !tenantId) return;
+    try {
+      await this.activityEventModel.create({
+        tenantId,
+        actorId: userId || null,
+        actorName: metadata.email || 'System',
+        action,
+        source: 'auth',
+        severity: action.includes('failed') ? 'medium' : 'info',
+        entityType: 'User',
+        entityId: userId || tenantId,
+        entityName: metadata.email || 'Authentication',
+        summary,
+        visibility: 'internal',
+        metadata,
+      });
+    } catch {
+      /* Security audit is best-effort and must not block auth. */
+    }
   }
 
   async buildAuthResponse(user, tenant, role) {

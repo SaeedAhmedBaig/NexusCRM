@@ -2,14 +2,17 @@
 
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Database, Plus, RefreshCw, RotateCcw, XCircle } from 'lucide-react';
-import { createDataJob, listDataJobs, updateDataJobStatus } from '../../../../lib/data-jobs-api';
+import { Database, Download, Play, Plus, RefreshCw, RotateCcw, XCircle } from 'lucide-react';
+import { createDataJob, listDataJobs, previewDataJob, runDataJob, retryDataJob, cancelDataJob } from '../../../../lib/data-jobs-api';
+import { downloadFileAsset } from '../../../../lib/files-api';
 import { PageHeader } from '../../../../components/ui/page-header';
 import { Input } from '../../../../components/ui/input';
 import { notifyError, notifySuccess } from '../../../../lib/notify';
 import { SettingsButton, SettingsPrimaryButton } from '../../../../components/settings/settings-layout';
+import { Can } from '../../../../components/can';
+import { useSession } from '../../../../components/providers/session-context';
 
-const OBJECT_TYPES = ['Lead', 'Contact', 'Company', 'Deal', 'Ticket', 'Invoice', 'Quotation', 'Order', 'Product'];
+const OBJECT_TYPES = ['Lead', 'Contact', 'Company', 'Deal', 'Ticket', 'Invoice', 'Quotation', 'Order', 'Product', 'ActivityEvent'];
 const JOB_TYPES = ['import', 'export', 'report_export', 'sync', 'enrichment'];
 const STATUSES = ['', 'queued', 'running', 'completed', 'failed', 'cancelled'];
 const STATUS_CLASSES = {
@@ -25,12 +28,17 @@ const initialForm = {
   objectType: 'Lead',
   name: '',
   fileName: '',
+  content: '',
+  mappingJson: '{}',
+  optionsJson: '{\n  "format": "csv",\n  "limit": 1000\n}',
 };
 
 export default function DataJobsPage() {
   const queryClient = useQueryClient();
+  const { profile } = useSession();
   const [filters, setFilters] = useState({ status: '', type: '' });
   const [form, setForm] = useState(initialForm);
+  const [selectedJob, setSelectedJob] = useState(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['data-jobs', filters],
@@ -42,17 +50,33 @@ export default function DataJobsPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: createDataJob,
-    onSuccess: () => {
+    mutationFn: async (payload) => {
+      const job = await createDataJob(payload);
+      if (payload.type === 'import' && form.content.trim()) {
+        return previewDataJob(job.id, {
+          content: form.content,
+          fileName: form.fileName || `${form.objectType.toLowerCase()}-import.csv`,
+          mapping: JSON.parse(form.mappingJson || '{}'),
+          options: JSON.parse(form.optionsJson || '{}'),
+        });
+      }
+      return job;
+    },
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['data-jobs'] });
       setForm(initialForm);
-      notifySuccess('Data job queued');
+      notifySuccess(result.rows ? 'Import preview generated' : 'Data job queued');
     },
     onError: notifyError,
   });
 
-  const statusMutation = useMutation({
-    mutationFn: ({ id, payload }) => updateDataJobStatus(id, payload),
+  const jobActionMutation = useMutation({
+    mutationFn: ({ action, id }) => {
+      if (action === 'run') return runDataJob(id);
+      if (action === 'retry') return retryDataJob(id);
+      if (action === 'cancel') return cancelDataJob(id);
+      throw new Error('Unknown action');
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['data-jobs'] });
       notifySuccess('Data job updated');
@@ -63,9 +87,23 @@ export default function DataJobsPage() {
   function submit(e) {
     e.preventDefault();
     createMutation.mutate({
-      ...form,
+      type: form.type,
+      objectType: form.objectType,
       name: form.name || `${form.type} ${form.objectType}`,
+      fileName: form.fileName,
+      mapping: JSON.parse(form.mappingJson || '{}'),
+      options: JSON.parse(form.optionsJson || '{}'),
     });
+  }
+
+  async function downloadArtifact(fileId) {
+    const file = await downloadFileAsset(fileId);
+    const url = URL.createObjectURL(file.blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = file.fileName;
+    link.click();
+    URL.revokeObjectURL(url);
   }
 
   const jobs = data?.data || [];
@@ -77,6 +115,7 @@ export default function DataJobsPage() {
   }
 
   return (
+    <Can action="manage" subject="DataJob" rules={profile?.rules} fallback={<p className="text-sm text-muted-foreground">You do not have permission to manage data jobs.</p>}>
     <div className="space-y-5">
       <PageHeader
         title="Data jobs"
@@ -124,9 +163,23 @@ export default function DataJobsPage() {
               <span className="font-semibold text-foreground">File name</span>
               <Input value={form.fileName} onChange={(e) => setForm({ ...form, fileName: e.target.value })} placeholder="leads.csv" />
             </label>
+            <label className="grid gap-1.5 text-sm">
+              <span className="font-semibold text-foreground">Mapping JSON</span>
+              <textarea className="input-base min-h-[84px] font-mono text-xs" value={form.mappingJson} onChange={(e) => setForm({ ...form, mappingJson: e.target.value })} />
+            </label>
+            <label className="grid gap-1.5 text-sm">
+              <span className="font-semibold text-foreground">Options JSON</span>
+              <textarea className="input-base min-h-[84px] font-mono text-xs" value={form.optionsJson} onChange={(e) => setForm({ ...form, optionsJson: e.target.value })} />
+            </label>
+            {form.type === 'import' && (
+              <label className="grid gap-1.5 text-sm">
+                <span className="font-semibold text-foreground">CSV or JSON content</span>
+                <textarea className="input-base min-h-[132px] font-mono text-xs" value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} placeholder="name,email&#10;Acme,hello@example.com" />
+              </label>
+            )}
             <SettingsPrimaryButton type="submit" disabled={createMutation.isPending}>
               <Plus className="h-4 w-4" />
-              Queue job
+              {form.type === 'import' ? 'Queue and preview' : 'Queue job'}
             </SettingsPrimaryButton>
           </div>
         </form>
@@ -206,23 +259,47 @@ export default function DataJobsPage() {
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-2">
                           {['queued', 'running'].includes(job.status) && (
+                            <>
+                            <SettingsButton type="button" onClick={() => setSelectedJob(job)}>
+                              Details
+                            </SettingsButton>
+                            {job.status === 'queued' && (
+                              <SettingsButton
+                                type="button"
+                                disabled={jobActionMutation.isPending}
+                                onClick={() => jobActionMutation.mutate({ action: 'run', id: job.id })}
+                              >
+                                <Play className="h-3.5 w-3.5" />
+                                Run
+                              </SettingsButton>
+                            )}
+                            {job.resultFileId && (
+                              <SettingsButton type="button" onClick={() => downloadArtifact(job.resultFileId)}>
+                                <Download className="h-3.5 w-3.5" />
+                                Result
+                              </SettingsButton>
+                            )}
+                            {job.errorFileId && (
+                              <SettingsButton type="button" onClick={() => downloadArtifact(job.errorFileId)}>
+                                <Download className="h-3.5 w-3.5" />
+                                Errors
+                              </SettingsButton>
+                            )}
                             <SettingsButton
                               type="button"
-                              disabled={statusMutation.isPending}
-                              onClick={() => statusMutation.mutate({ id: job.id, payload: { status: 'cancelled' } })}
+                              disabled={jobActionMutation.isPending}
+                              onClick={() => jobActionMutation.mutate({ action: 'cancel', id: job.id })}
                             >
                               <XCircle className="h-3.5 w-3.5" />
                               Cancel
                             </SettingsButton>
+                            </>
                           )}
                           {['failed', 'cancelled'].includes(job.status) && (
                             <SettingsButton
                               type="button"
-                              disabled={statusMutation.isPending}
-                              onClick={() => statusMutation.mutate({
-                                id: job.id,
-                                payload: { status: 'queued', processedRows: 0, successRows: 0, failedRows: 0 },
-                              })}
+                              disabled={jobActionMutation.isPending}
+                              onClick={() => jobActionMutation.mutate({ action: 'retry', id: job.id })}
                             >
                               <RotateCcw className="h-3.5 w-3.5" />
                               Retry
@@ -238,6 +315,29 @@ export default function DataJobsPage() {
           )}
         </div>
       </div>
+      {selectedJob && (
+        <div className="border border-border bg-card p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-bold text-foreground">{selectedJob.name}</h2>
+              <p className="text-xs text-muted-foreground">{selectedJob.type} · {selectedJob.objectType} · attempt {selectedJob.attempt || 0}/{selectedJob.maxAttempts || 3}</p>
+            </div>
+            <SettingsButton onClick={() => setSelectedJob(null)}>Close</SettingsButton>
+          </div>
+          {selectedJob.previewRows?.length ? (
+            <pre className="mt-4 max-h-48 overflow-auto bg-muted p-3 text-xs text-muted-foreground">{JSON.stringify(selectedJob.previewRows, null, 2)}</pre>
+          ) : null}
+          <div className="mt-4 grid gap-2">
+            {(selectedJob.logs || []).map((log, index) => (
+              <div key={`${log.at}-${index}`} className="border border-border bg-control p-3 text-xs">
+                <p className="font-bold uppercase text-muted-foreground">{log.level} · {log.at ? new Date(log.at).toLocaleString() : ''}</p>
+                <p className="mt-1 text-foreground">{log.message}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
+    </Can>
   );
 }

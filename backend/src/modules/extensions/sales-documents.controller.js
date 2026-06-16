@@ -1,9 +1,16 @@
-const { Controller, Get, Post, Patch, Delete, Bind, Body, Req, Query, Param, Res } = require('@nestjs/common');
+const { Controller, Get, Post, Patch, Delete, Bind, Body, Req, Query, Param, Res, UseGuards } = require('@nestjs/common');
 const { defineParamTypes } = require('../../common/define-param-types');
 const { SalesDocumentsService } = require('./sales-documents.service');
+const { RolesGuard } = require('../../common/guards/roles.guard');
+const { PoliciesGuard } = require('../../common/guards/policies.guard');
+const { CheckPolicies } = require('../../common/decorators/check-policies.decorator');
+
+const canManageSalesDocuments = (ability) => ability.can('manage', 'SalesDocument');
 
 function createSalesDocumentController(route) {
   @Controller(route)
+  @UseGuards(RolesGuard, PoliciesGuard)
+  @CheckPolicies(canManageSalesDocuments)
   class SalesDocumentController {
     service;
 

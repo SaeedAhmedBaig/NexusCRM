@@ -21,6 +21,26 @@ export const CUSTOM_FIELD_OBJECT_TYPES = {
 
 const EMPTY_VALUES = new Set([undefined, null, '']);
 
+function getPathValue(values = {}, path = '') {
+  return path.split('.').reduce((current, part) => (current && current[part] !== undefined ? current[part] : undefined), values);
+}
+
+function setPathValue(values = {}, path = '', value) {
+  const parts = path.split('.');
+  if (parts.length === 1) return { ...values, [path]: value };
+  const next = { ...values };
+  let cursor = next;
+  parts.forEach((part, index) => {
+    if (index === parts.length - 1) {
+      cursor[part] = value;
+      return;
+    }
+    cursor[part] = { ...(cursor[part] || {}) };
+    cursor = cursor[part];
+  });
+  return next;
+}
+
 export function getCustomFieldObjectType(entity) {
   return CUSTOM_FIELD_OBJECT_TYPES[entity] || null;
 }
@@ -58,11 +78,11 @@ export function buildInitialForm(baseDefaults = {}, customFields = []) {
 
 export function getFieldValue(values = {}, field) {
   if (field.customKey) return values.customFields?.[field.customKey] ?? '';
-  return values[field.key] ?? '';
+  return getPathValue(values, field.key) ?? '';
 }
 
 export function setFieldValue(values = {}, field, value) {
-  if (!field.customKey) return { ...values, [field.key]: value };
+  if (!field.customKey) return setPathValue(values, field.key, value);
   return {
     ...values,
     customFields: {
@@ -84,7 +104,10 @@ function normalizeValue(field, value) {
 }
 
 export function buildPayload(values = {}, baseFields = [], customFields = []) {
-  const payload = Object.fromEntries(baseFields.map((field) => [field.key, values[field.key]]));
+  let payload = {};
+  baseFields.forEach((field) => {
+    payload = setPathValue(payload, field.key, normalizeValue(field, getPathValue(values, field.key)));
+  });
   if (customFields.length > 0) {
     payload.customFields = {};
     customFields.forEach((field) => {

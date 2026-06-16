@@ -52,6 +52,7 @@ export function ModuleListPage({
   createFields = [],
   createDefaults = {},
   detailSegment,
+  detailBase = 'sales',
   subdomain,
 }) {
   const router = useRouter();
@@ -145,7 +146,7 @@ export function ModuleListPage({
   const openRecord = useCallback(
     async (row, mode = 'view') => {
       if (detailSegment) {
-        router.push(getTenantUrl(subdomain, `/sales/${detailSegment}/${row.id}`));
+        router.push(getTenantUrl(subdomain, `/${detailBase}/${detailSegment}/${row.id}`));
         return;
       }
       setDetailLoading(true);
@@ -157,7 +158,7 @@ export function ModuleListPage({
         setDetailLoading(false);
       }
     },
-    [detailSegment, getRecord, router, subdomain],
+    [detailBase, detailSegment, getRecord, router, subdomain],
   );
 
   function renderFieldInput(field, value, onChange) {
@@ -184,6 +185,18 @@ export function ModuleListPage({
         </select>
       );
     }
+    if (field.type === 'tags') {
+      const inputValue = Array.isArray(value) ? value.join(', ') : value ?? '';
+      return (
+        <input
+          className="input-base"
+          type="text"
+          value={inputValue}
+          placeholder={field.placeholder}
+          onChange={(e) => onChange(e.target.value.split(',').map((item) => item.trim()).filter(Boolean))}
+        />
+      );
+    }
     if (field.type === 'select') {
       return (
         <select className="input-base" value={value ?? ''} onChange={(e) => onChange(e.target.value)}>
@@ -199,7 +212,7 @@ export function ModuleListPage({
     }
     const type = field.type === 'currency' ? 'number' : field.type === 'datetime' ? 'datetime-local' : field.type || 'text';
     const inputValue = field.type === 'date' && value ? String(value).slice(0, 10) : value ?? '';
-    return <input className="input-base" type={type} value={inputValue} onChange={(e) => onChange(e.target.value)} />;
+    return <input className="input-base" type={type} value={inputValue} placeholder={field.placeholder} onChange={(e) => onChange(e.target.value)} />;
   }
 
   function buildEditablePayload(values) {

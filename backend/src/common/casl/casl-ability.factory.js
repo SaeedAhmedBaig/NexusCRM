@@ -1,5 +1,6 @@
 const { Injectable } = require('@nestjs/common');
 const { AbilityBuilder, createMongoAbility } = require('@casl/ability');
+const { DEFAULT_GROUP_TEMPLATES } = require('../constants/roles');
 
 function parsePermission(permission) {
   const [action, subject] = String(permission).split(':');
@@ -12,6 +13,7 @@ class CaslAbilityFactory {
     const { can, build } = new AbilityBuilder(createMongoAbility);
 
     const permissionSet = new Set([
+      ...(DEFAULT_GROUP_TEMPLATES.find((template) => template.role === membership?.role)?.permissions || []),
       ...(group?.permissions || []),
       ...(membership?.permissions || []),
     ]);

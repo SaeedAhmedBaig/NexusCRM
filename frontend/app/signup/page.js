@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { SignupForm } from '../../components/auth/signup-form';
 import { AuthShell } from '../../components/layout/auth-shell';
-import { signup } from '../../lib/api';
+import { getMe, getToken, setSession, signup } from '../../lib/api';
+import { clearSession, isAuthenticated } from '../../lib/auth';
+import { getTenantUrl } from '../../lib/tenant';
 import { notifySuccess } from '../../lib/notify';
 
 const PLAN_LABELS = { free: 'Free', pro: 'Pro trial', enterprise: 'Enterprise' };
@@ -14,6 +16,32 @@ function SignupContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const plan = searchParams.get('plan') || 'free';
+
+  useEffect(() => {
+    let cancelled = false;
+    async function restoreSession() {
+      if (!isAuthenticated()) return;
+      try {
+        const token = getToken();
+        const profile = await getMe();
+        if (cancelled) return;
+        if (profile.user?.isSuperadmin || localStorage.getItem('crm_is_superadmin') === 'true') {
+          router.replace('/superadmin');
+          return;
+        }
+        if (profile.tenant?.subdomain) {
+          setSession({ token, tenant: profile.tenant, rules: profile.rules, user: profile.user });
+          router.replace(getTenantUrl(profile.tenant.subdomain, profile.tenant.onboardingCompleted === false ? '/onboarding' : '/dashboard'));
+        }
+      } catch {
+        clearSession();
+      }
+    }
+    restoreSession();
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
 
   async function handleSignup(data) {
     const result = await signup({
@@ -35,9 +63,6 @@ function SignupContent() {
       router.push(`/verify-email?${params.toString()}`);
       return;
     }
-
-    const { setSession } = await import('../../lib/api');
-    const { getTenantUrl } = await import('../../lib/tenant');
     setSession({ token: result.token, tenant: result.tenant, rules: result.rules });
     router.push(getTenantUrl(result.tenant.subdomain, '/onboarding'));
   }

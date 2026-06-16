@@ -1,6 +1,7 @@
 const { Module } = require('@nestjs/common');
 const { MongooseModule } = require('@nestjs/mongoose');
 const { withModels } = require('../../common/providers/with-models');
+const { RbacModule } = require('../rbac/rbac.module');
 const { createEntityService } = require('./base-entity.service');
 const { createEntityController } = require('./create-entity-controller');
 const { ENTITY_CONFIGS } = require('./entity-configs');
@@ -18,6 +19,8 @@ const { AutomationRunSchema, AutomationRunModelName } = require('./schemas/autom
 const { ReportExportJobSchema, ReportExportJobModelName } = require('./schemas/report-export-job.schema');
 const { LiveChatSessionSchema, LiveChatSessionModelName } = require('./schemas/live-chat-session.schema');
 const { EmailAccountSchema, EmailAccountModelName } = require('../mail/schemas/email-account.schema');
+const { UserSchema, UserModelName } = require('../auth/schemas/user.schema');
+const { AttachmentSchema, AttachmentModelName } = require('../crm/schemas/attachment.schema');
 const { TenantSchema, TenantModelName } = require('../tenant/schemas/tenant.schema');
 const { DealSchema, DealModelName } = require('../crm/schemas/deal.schema');
 const { ContactSchema, ContactModelName } = require('../crm/schemas/contact.schema');
@@ -27,15 +30,17 @@ const { IntegrationsService } = require('./integrations.service');
 const { IntegrationsController } = require('./integrations.controller');
 const { SalesDocumentsService } = require('./sales-documents.service');
 const { QuotationsController, OrdersController, InvoicesController } = require('./sales-documents.controller');
+const { TicketsService } = require('./tickets.service');
+const { TicketsController } = require('./tickets.controller');
 
 const entities = [
   { route: 'products', modelName: ProductModelName, configKey: 'products' },
-  { route: 'tickets', modelName: TicketModelName, configKey: 'tickets' },
   { route: 'ticket-queues', modelName: TicketQueueModelName, configKey: 'ticket-queues' },
   { route: 'ticket-macros', modelName: TicketMacroModelName, configKey: 'ticket-macros' },
   { route: 'sms', modelName: SmsCampaignModelName, configKey: 'sms' },
   { route: 'knowledge', modelName: KnowledgeArticleModelName, configKey: 'knowledge' },
   { route: 'automation', modelName: AutomationRuleModelName, configKey: 'automation' },
+  { route: 'automation-runs', modelName: AutomationRunModelName, configKey: 'automation-runs' },
   { route: 'report-export-jobs', modelName: ReportExportJobModelName, configKey: 'report-export-jobs' },
   { route: 'live-chat', modelName: LiveChatSessionModelName, configKey: 'live-chat' },
 ];
@@ -52,6 +57,7 @@ const providers = entities.map(({ modelName }, index) =>
 
 @Module({
   imports: [
+    RbacModule,
     MongooseModule.forFeature([
       { name: QuotationModelName, schema: QuotationSchema },
       { name: OrderModelName, schema: OrderSchema },
@@ -67,6 +73,8 @@ const providers = entities.map(({ modelName }, index) =>
       { name: ReportExportJobModelName, schema: ReportExportJobSchema },
       { name: LiveChatSessionModelName, schema: LiveChatSessionSchema },
       { name: EmailAccountModelName, schema: EmailAccountSchema },
+      { name: UserModelName, schema: UserSchema },
+      { name: AttachmentModelName, schema: AttachmentSchema },
       { name: TenantModelName, schema: TenantSchema },
       { name: DealModelName, schema: DealSchema },
       { name: ContactModelName, schema: ContactSchema },
@@ -74,8 +82,19 @@ const providers = entities.map(({ modelName }, index) =>
       { name: ActivityEventModelName, schema: ActivityEventSchema },
     ]),
   ],
-  controllers: [QuotationsController, OrdersController, InvoicesController, ...controllers, IntegrationsController],
+  controllers: [QuotationsController, OrdersController, InvoicesController, TicketsController, ...controllers, IntegrationsController],
   providers: [
+    withModels(TicketsService, {
+      ticketModel: 'Ticket',
+      ticketQueueModel: 'TicketQueue',
+      ticketMacroModel: 'TicketMacro',
+      userModel: 'User',
+      contactModel: 'Contact',
+      companyModel: 'Company',
+      dealModel: 'Deal',
+      activityEventModel: 'ActivityEvent',
+      attachmentModel: 'Attachment',
+    }),
     withModels(SalesDocumentsService, {
       quotationModel: 'Quotation',
       orderModel: 'Order',

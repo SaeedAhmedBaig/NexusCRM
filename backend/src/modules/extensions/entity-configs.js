@@ -73,36 +73,235 @@ function withDocumentTotals(body) {
   };
 }
 
+function getValue(source = {}, path = '') {
+  if (!path) return undefined;
+  const direct = path.split('.').reduce((current, part) => (current && current[part] !== undefined ? current[part] : undefined), source);
+  if (direct !== undefined) return direct;
+  return path.split('.').reduce((current, part) => (current && current[part] !== undefined ? current[part] : undefined), source.record || {});
+}
+
+function evaluateCondition(condition = {}, input = {}) {
+  const actual = getValue(input, condition.field);
+  const expected = condition.value;
+  switch (condition.operator) {
+    case 'not_equals':
+      return actual !== expected;
+    case 'contains':
+      return String(actual || '').toLowerCase().includes(String(expected || '').toLowerCase());
+    case 'not_contains':
+      return !String(actual || '').toLowerCase().includes(String(expected || '').toLowerCase());
+    case 'greater_than':
+      return Number(actual) > Number(expected);
+    case 'less_than':
+      return Number(actual) < Number(expected);
+    case 'exists':
+      return actual !== undefined && actual !== null && actual !== '';
+    case 'not_exists':
+      return actual === undefined || actual === null || actual === '';
+    case 'equals':
+    default:
+      return actual === expected;
+  }
+}
+
+function conditionsPass(rule, input) {
+  const conditions = rule.conditions || [];
+  if (conditions.length === 0) return { passed: true, results: [] };
+  const results = conditions.map((condition) => ({
+    field: condition.field,
+    operator: condition.operator,
+    expected: condition.value,
+    actual: getValue(input, condition.field),
+    passed: evaluateCondition(condition, input),
+  }));
+  const passed = rule.conditionMode === 'any'
+    ? results.some((result) => result.passed)
+    : results.every((result) => result.passed);
+  return { passed, results };
+}
+
+function getRuleActions(rule) {
+  if (Array.isArray(rule.actions) && rule.actions.length > 0) return rule.actions;
+  return [{ type: rule.action || 'notify', name: rule.action || 'Notify', config: rule.config || {} }];
+}
+
+async function executeAutomationAction(db, { tenantId, userId, rule, action, input, dryRun }) {
+  const config = action.config || {};
+  const type = action.type || rule.action || 'notify';
+  if (dryRun) {
+    return { type, status: 'planned', message: `Dry run planned ${type}`, config };
+  }
+
+  if (type === 'notify') {
+    const ActivityEvent = getModel(db, 'ActivityEvent');
+    if (ActivityEvent) {
+      await ActivityEvent.create({
+        tenantId,
+        actorId: userId,
+        action: 'automation_notification',
+        entityType: config.entityType || 'AutomationRule',
+        entityId: config.entityId || rule._id,
+        entityName: rule.name,
+        summary: config.message || `Automation notification: ${rule.name}`,
+        metadata: { ruleId: rule._id, input },
+      });
+    }
+    return { type, status: 'succeeded', message: config.message || 'Notification recorded' };
+  }
+
+  if (type === 'create_task') {
+    const Task = getModel(db, 'Task');
+    if (!Task) throw new Error('Task model is not available for automation action');
+    const task = await Task.create({
+      tenantId,
+      title: config.title || input.title || `Automation task: ${rule.name}`,
+      description: config.description || '',
+      status: config.status || 'todo',
+      priority: config.priority || 'medium',
+      assignedTo: config.assignedTo || userId,
+      createdBy: userId,
+      dueDate: config.dueDate ? new Date(config.dueDate) : null,
+    });
+    return { type, status: 'succeeded', recordType: 'Task', recordId: task._id };
+  }
+
+  if (type === 'create_ticket') {
+    const Ticket = getModel(db, 'Ticket');
+    if (!Ticket) throw new Error('Ticket model is not available for automation action');
+    const ticket = await Ticket.create({
+      tenantId,
+      title: config.title || input.title || `Automation ticket: ${rule.name}`,
+      description: config.description || '',
+      status: config.status || 'open',
+      priority: config.priority || 'medium',
+      channel: config.channel || 'internal',
+      assignedTo: config.assignedTo || userId,
+      createdBy: userId,
+      tags: config.tags || ['automation'],
+    });
+    return { type, status: 'succeeded', recordType: 'Ticket', recordId: ticket._id };
+  }
+
+  if (['update_record', 'assign_owner', 'add_tag'].includes(type)) {
+    const modelName = config.modelName || input.modelName;
+    const recordId = config.recordId || input.recordId || input.id;
+    const Model = getModel(db, modelName);
+    if (!Model || !recordId) throw new Error(`${type} requires modelName and recordId`);
+    const update = {};
+    if (type === 'update_record') Object.assign(update, config.fields || {});
+    if (type === 'assign_owner') update.assignedTo = config.assignedTo || userId;
+    if (type === 'add_tag') update.$addToSet = { tags: { $each: config.tags || input.tags || [] } };
+    const result = await Model.updateOne({ _id: recordId, tenantId }, update);
+    return { type, status: result.matchedCount ? 'succeeded' : 'skipped', recordType: modelName, recordId, modifiedCount: result.modifiedCount };
+  }
+
+  if (type === 'apply_ticket_macro') {
+    const Ticket = getModel(db, 'Ticket');
+    const TicketMacro = getModel(db, 'TicketMacro');
+    const ticketId = config.ticketId || input.ticketId || input.recordId;
+    const macroId = config.macroId || input.macroId;
+    if (!Ticket || !TicketMacro || !ticketId || !macroId) throw new Error('apply_ticket_macro requires ticketId and macroId');
+    const macro = await TicketMacro.findOne({ _id: macroId, tenantId }).lean();
+    if (!macro) throw new Error('Ticket macro not found');
+    await Ticket.updateOne(
+      { _id: ticketId, tenantId },
+      {
+        $push: { conversation: { body: macro.body, authorId: userId, authorName: 'Automation', visibility: 'public', direction: 'outbound' } },
+        $addToSet: { tags: { $each: macro.tags || [] } },
+        $set: { lastAgentReplyAt: new Date() },
+      },
+    );
+    await TicketMacro.updateOne({ _id: macroId }, { $inc: { usageCount: 1 } });
+    return { type, status: 'succeeded', recordType: 'Ticket', recordId: ticketId, macroId };
+  }
+
+  if (type === 'call_webhook') {
+    if (!config.url) throw new Error('call_webhook requires url');
+    const response = await fetch(config.url, {
+      method: config.method || 'POST',
+      headers: { 'content-type': 'application/json', ...(config.headers || {}) },
+      body: JSON.stringify({ ruleId: rule._id, ruleName: rule.name, input }),
+    });
+    return { type, status: response.ok ? 'succeeded' : 'failed', statusCode: response.status };
+  }
+
+  if (['send_email', 'send_sms'].includes(type)) {
+    return { type, status: 'queued', message: `${type} queued for provider delivery`, to: config.to || input.to || '' };
+  }
+
+  throw new Error(`Unsupported automation action: ${type}`);
+}
+
+function retryDate(rule) {
+  const delayMinutes = Number(rule.retryPolicy?.delayMinutes) || 5;
+  return new Date(Date.now() + delayMinutes * 60 * 1000);
+}
+
 async function runAutomationRule(model, { tenantId, userId, id, body = {} }) {
   const rule = await model.findOne({ _id: id, tenantId });
   if (!rule) throw new Error('Automation rule not found');
   const AutomationRun = model.db.model('AutomationRun');
+  const input = body.input || {};
+  const testRun = Boolean(body.testRun || body.dryRun);
+  const dryRun = body.dryRun !== false || testRun;
+  const attempt = Number(body.attempt) || 1;
+  const maxAttempts = Number(rule.retryPolicy?.maxAttempts) || 1;
+  const idempotencyKey = body.idempotencyKey || (body.eventId ? `${rule._id}:${body.eventId}` : '');
+  if (idempotencyKey) {
+    const existing = await AutomationRun.findOne({ tenantId, idempotencyKey, status: { $in: ['running', 'succeeded', 'skipped'] } }).lean();
+    if (existing) return leanId(existing);
+  }
   const startedAt = new Date();
   const run = await AutomationRun.create({
     tenantId,
     ruleId: rule._id,
+    parentRunId: body.parentRunId || null,
     triggeredBy: userId,
     trigger: body.trigger || rule.trigger,
-    action: rule.action,
+    action: getRuleActions(rule).map((action) => action.type).join(','),
     status: 'running',
-    input: body.input || {},
-    logs: [{ level: 'info', message: `Automation run started for ${rule.name}` }],
+    eventId: body.eventId || '',
+    idempotencyKey,
+    attempt,
+    maxAttempts,
+    input,
+    logs: [{ level: 'info', message: `Automation run started for ${rule.name}`, data: { dryRun, attempt } }],
     startedAt,
   });
 
   try {
-    const output = {
-      action: rule.action,
-      message: rule.config?.message || 'Automation evaluated successfully',
-      dryRun: body.dryRun !== false,
-    };
+    if (rule.status !== 'active' && !testRun && !body.force) {
+      run.status = 'skipped';
+      run.skippedReason = 'Rule is inactive';
+      run.logs.push({ level: 'warning', message: run.skippedReason });
+      return leanId((await run.save()).toObject());
+    }
+
+    const conditionResult = conditionsPass(rule, input);
+    run.logs.push({ level: 'info', message: 'Conditions evaluated', data: conditionResult });
+    if (!conditionResult.passed) {
+      run.status = 'skipped';
+      run.skippedReason = 'Conditions did not match';
+      run.output = { conditionResult };
+      return leanId((await run.save()).toObject());
+    }
+
+    const actionResults = [];
+    for (const action of getRuleActions(rule)) {
+      run.logs.push({ level: 'info', message: `Running action ${action.type}` });
+      const result = await executeAutomationAction(model.db, { tenantId, userId, rule, action, input, dryRun });
+      actionResults.push(result);
+      run.logs.push({ level: result.status === 'failed' ? 'error' : 'info', message: `Action ${action.type} ${result.status}`, data: result });
+    }
     run.status = 'succeeded';
-    run.output = output;
-    run.logs.push({ level: 'info', message: `Action ${rule.action} completed`, data: output });
+    run.actionResults = actionResults;
+    run.output = { dryRun, actionResults };
     rule.failureCount = rule.failureCount || 0;
   } catch (error) {
-    run.status = 'failed';
+    const canRetry = attempt < maxAttempts;
+    run.status = canRetry ? 'retry_scheduled' : 'failed';
     run.error = error.message;
+    if (canRetry) run.nextRetryAt = retryDate(rule);
     run.logs.push({ level: 'error', message: error.message });
     rule.failureCount = (rule.failureCount || 0) + 1;
   } finally {
@@ -116,6 +315,29 @@ async function runAutomationRule(model, { tenantId, userId, id, body = {} }) {
   }
 
   return leanId(run.toObject());
+}
+
+async function retryAutomationRun(model, { tenantId, userId, id, body = {} }) {
+  const run = await model.findOne({ _id: id, tenantId }).lean();
+  if (!run) throw new Error('Automation run not found');
+  if (!['failed', 'retry_scheduled'].includes(run.status) && !body.force) {
+    throw new Error('Only failed or retry-scheduled runs can be retried');
+  }
+  const AutomationRule = model.db.model('AutomationRule');
+  return runAutomationRule(AutomationRule, {
+    tenantId,
+    userId,
+    id: run.ruleId,
+    body: {
+      ...body,
+      input: body.input || run.input,
+      trigger: run.trigger,
+      parentRunId: run._id,
+      attempt: (Number(run.attempt) || 1) + 1,
+      dryRun: body.dryRun ?? false,
+      force: true,
+    },
+  });
 }
 
 function exportFileName(job) {
@@ -501,6 +723,22 @@ const ENTITY_CONFIGS = {
       return base;
     },
     run: runAutomationRule,
+  },
+  'automation-runs': {
+    entityType: 'AutomationRun',
+    hrefBase: '/automation',
+    searchFields: ['trigger', 'action', 'status', 'error'],
+    filterFields: ['ruleId', 'trigger', 'action'],
+    populate: [{ path: 'ruleId', select: 'name trigger action status' }, { path: 'triggeredBy', select: 'name email' }],
+    formatRow: (row) => {
+      const base = leanId(row);
+      base.name = row.ruleId?.name || row.trigger || 'Automation run';
+      base.ruleName = row.ruleId?.name || '';
+      base.rule = row.ruleId?._id ? { id: row.ruleId._id.toString(), name: row.ruleId.name } : null;
+      base.owner = row.triggeredBy?._id ? { id: row.triggeredBy._id.toString(), name: row.triggeredBy.name || row.triggeredBy.email } : null;
+      return base;
+    },
+    run: retryAutomationRun,
   },
   'report-export-jobs': {
     entityType: 'ReportExportJob',

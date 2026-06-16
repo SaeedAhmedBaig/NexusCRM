@@ -20,6 +20,9 @@ const { SuperadminModule } = require('./modules/superadmin/superadmin.module');
 const { ActivityModule } = require('./modules/activity/activity.module');
 const { MetadataModule } = require('./modules/metadata/metadata.module');
 const { DataJobsModule } = require('./modules/data-jobs/data-jobs.module');
+const { FilesModule } = require('./modules/files/files.module');
+const { JobsModule } = require('./modules/jobs/jobs.module');
+const { SecurityModule } = require('./modules/security/security.module');
 const { TenantMiddleware } = require('./common/middleware/tenant.middleware');
 const { TenantGuard } = require('./common/guards/tenant.guard');
 const { TenantScopeInterceptor } = require('./common/interceptors/tenant-scope.interceptor');
@@ -49,6 +52,9 @@ const { TenantScopeInterceptor } = require('./common/interceptors/tenant-scope.i
     VoipModule,
     ActivityModule,
     MetadataModule,
+    FilesModule,
+    JobsModule,
+    SecurityModule,
     DataJobsModule,
     ExtensionsModule,
     SuperadminModule,

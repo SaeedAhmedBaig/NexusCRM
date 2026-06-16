@@ -2,10 +2,13 @@ const { Module } = require('@nestjs/common');
 const { ConfigModule } = require('@nestjs/config');
 const { MongooseModule } = require('@nestjs/mongoose');
 const { withModels } = require('../../common/providers/with-models');
+const { RbacModule } = require('../rbac/rbac.module');
 const { EmailAccountSchema, EmailAccountModelName } = require('./schemas/email-account.schema');
 const { EmailTemplateSchema, EmailTemplateModelName } = require('./schemas/email-template.schema');
 const { MassmailCampaignSchema, MassmailCampaignModelName } = require('./schemas/massmail-campaign.schema');
 const { UnsubscribeSchema, UnsubscribeModelName } = require('./schemas/unsubscribe.schema');
+const { MailboxThreadSchema, MailboxThreadModelName } = require('./schemas/mailbox-thread.schema');
+const { MailboxMessageSchema, MailboxMessageModelName } = require('./schemas/mailbox-message.schema');
 const { CrmEmailSchema, CrmEmailModelName } = require('../crm/schemas/crm-email.schema');
 const { DealSchema, DealModelName } = require('../crm/schemas/deal.schema');
 const { ContactSchema, ContactModelName } = require('../crm/schemas/contact.schema');
@@ -13,20 +16,26 @@ const { CompanySchema, CompanyModelName } = require('../crm/schemas/company.sche
 const { LeadSchema, LeadModelName } = require('../crm/schemas/lead.schema');
 const { TenantSchema, TenantModelName } = require('../tenant/schemas/tenant.schema');
 const { NotificationSchema, NotificationModelName } = require('../realtime/schemas/notification.schema');
+const { ActivityEventSchema, ActivityEventModelName } = require('../activity/schemas/activity-event.schema');
 const { EmailAccountsService } = require('./email-accounts.service');
 const { EmailsService } = require('./emails.service');
 const { MassmailService } = require('./massmail.service');
+const { SharedInboxService } = require('./shared-inbox.service');
 const { MailController } = require('./mail.controller');
+const { SharedInboxController } = require('./shared-inbox.controller');
 const { GoogleOAuthController } = require('./google-oauth.controller');
 
 @Module({
   imports: [
     ConfigModule,
+    RbacModule,
     MongooseModule.forFeature([
       { name: EmailAccountModelName, schema: EmailAccountSchema },
       { name: EmailTemplateModelName, schema: EmailTemplateSchema },
       { name: MassmailCampaignModelName, schema: MassmailCampaignSchema },
       { name: UnsubscribeModelName, schema: UnsubscribeSchema },
+      { name: MailboxThreadModelName, schema: MailboxThreadSchema },
+      { name: MailboxMessageModelName, schema: MailboxMessageSchema },
       { name: CrmEmailModelName, schema: CrmEmailSchema },
       { name: DealModelName, schema: DealSchema },
       { name: ContactModelName, schema: ContactSchema },
@@ -34,9 +43,10 @@ const { GoogleOAuthController } = require('./google-oauth.controller');
       { name: LeadModelName, schema: LeadSchema },
       { name: TenantModelName, schema: TenantSchema },
       { name: NotificationModelName, schema: NotificationSchema },
+      { name: ActivityEventModelName, schema: ActivityEventSchema },
     ]),
   ],
-  controllers: [MailController, GoogleOAuthController],
+  controllers: [MailController, SharedInboxController, GoogleOAuthController],
   providers: [
     withModels(EmailAccountsService, {
       emailAccountModel: 'EmailAccount',
@@ -62,6 +72,13 @@ const { GoogleOAuthController } = require('./google-oauth.controller');
       unsubscribeModel: 'Unsubscribe',
       tenantModel: 'Tenant',
     }),
+    withModels(SharedInboxService, {
+      emailAccountModel: 'EmailAccount',
+      mailboxThreadModel: 'MailboxThread',
+      mailboxMessageModel: 'MailboxMessage',
+      crmEmailModel: 'CrmEmail',
+      activityEventModel: 'ActivityEvent',
+    }),
     {
       provide: 'MAIL_SERVICE_WIRING',
       useFactory: (emailAccountsService, emailsService, massmailService) => {
@@ -72,7 +89,7 @@ const { GoogleOAuthController } = require('./google-oauth.controller');
       inject: [EmailAccountsService, EmailsService, MassmailService],
     },
   ],
-  exports: [EmailAccountsService, EmailsService, MassmailService],
+  exports: [EmailAccountsService, EmailsService, MassmailService, SharedInboxService],
 })
 class MailModule {}
 

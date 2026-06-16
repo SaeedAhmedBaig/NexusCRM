@@ -26,12 +26,13 @@ function Inner() {
       bulkAction={ticketMacrosApi.bulk}
       filters={COMMON_FILTERS}
       filterOptions={{ statuses: statusOptions('ticket-macros') }}
-      createDefaults={{ status: 'active', category: 'General', visibility: 'team' }}
+      createDefaults={{ status: 'active', category: 'General', visibility: 'team', tags: [] }}
       createFields={[
         { key: 'name', label: 'Macro name', required: true },
-        { key: 'category', label: 'Category' },
+        { key: 'category', label: 'Category', placeholder: 'Billing, onboarding, outage...' },
         { key: 'subject', label: 'Subject' },
         { key: 'body', label: 'Response body', type: 'textarea', required: true },
+        { key: 'tags', label: 'Tags added to ticket', type: 'tags', placeholder: 'refund, escalation, vip' },
         { key: 'visibility', label: 'Visibility', type: 'select', options: [
           { value: 'team', label: 'Team' },
           { value: 'private', label: 'Private' },

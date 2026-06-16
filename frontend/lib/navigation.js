@@ -62,6 +62,7 @@ export const NAV_SECTIONS = [
   {
     label: 'Marketing',
     items: [
+      { href: '/inbox', label: 'Shared Inbox', icon: Inbox, action: 'read', subject: 'Inbox' },
       { href: '/marketing/campaigns', label: 'Campaigns', icon: Megaphone },
       { href: '/massmail', label: 'Email Marketing', icon: Mail },
       { href: '/marketing/sms', label: 'SMS Marketing', icon: MessageSquare },
@@ -98,7 +99,8 @@ export const NAV_SECTIONS = [
       { href: '/settings/lead-routing', label: 'Lead Routing', icon: GitBranch, action: 'manage', subject: 'Settings' },
       { href: '/settings/pipelines', label: 'Pipelines', icon: GitBranch, action: 'manage', subject: 'Settings' },
       { href: '/settings/custom-fields', label: 'Custom Fields', icon: SlidersHorizontal, action: 'manage', subject: 'Settings' },
-      { href: '/settings/audit', label: 'Security & Audit', icon: ShieldCheck, action: 'manage', subject: 'Settings' },
+      { href: '/settings/security', label: 'Security Center', icon: ShieldCheck, action: 'manage', subject: 'Settings' },
+      { href: '/settings/audit', label: 'Audit Stream', icon: ShieldCheck, action: 'manage', subject: 'Settings' },
       { href: '/settings/data-jobs', label: 'Data Jobs', icon: Database, action: 'manage', subject: 'Settings' },
       { href: '/settings/billing', label: 'Billing', icon: CreditCard, action: 'manage', subject: 'Settings' },
       { href: '/settings', label: 'Settings', icon: Settings },

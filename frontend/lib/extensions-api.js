@@ -61,7 +61,16 @@ export const quotationsApi = salesDocumentApi('quotations');
 export const ordersApi = salesDocumentApi('orders');
 export const invoicesApi = salesDocumentApi('invoices');
 export const productsApi = entityApi('products');
-export const ticketsApi = entityApi('tickets');
+export const ticketsApi = {
+  ...entityApi('tickets'),
+  conversation: (id) => apiFetch(`/tickets/${id}/conversation`),
+  reply: (id, payload) => apiFetch(`/tickets/${id}/replies`, { method: 'POST', body: payload }),
+  note: (id, payload) => apiFetch(`/tickets/${id}/notes`, { method: 'POST', body: payload }),
+  applyMacro: (id, payload) => apiFetch(`/tickets/${id}/apply-macro`, { method: 'POST', body: payload }),
+  route: (id, payload = {}) => apiFetch(`/tickets/${id}/route`, { method: 'POST', body: payload }),
+  resolve: (id, payload = {}) => apiFetch(`/tickets/${id}/resolve`, { method: 'POST', body: payload }),
+  reopen: (id, payload = {}) => apiFetch(`/tickets/${id}/reopen`, { method: 'POST', body: payload }),
+};
 export const ticketQueuesApi = entityApi('ticket-queues');
 export const ticketMacrosApi = entityApi('ticket-macros');
 export const smsApi = entityApi('sms');
@@ -69,6 +78,14 @@ export const knowledgeApi = entityApi('knowledge');
 export const automationApi = {
   ...entityApi('automation'),
   run: (id, payload) => apiFetch(`/automation/${id}/run`, { method: 'POST', body: payload }),
+  testRun: (id, payload = {}) => apiFetch(`/automation/${id}/run`, { method: 'POST', body: { ...payload, testRun: true, dryRun: true } }),
+  runs: (params) => apiFetch(`/automation-runs${buildQuery(params)}`),
+  getRun: (id) => apiFetch(`/automation-runs/${id}`),
+  retryRun: (id, payload = {}) => apiFetch(`/automation-runs/${id}/run`, { method: 'POST', body: payload }),
+};
+export const automationRunsApi = {
+  ...entityApi('automation-runs'),
+  retry: (id, payload = {}) => apiFetch(`/automation-runs/${id}/run`, { method: 'POST', body: payload }),
 };
 export const reportExportJobsApi = {
   ...entityApi('report-export-jobs'),

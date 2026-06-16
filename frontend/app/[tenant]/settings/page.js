@@ -34,7 +34,8 @@ const SETTINGS_GROUPS = [
     description: 'Enterprise metadata, audit, and operational controls.',
     items: [
       { href: '/settings/custom-fields', label: 'Custom fields', description: 'Tenant metadata fields used by CRM forms and records.', icon: SlidersHorizontal, action: 'manage', subject: 'Settings' },
-      { href: '/settings/audit', label: 'Security and audit', description: 'Tenant-scoped activity stream and governance review.', icon: ShieldCheck, action: 'manage', subject: 'Settings' },
+      { href: '/settings/security', label: 'Security center', description: 'MFA/session policy, risk signals, and audit export controls.', icon: ShieldCheck, action: 'manage', subject: 'Settings' },
+      { href: '/settings/audit', label: 'Audit stream', description: 'Tenant-scoped activity stream and governance review.', icon: ShieldCheck, action: 'manage', subject: 'Settings' },
       { href: '/settings/data-jobs', label: 'Data jobs', description: 'Imports, exports, sync jobs, and enrichment operations.', icon: Database, action: 'manage', subject: 'Settings' },
     ],
   },

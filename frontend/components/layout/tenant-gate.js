@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { getMe } from '../../lib/api';
+import { getMe, getToken, setSession } from '../../lib/api';
 import { getTenantUrl, getPublicUrl } from '../../lib/tenant';
 import { isAuthenticated, clearSession, redirectToLogin } from '../../lib/auth';
 import { SessionProvider } from '../providers/session-context';
@@ -65,6 +65,7 @@ export function TenantGate({ subdomain, children }) {
 
         loadedRef.current = true;
         clearTimeout(safetyTimer);
+        setSession({ token: getToken(), tenant: me.tenant, rules: me.rules, user: me.user });
         setProfile(me);
       } catch (err) {
         if (cancelled) return;
