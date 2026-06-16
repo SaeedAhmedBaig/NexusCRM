@@ -25,7 +25,10 @@ export function NotificationsDropdown({ subdomain }) {
   }, []);
 
   useEffect(() => {
-    load().catch(() => {});
+    const timer = window.setTimeout(() => {
+      load().catch(() => {});
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [load]);
 
   useEffect(() => {

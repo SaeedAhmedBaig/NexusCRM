@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Can } from '../can';
@@ -81,7 +82,7 @@ export function AppSidebar({
           }`}
         >
           {tenantLogo ? (
-            <img src={tenantLogo} alt="" className="h-8 w-8 shrink-0 rounded-md object-cover" />
+            <Image src={tenantLogo} alt="" width={32} height={32} unoptimized className="h-8 w-8 shrink-0 rounded-md object-cover" />
           ) : (
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-brand text-sm font-semibold text-brand-foreground shadow-sm">
               {initial}

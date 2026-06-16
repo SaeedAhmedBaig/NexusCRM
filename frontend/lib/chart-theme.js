@@ -79,13 +79,14 @@ export function useChartColors() {
   const [colors, setColors] = useState(getChartColors);
 
   useEffect(() => {
-    setColors(getChartColors());
+    const timer = window.setTimeout(() => setColors(getChartColors()), 0);
     const observer = new MutationObserver(() => setColors(getChartColors()));
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const onChange = () => setColors(getChartColors());
     mq.addEventListener('change', onChange);
     return () => {
+      window.clearTimeout(timer);
       observer.disconnect();
       mq.removeEventListener('change', onChange);
     };

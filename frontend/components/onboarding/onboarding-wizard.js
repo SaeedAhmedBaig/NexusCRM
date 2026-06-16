@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import Image from 'next/image';
+import { useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { FormField, inputClass } from '../ui/form-field';
 import { completeOnboarding } from '../../lib/api';
@@ -24,7 +25,7 @@ export function OnboardingWizard({ subdomain }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const { register, handleSubmit, watch, setValue } = useForm({
+  const { control, register, handleSubmit, setValue } = useForm({
     defaultValues: {
       company: {
         name: '',
@@ -47,7 +48,7 @@ export function OnboardingWizard({ subdomain }) {
     },
   });
 
-  const logoUrl = watch('company.logoUrl');
+  const logoUrl = useWatch({ control, name: 'company.logoUrl' });
 
   function skipStep(stepId) {
     setSkippedSteps((prev) => [...new Set([...prev, stepId])]);
@@ -152,7 +153,7 @@ export function OnboardingWizard({ subdomain }) {
             <FormField label="Logo">
               <input type="file" accept="image/*" onChange={handleLogoFile} className="text-sm" />
               {logoUrl && (
-                <img src={logoUrl} alt="Logo preview" className="mt-2 h-16 w-16 rounded-lg object-cover" />
+                <Image src={logoUrl} alt="Logo preview" width={64} height={64} unoptimized className="mt-2 h-16 w-16 rounded-lg object-cover" />
               )}
             </FormField>
             <FormField label="Address">

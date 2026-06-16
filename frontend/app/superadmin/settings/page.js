@@ -36,9 +36,12 @@ export default function SuperadminSettingsPage() {
 
   useEffect(() => {
     if (!data) return;
-    setDefaultPlan(data.defaultPlan || 'Starter');
-    setFeatureFlags(data.featureFlags || {});
-    setPlanPricing(data.planPricing || {});
+    const timer = window.setTimeout(() => {
+      setDefaultPlan(data.defaultPlan || 'Starter');
+      setFeatureFlags(data.featureFlags || {});
+      setPlanPricing(data.planPricing || {});
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [data]);
 
   const saveMut = useMutation({

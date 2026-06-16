@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useState } from 'react';
 import { FormField, inputClass, inputErrorClass } from '../ui/form-field';
 import { getRecaptchaToken, isRecaptchaEnabled } from '../../lib/recaptcha';
@@ -17,9 +17,9 @@ export function SignupForm({ defaultPlan = 'free', onSubmit }) {
   const [serverError, setServerError] = useState('');
 
   const {
+    control,
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -31,7 +31,7 @@ export function SignupForm({ defaultPlan = 'free', onSubmit }) {
     },
   });
 
-  const subdomain = watch('subdomain');
+  const subdomain = useWatch({ control, name: 'subdomain' });
 
   async function submit(data) {
     setLoading(true);

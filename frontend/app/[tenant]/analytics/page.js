@@ -48,7 +48,9 @@ function AnalyticsPageInner() {
   const [tab, setTab] = useState(VALID_TABS.has(initialTab) ? initialTab : 'income');
 
   useEffect(() => {
-    if (VALID_TABS.has(initialTab)) setTab(initialTab);
+    if (!VALID_TABS.has(initialTab)) return;
+    const timer = window.setTimeout(() => setTab(initialTab), 0);
+    return () => window.clearTimeout(timer);
   }, [initialTab]);
   const [start, setStart] = useState(monthStart());
   const [end, setEnd] = useState(today());

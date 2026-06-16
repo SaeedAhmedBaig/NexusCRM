@@ -23,8 +23,12 @@ export function ToastStack() {
   const [toasts, setToasts] = useState([]);
 
   useEffect(() => {
-    setToasts(getToasts());
-    return subscribe(() => setToasts([...getToasts()]));
+    const timer = window.setTimeout(() => setToasts(getToasts()), 0);
+    const unsubscribe = subscribe(() => setToasts([...getToasts()]));
+    return () => {
+      window.clearTimeout(timer);
+      unsubscribe?.();
+    };
   }, []);
 
   if (!toasts.length) return null;
