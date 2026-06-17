@@ -43,9 +43,9 @@ export function AppShell({ subdomain, profile, children }) {
           onToggleCollapse={() => setCollapsed((v) => !v)}
         />
         <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto grid w-full max-w-[1360px] gap-4 px-4 py-4 sm:px-5 lg:px-6 lg:py-5">
+          <div className="app-container grid gap-4">
             {trialMessage ? (
-              <div className="border border-warning/30 bg-warning-light px-4 py-3 text-sm font-medium text-warning">
+              <div className="rounded-[var(--callout-radius)] border border-warning/30 bg-warning-light px-5 py-3 text-sm font-medium text-warning">
                 {trialMessage} <a href={`/${subdomain}/settings/billing`} className="underline">View plans</a>
               </div>
             ) : null}

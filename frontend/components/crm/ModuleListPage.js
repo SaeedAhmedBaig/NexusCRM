@@ -221,7 +221,7 @@ export function ModuleListPage({
 
   if (error) {
     return (
-      <div className="rounded-md border border-danger/20 bg-danger-light p-6 text-sm text-danger">
+      <div className="rounded-[var(--radius-xl)] border border-danger/20 bg-danger-light p-6 text-sm text-danger">
         {error.message}
       </div>
     );
@@ -250,7 +250,7 @@ export function ModuleListPage({
 
       {showCreate && createFields.length > 0 && (
         <form
-          className="rounded-lg border border-border bg-card p-5"
+          className="page-section p-5"
           onSubmit={(e) => {
             e.preventDefault();
             createMutation.mutate(buildEditablePayload(form));
@@ -352,21 +352,21 @@ export function ModuleListPage({
                       .filter(([key, value]) => !['_id', 'id', '__v', 'customFields'].includes(key) && value !== null && value !== undefined && typeof value !== 'object')
                       .slice(0, 12)
                       .map(([key, value]) => (
-                        <div key={key} className="rounded-md border border-border bg-control p-4">
+                        <div key={key} className="rounded-[var(--radius-xl)] border border-border bg-control p-4">
                           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{key.replace(/([A-Z])/g, ' $1')}</p>
                           <p className="mt-1 break-words text-sm font-semibold text-foreground">{String(value)}</p>
                         </div>
                       ))}
                   </div>
                   {customFields.length > 0 && (
-                    <div className="rounded-lg border border-border bg-card p-4">
+                    <div className="feature-card p-4">
                       <div className="mb-3">
                         <p className="text-sm font-bold text-foreground">Custom fields</p>
                         <p className="text-xs text-muted-foreground">Metadata fields configured for {customFieldObjectType} records.</p>
                       </div>
                       <div className="grid gap-3 sm:grid-cols-2">
                         {customFields.map((field) => (
-                          <div key={field.key} className="rounded-md border border-border bg-control p-3">
+                          <div key={field.key} className="rounded-[var(--button-radius)] border border-border bg-control p-3">
                             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{field.label}</p>
                             <p className="mt-1 break-words text-sm font-semibold text-foreground">
                               {formatCustomFieldValue(field, drawer.record?.customFields?.[field.customKey])}
@@ -382,7 +382,7 @@ export function ModuleListPage({
                     </Button>
                   )}
                   {activityEntityType && (
-                    <div className="rounded-lg border border-border bg-card p-4">
+                    <div className="feature-card p-4">
                       <div className="mb-3">
                         <p className="text-sm font-bold text-foreground">Recent activity</p>
                         <p className="text-xs text-muted-foreground">Enterprise activity stream for this record.</p>
@@ -390,7 +390,7 @@ export function ModuleListPage({
                       {activityPage?.data?.length ? (
                         <ul className="space-y-2">
                           {activityPage.data.map((event) => (
-                            <li key={event.id} className="rounded-md border border-border bg-control px-3 py-2 text-xs">
+                            <li key={event.id} className="rounded-[var(--button-radius)] border border-border bg-control px-3 py-2 text-xs">
                               <p className="font-semibold text-foreground">{event.summary}</p>
                               <p className="mt-0.5 text-muted-foreground">
                                 {event.actorName || 'System'} · {new Date(event.createdAt).toLocaleString()}

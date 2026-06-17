@@ -15,6 +15,7 @@
   --brand-muted: rgba(0, 127, 137, 0.14);
   --brand-light: rgba(0, 127, 137, 0.1);
   --brand-subtle: rgba(0, 127, 137, 0.06);
+  --brand-gradient: linear-gradient(100deg, color-mix(in srgb, var(--brand) 62%, #ffffff) -6.08%, var(--brand) 28%, var(--brand-darker) 100%);
 
   /* Neutral surface stack */
   --background: #f3f5f4;
@@ -97,11 +98,18 @@
 
   --radius: 0.625rem;
   --radius-lg: 0.875rem;
-  --shadow-sm: 0 1px 2px rgba(9, 30, 26, 0.06), 0 8px 28px rgba(9, 30, 26, 0.04);
-  --shadow-md: 0 12px 38px rgba(9, 30, 26, 0.1);
-  --shadow-lg: 0 28px 80px rgba(9, 30, 26, 0.15);
-  --app-gutter: clamp(1rem, 2vw, 2rem);
+  --radius-xl: 1.125rem;
+  --section-radius: 2rem;
+  --button-radius: 0.5rem;
+  --callout-radius: 3.375rem;
+  --surface-hover-subtle: rgba(0, 0, 0, 0.04);
+  --shadow-sm: none;
+  --shadow-md: 0 1px 0 rgba(9, 30, 26, 0.04);
+  --shadow-lg: 0 18px 52px rgba(9, 30, 26, 0.08);
+  --app-gutter: clamp(1.5rem, 3.5vw, 5rem);
   --app-grid-gap: 1rem;
+  --layout-container-max: 1160px;
+  --section-rhythm: 5rem;
 
   /* Unified shell header height (marketing + app + auth) */
   --header-height: 3.5rem;
@@ -132,6 +140,8 @@
   --brand-muted: rgba(0, 184, 194, 0.22);
   --brand-light: rgba(0, 184, 194, 0.15);
   --brand-subtle: rgba(0, 184, 194, 0.08);
+  --brand-gradient: linear-gradient(100deg, #67e8f9 -6.08%, #00b8c2 28%, #007f89 100%);
+  --surface-hover-subtle: rgba(255, 255, 255, 0.06);
 
   --success: #4ade80;
   --warning: #facc15;
@@ -199,6 +209,7 @@
   --color-brand-muted: var(--brand-muted);
   --color-brand-light: var(--brand-light);
   --color-brand-subtle: var(--brand-subtle);
+  --color-surface-hover-subtle: var(--surface-hover-subtle);
   --color-accent: var(--accent);
   --color-surface: var(--surface);
   --color-surface-elevated: var(--surface-elevated);
@@ -247,15 +258,15 @@
   --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
-  --font-sans: var(--font-jakarta);
+  --font-sans: var(--font-inter);
   --font-heading: var(--font-jakarta);
   --radius-sm: calc(var(--radius) * 0.75);
   --radius-md: var(--radius);
   --radius-lg: var(--radius-lg);
-  --radius-xl: calc(var(--radius) * 1.25);
-  --radius-2xl: calc(var(--radius) * 1.5);
-  --radius-3xl: calc(var(--radius) * 2);
-  --radius-4xl: calc(var(--radius) * 2.5);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--section-radius);
+  --radius-3xl: var(--section-radius);
+  --radius-4xl: calc(var(--section-radius) * 1.25);
 }
 
 * { box-sizing: border-box; }
@@ -272,19 +283,19 @@ body {
 }
 
 /* Typography scale */
-.text-display { font-size: 2.25rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; }
-.text-h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; line-height: 1.25; }
-.text-h2 { font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.3; }
-.text-h3 { font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.4; }
+.text-display { font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif; font-size: 2.25rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; }
+.text-h1 { font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; line-height: 1.25; }
+.text-h2 { font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif; font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.3; }
+.text-h3 { font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif; font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.4; }
 .text-body-lg { font-size: 1.0625rem; line-height: 1.6; color: var(--muted-foreground); }
 .text-meta { font-size: 0.75rem; font-weight: 500; color: var(--muted-foreground); }
 
 /* Marketing */
 .marketing-section {
-  padding-block: clamp(5rem, 8vw, 8rem);
+  padding-block: var(--section-rhythm);
 }
 .marketing-container {
-  max-width: 1200px;
+  max-width: var(--layout-container-max);
   margin-inline: auto;
   padding-inline: clamp(1rem, 4vw, 2rem);
   width: 100%;
@@ -297,10 +308,38 @@ body {
 }
 .marketing-card {
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--section-radius);
   background: var(--card);
   color: var(--card-foreground);
   box-shadow: var(--shadow-sm);
+}
+
+.app-container {
+  width: 100%;
+  max-width: min(100%, 1360px);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 2vw, 1.5rem);
+  padding-block: clamp(1rem, 2vw, 1.5rem);
+}
+
+.page-section {
+  border: 1px solid var(--border);
+  border-radius: var(--section-radius);
+  background: var(--card);
+  color: var(--card-foreground);
+}
+
+.feature-card {
+  border: 1px solid var(--border);
+  border-radius: var(--section-radius);
+  background: var(--card);
+  color: var(--card-foreground);
+  box-shadow: var(--shadow-sm);
+}
+
+.primary-action-surface {
+  background-image: var(--brand-gradient);
+  color: var(--brand-foreground);
 }
 
 .app-grid {
@@ -316,14 +355,14 @@ body {
 
 .effix-panel {
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--section-radius);
   background: var(--card);
   box-shadow: var(--shadow-sm);
 }
 
 .effix-widget {
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--section-radius);
   background: var(--card);
   padding: 1rem;
   box-shadow: var(--shadow-sm);
@@ -366,9 +405,8 @@ body {
 .card-elevated {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--section-radius);
   box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(16px);
 }
 
 .focus-ring:focus-visible {
@@ -380,7 +418,7 @@ body {
   width: 100%;
   min-width: 0;
   min-height: 2.625rem;
-  border-radius: var(--radius);
+  border-radius: var(--button-radius);
   border: 1px solid var(--border);
   background: var(--control);
   padding-block: 0.5625rem;

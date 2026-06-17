@@ -41,10 +41,10 @@ export function AppSidebar({
         href={`${base}${item.href}`}
         onClick={onClose}
         title={collapsed ? item.label : undefined}
-        className={`group flex h-8 items-center gap-2 rounded-md px-2.5 text-[12px] font-semibold transition-all ${
+        className={`group flex h-8 items-center gap-2 rounded-[var(--button-radius)] px-2.5 text-[12px] font-semibold transition-all ${
           active
             ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-            : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+            : 'text-muted-foreground hover:bg-surface-hover-subtle hover:text-sidebar-accent-foreground'
         } ${collapsed ? 'justify-center px-2.5' : ''}`}
       >
         <Icon className="h-4 w-4 shrink-0 opacity-80" strokeWidth={active ? 2.25 : 1.75} />
@@ -84,9 +84,9 @@ export function AppSidebar({
           }`}
         >
           {tenantLogo ? (
-            <Image src={tenantLogo} alt="" width={32} height={32} unoptimized className="h-8 w-8 shrink-0 rounded-md object-cover" />
+            <Image src={tenantLogo} alt="" width={32} height={32} unoptimized className="h-8 w-8 shrink-0 rounded-[var(--button-radius)] object-cover" />
           ) : (
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-brand text-sm font-semibold text-brand-foreground shadow-sm">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--button-radius)] bg-[image:var(--brand-gradient)] text-sm font-semibold text-brand-foreground">
               {initial}
             </span>
           )}

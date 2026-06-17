@@ -6,7 +6,8 @@
     "start": "node -r @babel/register src/main.js",
     "start:dev": "node -r @babel/register --watch src/main.js",
     "start:prod": "node -r @babel/register src/main.js",
-    "flush-db": "node scripts/flush-db.js"
+    "flush-db": "node scripts/flush-db.js",
+    "seed": "node scripts/seed.js"
   },
   "dependencies": {
     "@babel/core": "^7.26.0",

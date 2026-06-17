@@ -118,7 +118,7 @@ export function DataTable({
       <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
           {title ? <h1 className="text-h1 text-foreground">{title}</h1> : null}
-          <p className="text-[13px] text-muted-foreground">{total.toLocaleString()} records</p>
+          <p className="text-sm text-muted-foreground">{total.toLocaleString()} records</p>
         </div>
         <div className="flex flex-wrap items-center gap-2.5">
           {selected.size > 0 && (
@@ -126,17 +126,17 @@ export function DataTable({
               <button
                 type="button"
                 onClick={() => setBulkMenuOpen(!bulkMenuOpen)}
-              className="focus-ring flex h-9 items-center gap-2 rounded-md border border-border bg-control px-3 text-[13px] font-semibold text-foreground shadow-sm hover:bg-control-hover"
+                className="focus-ring flex h-9 items-center gap-2 rounded-[var(--button-radius)] border border-border bg-control px-3 text-[13px] font-semibold text-foreground hover:bg-control-hover"
               >
                 <MoreHorizontal className="h-4 w-4" />
                 Bulk ({selected.size})
               </button>
               {bulkMenuOpen && (
-                <div className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-lg border border-border bg-popover p-1.5 text-popover-foreground shadow-lg">
+                <div className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-popover p-1.5 text-popover-foreground shadow-lg">
                   {filterOptions.statuses?.length > 0 && (
                     <button
                       type="button"
-                      className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm hover:bg-surface"
+                      className="flex w-full items-center rounded-[var(--button-radius)] px-3 py-2 text-left text-sm hover:bg-surface-hover-subtle"
                       onClick={() => askBulk('change_status', 'Change status', `Update status for ${selected.size} record(s)?`)}
                     >
                       Change status
@@ -144,14 +144,14 @@ export function DataTable({
                   )}
                   <button
                     type="button"
-                    className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm hover:bg-surface"
+                    className="flex w-full items-center rounded-[var(--button-radius)] px-3 py-2 text-left text-sm hover:bg-surface-hover-subtle"
                     onClick={() => askBulk('assign_owner', 'Assign owner', `Assign owner to ${selected.size} record(s)?`)}
                   >
                     Assign owner
                   </button>
                   <button
                     type="button"
-                    className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm hover:bg-surface"
+                    className="flex w-full items-center rounded-[var(--button-radius)] px-3 py-2 text-left text-sm hover:bg-surface-hover-subtle"
                     onClick={() => askBulk('mass_mail', 'Create mass mail', `Queue mass mail for ${selected.size} record(s)?`)}
                   >
                     Create mass mail
@@ -170,7 +170,7 @@ export function DataTable({
           <button
             type="button"
             onClick={() => setFilterOpen(true)}
-            className="focus-ring flex h-9 items-center gap-2 rounded-md border border-border bg-control px-3 text-[13px] font-semibold text-foreground shadow-sm hover:bg-control-hover"
+            className="focus-ring flex h-9 items-center gap-2 rounded-[var(--button-radius)] border border-border bg-control px-3 text-[13px] font-semibold text-foreground hover:bg-control-hover"
           >
             <Filter className="h-4 w-4" strokeWidth={2} />
             Filters
@@ -190,7 +190,7 @@ export function DataTable({
       {loading ? (
         <SkeletonTable rows={8} />
       ) : (
-      <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+      <div className="overflow-hidden rounded-[var(--section-radius)] border border-border bg-card shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[820px] text-left text-[13px]">
             <thead className="sticky top-0 z-10 border-b border-border bg-muted">
@@ -312,7 +312,7 @@ export function DataTable({
               type="button"
               disabled={page <= 1}
               onClick={() => onParamsChange({ page: String(page - 1) })}
-              className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-control shadow-sm disabled:opacity-40"
+              className="inline-flex size-8 items-center justify-center rounded-[var(--button-radius)] border border-border bg-control disabled:opacity-40"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -320,7 +320,7 @@ export function DataTable({
               type="button"
               disabled={page >= totalPages}
               onClick={() => onParamsChange({ page: String(page + 1) })}
-              className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-control shadow-sm disabled:opacity-40"
+              className="inline-flex size-8 items-center justify-center rounded-[var(--button-radius)] border border-border bg-control disabled:opacity-40"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -335,7 +335,7 @@ export function DataTable({
           <aside className="animate-slide-in-right relative flex h-full w-full max-w-md flex-col border-l border-border bg-card shadow-xl">
             <div className="flex items-center justify-between border-b border-border px-5 py-5">
               <h2 className="font-semibold">Filters</h2>
-              <button type="button" onClick={() => setFilterOpen(false)} className="inline-flex size-9 items-center justify-center rounded-md hover:bg-surface">
+              <button type="button" onClick={() => setFilterOpen(false)} className="inline-flex size-9 items-center justify-center rounded-[var(--button-radius)] hover:bg-surface-hover-subtle">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -374,7 +374,7 @@ export function DataTable({
                   onParamsChange({ status: '', stage: '', department: '', owner: '', dateFrom: '', dateTo: '', page: '1' });
                   setFilterOpen(false);
                 }}
-                className="h-10 w-full rounded-md border border-border bg-control px-4 text-sm font-semibold hover:bg-control-hover"
+                className="h-10 w-full rounded-[var(--button-radius)] border border-border bg-control px-4 text-sm font-semibold hover:bg-control-hover"
               >
                 Clear filters
               </button>

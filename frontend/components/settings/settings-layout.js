@@ -7,10 +7,10 @@ import { cn } from '../../lib/utils';
 export function SettingsPageShell({ title, description, actions, children, className = '' }) {
   return (
     <div className={cn('w-full animate-fade-in space-y-5', className)}>
-      <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="page-section flex flex-col gap-3 p-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-[-0.03em] text-foreground">{title}</h1>
-          {description ? <p className="mt-1 text-sm text-muted-foreground">{description}</p> : null}
+          {description ? <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">{description}</p> : null}
         </div>
         {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
       </div>
@@ -21,11 +21,11 @@ export function SettingsPageShell({ title, description, actions, children, class
 
 export function SettingsSection({ title, description, actions, children, className = '' }) {
   return (
-    <section className={cn('border border-border bg-card', className)}>
-      <div className="flex flex-col gap-2 border-b border-border bg-muted/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <section className={cn('page-section overflow-hidden', className)}>
+      <div className="flex flex-col gap-2 border-b border-border bg-muted/40 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-          {description ? <p className="mt-0.5 text-xs text-muted-foreground">{description}</p> : null}
+          <h2 className="text-base font-semibold tracking-[-0.01em] text-foreground">{title}</h2>
+          {description ? <p className="mt-1 text-sm leading-5 text-muted-foreground">{description}</p> : null}
         </div>
         {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
       </div>
@@ -36,10 +36,10 @@ export function SettingsSection({ title, description, actions, children, classNa
 
 export function SettingsRow({ icon: Icon, label, description, value, href, action, children, className = '' }) {
   const content = (
-    <div className={cn('grid gap-3 px-4 py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center', className)}>
+    <div className={cn('grid gap-3 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center', className)}>
       <div className="flex min-w-0 gap-3">
         {Icon ? (
-          <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center border border-border bg-control text-muted-foreground">
+          <span className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-[var(--button-radius)] border border-border bg-control text-muted-foreground">
             <Icon className="h-4 w-4" />
           </span>
         ) : null}
@@ -59,7 +59,7 @@ export function SettingsRow({ icon: Icon, label, description, value, href, actio
 
   if (href) {
     return (
-      <Link href={href} className="block transition-colors hover:bg-muted/50">
+      <Link href={href} className="block transition-colors hover:bg-surface-hover-subtle">
         {content}
       </Link>
     );
@@ -72,7 +72,7 @@ export function SettingsButton({ children, className = '', ...props }) {
   return (
     <button
       type="button"
-      className={cn('inline-flex h-8 items-center gap-2 border border-border bg-control px-3 text-xs font-semibold text-foreground hover:bg-control-hover disabled:opacity-50', className)}
+      className={cn('inline-flex h-9 items-center gap-2 rounded-[var(--button-radius)] border border-border bg-control px-3 text-xs font-semibold text-foreground hover:bg-control-hover disabled:opacity-50', className)}
       {...props}
     >
       {children}
@@ -84,7 +84,7 @@ export function SettingsPrimaryButton({ children, className = '', ...props }) {
   return (
     <button
       type="button"
-      className={cn('inline-flex h-8 items-center gap-2 bg-brand px-3 text-xs font-semibold text-white hover:bg-brand-dark disabled:opacity-50', className)}
+      className={cn('inline-flex h-9 items-center gap-2 rounded-[var(--button-radius)] border border-black/15 bg-[image:var(--brand-gradient)] px-3 text-xs font-semibold text-white hover:brightness-95 disabled:opacity-50', className)}
       {...props}
     >
       {children}
